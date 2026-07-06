@@ -1,60 +1,161 @@
-# Globally Scalable Food Delivery Super Platform
+# Delivoos - Enterprise Food Delivery & Logistics Platform
 
-This is a production-grade, FAANG-level food delivery microservices platform designed using Domain Driven Design (DDD), Clean/Hexagonal Architecture, Event-Driven Sagas, and Kubernetes orchestration.
+[![Java Version](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://www.oracle.com/java/)
+[![Framework](https://img.shields.io/badge/Framework-Spring%20Boot%203.3.2-green.svg)](https://spring.io/projects/spring-boot)
+[![Messaging](https://img.shields.io/badge/Messaging-Apache%20Kafka-blue.svg)](https://kafka.apache.org/)
+[![Database](https://img.shields.io/badge/Database-PostgreSQL%20%7C%20Redis-blue.svg)](https://www.postgresql.org/)
+[![Orchestration](https://img.shields.io/badge/Orchestration-Kubernetes-blue.svg)](https://kubernetes.io/)
 
-## System Bounded Contexts & Microservices
-
-1. **API Gateway**: Spring Cloud Gateway proxy routing all incoming requests with rate-limiting and security validations.
-2. **User Service**: Registration, credential management, profile, security roles, and user addresses.
-3. **Order Service**: Coordinates order placement, processes tracking tokens, and handles state machine flow.
-4. **Payment Service**: Integrates wallet systems, ledger balancing, and payment validation.
-
----
-
-## Architecture Design Principles
-
-- **Hexagonal Architecture**: Isolates the domain models (`Order.java`, `User.java`, `Payment.java`) from databases and messaging protocols using inputs ports (`ApplicationService`) and outputs ports (`Repository`, `MessagePublisher`).
-- **CQRS**: Separates command writing transactions from reading operations (queries).
-- **Outbox Pattern**: Assures Exactly-Once messaging by inserting events to `payment_outbox` table in the same transaction as state updates, polled asynchronously by schedulers.
-- **Saga Orchestration**: Asynchronous choreography orchestrated by `Order Service` mapping transactions:
-  - Create Order (PENDING) -> Process Payment (PAID) -> Approve Restaurant (APPROVED).
-  - Compensation on failure: Refund Payment (REFUNDED) -> Cancel Order (CANCELLED).
+Delivoos is a production-grade, FAANG-level enterprise food delivery and real-time logistics platform. Designed using Domain-Driven Design (DDD), Hexagonal (Ports & Adapters) Architecture, Event-Driven Sagas, and Transactional Outbox patterns, the system is architected for absolute consistency, high throughput, and fault tolerance across multi-region transactions.
 
 ---
 
-## Local Development & Docker Setup
+## 🏗️ System Architecture
 
-To spin up database clusters, Kafka brokers, Redis cache, and Elasticsearch locally, run:
+The platform utilizes a microservices architecture coordinated via Event-Driven Choreography over Apache Kafka and routed through an API Gateway:
 
+```mermaid
+graph TD
+    Client[Client Browser / Mobile] -->|HTTPS Requests| APIGateway[API Gateway: Spring Cloud Gateway]
+    
+    subgraph Microservices Stack
+        APIGateway -->|Routing & Auth| UserService[User Service]
+        APIGateway -->|Order Lifecycle| OrderService[Order Service]
+        APIGateway -->|Wallet & Ledger| PaymentService[Payment Service]
+        APIGateway -->|Rider Matching| DeliveryService[Delivery Service]
+        APIGateway -->|Search Catalog| SearchService[Search Service]
+    end
+
+    subgraph Event Broker & Storage
+        OrderService -.->|Publish Outbox Events| Kafka[Apache Kafka Cluster]
+        PaymentService -.->|Publish Outbox Events| Kafka
+        DeliveryService -.->|Publish Outbox Events| Kafka
+        
+        Kafka -.->|Subscribe to Events| OrderService
+        Kafka -.->|Subscribe to Events| DeliveryService
+        Kafka -.->|Index Menu Updates| SearchService
+        
+        OrderService === Postgres1[(PostgreSQL DB)]
+        PaymentService === Postgres2[(PostgreSQL DB)]
+        UserService === Postgres3[(PostgreSQL DB)]
+        
+        OrderService === Redis[(Redis Cache)]
+    end
+    
+    subgraph Local Prototyping
+        Client -->|Local Dev| LocalServer[Server.java Standalone Server]
+    end
+```
+
+---
+
+## 🛠️ Technology Stack
+
+* **API Gateway & Routing**: Spring Cloud Gateway, Netty.
+* **Core Microservices**: Spring Boot 3.3.2, Java 17/21, Spring Data JPA.
+* **Data Stores**: PostgreSQL (Transactional Ledger), Redis (Cache & Active Sessions), Elasticsearch (Catalog Search).
+* **Message Broker**: Apache Kafka (Distributed commit log, event streaming).
+* **Frontend client**: Vanilla HTML5, Modern CSS3 (featuring premium capsule layouts & liquid transitions), JavaScript (Assembled via Virtual Threads SSI).
+* **DevOps & Cloud**: Docker, Kubernetes (zone-aware AntiAffinity configurations), Prometheus, OpenTelemetry, Grafana.
+
+---
+
+## 💡 Architectural Deep-Dive & Challenges Solved
+
+### 1. Distributed Transaction Consistency via Saga Pattern
+In a distributed microservice environment, maintaining ACID transactions across separate databases (e.g. Order DB and Payment DB) is a key challenge. Delivoos solves this using **Event-Driven Saga Orchestration**:
+
+```mermaid
+sequenceDiagram
+    participant OS as Order Service
+    participant PS as Payment Service
+    participant RS as Restaurant Service
+    
+    Note over OS: 1. Create Order (PENDING)
+    OS->>PS: Publish OrderCreatedEvent
+    Note over PS: 2. Process Wallet Ledger
+    alt Payment Successful
+        PS->>OS: Publish PaymentCompletedEvent
+        Note over OS: 3. Update Order (PAID)
+        OS->>RS: Publish OrderPaidEvent
+        Note over RS: 4. Approve Restaurant
+        alt Restaurant Approves
+            RS->>OS: Publish OrderApprovedEvent
+            Note over OS: 5. Complete Order (APPROVED)
+        else Restaurant Rejects (Out of Stock)
+            RS->>OS: Publish OrderRejectedEvent
+            Note over OS: 6. Trigger Compensation
+            OS->>PS: Publish RefundPaymentEvent
+            Note over PS: 7. Revert Wallet Funds
+            PS->>OS: Publish PaymentRefundedEvent
+            Note over OS: 8. Cancel Order (CANCELLED)
+        end
+    else Insufficient Funds
+        PS->>OS: Publish PaymentFailedEvent
+        Note over OS: 6. Cancel Order (CANCELLED)
+    end
+```
+* **Happy Path**: Order Placed $\rightarrow$ Wallet Charged $\rightarrow$ Kitchen Accepts $\rightarrow$ Dispatched.
+* **Compensation Path**: If the kitchen rejects an order (e.g., out of stock) or a network timeout occurs, a compensation Saga is triggered. The Payment Service automatically reverses the ledger transaction, rolls back wallet credits, and releases reserved stock.
+
+### 2. Reliable Event Delivery via Transactional Outbox Pattern
+To prevent "dual-write" bugs where a database write succeeds but publishing the corresponding event to Kafka fails (or vice versa), the system implements the **Outbox Pattern**:
+1. Business data updates and event payloads are committed **atomically** in the same local database transaction (writing to business tables and an `outbox` table).
+2. An asynchronous scheduler polls the `outbox` table, publishes the message to Kafka, and marks the outbox row as processed upon acknowledgment.
+3. This guarantees **Exactly-Once processing** and ensures ultimate data consistency.
+
+### 3. Hexagonal (Ports & Adapters) Architecture
+To keep business logic isolated from database mappings and messaging frameworks, the service modules follow a clean Hexagonal structure:
+* **`domain`**: Contains pure business rules, entities (`Order.java`, `User.java`), and interface ports. Zero dependencies on external frameworks like Spring or Hibernate.
+* **`application`**: Connects ports to orchestrate business scenarios (services, DTO mappings).
+* **`dataaccess`**: Implements repositories and entities mapping domain state to PostgreSQL tables.
+* **`messaging`**: Implements consumer listeners and event publishers mapping domain ports to Kafka topics.
+* **`container`**: Bootstraps the application, loading configurations and launching the Spring Boot runtime.
+
+### 4. Real-Time Tracking & GPS Simulation
+* The client tracks delivery couriers dynamically via a lightweight geohash polling system.
+* Courier locations are simulated using interpolation vectors on the frontend map.
+* Unrealistic distance telemetry coordinates are calculated and scaled within a local delivery radius (1.2 to 14.8 km) using Haversine formulations to maintain realistic system status.
+
+---
+
+## 🚀 Local Development Setup
+
+### 1. Infrastructure Stack (Docker Compose)
+Spin up PostgreSQL, Kafka, Redis, and Elasticsearch clusters locally:
 ```bash
 docker-compose up -d
 ```
+* **PostgreSQL Port**: `5432`
+* **Redis Port**: `6379`
+* **Kafka Broker Port**: `9092`
+* **Elasticsearch Port**: `9200`
 
-### Databases Mapped Local Ports:
-- PostgreSQL DB Cluster: `5432`
-- Redis Cache Instance: `6379`
-- Kafka Message Broker: `9092`
-- Elasticsearch Search Engine: `9200`
+### 2. Run the Prototyping Dev Server
+For rapid prototyping without microservices running, boot the lightweight standalone prototyping server. This serves the dynamic frontend (assembling Server-Side Includes) on port 8080:
+```bash
+# Compile and run
+javac Server.java
+java Server
+```
+Navigate to **`http://127.0.0.1:8080/`** to explore the application interface.
+
+### 3. Run the Spring Boot Services
+To run the enterprise Spring Boot REST API gateway and business services:
+```bash
+# Navigate to backend Maven project
+cd backend
+mvn spring-boot:run
+```
 
 ---
 
-## Kubernetes Production Deployment
-
-Production-grade manifests are located inside `infrastructure/k8s/`. Deploy the entire namespace stack:
-
+## 📦 Kubernetes Production Manifests
+Production deployment configurations are located in `infrastructure/k8s/`. Deploy the namespace stack to AWS EKS:
 ```bash
 kubectl apply -f infrastructure/k8s/food-delivery-manifests.yaml
 ```
-
-The stack configures:
-- Horizontal Pod Autoscalers (HPA) scaling deployments based on CPU load.
-- Network policies blocking direct database access from untrusted pods.
-- Replicas with zone-aware AntiAffinity configurations preventing cluster outages.
-
----
-
-## Observability & Observability Monitoring
-
-- **Prometheus** scrapes metric endpoints exposing JVM heap memory levels and HTTP request latency.
-- **OpenTelemetry Collector** exports trace spans to Jaeger instances.
-- **Grafana Dashboards** present KPIs and SLO charts.
+Key production capabilities configured:
+* **Horizontal Pod Autoscaling (HPA)** based on CPU/memory thresholds.
+* **Pod Anti-Affinity** policies preventing single points of failure across AZs.
+* **Network Policies** blocking direct access to database configurations from untrusted pods.
