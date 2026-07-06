@@ -8,41 +8,17 @@
 
 Delivoos is a production-grade, FAANG-level enterprise food delivery and real-time logistics platform. Designed using Domain-Driven Design (DDD), Hexagonal (Ports & Adapters) Architecture, Event-Driven Sagas, and Transactional Outbox patterns, the system is architected for absolute consistency, high throughput, and fault tolerance across multi-region transactions.
 
+<img width="1365" height="691" alt="ezgif com-gif-maker" src="https://github.com/user-attachments/assets/645d17a3-7740-4f44-be48-d72dea0cedf1" />
+
 ---
 
 ## 🏗️ System Architecture
 
 The platform utilizes a microservices architecture coordinated via Event-Driven Choreography over Apache Kafka and routed through an API Gateway:
 
-```mermaid
-graph TD
-    Client[Client Browser / Mobile] -->|HTTPS Requests| APIGateway[API Gateway: Spring Cloud Gateway]
-    
-    subgraph Services [Microservices Stack]
-        APIGateway --> UserService[User Service]
-        APIGateway --> OrderService[Order Service]
-        APIGateway --> PaymentService[Payment Service]
-        APIGateway --> DeliveryService[Delivery Service]
-        APIGateway --> SearchService[Search Service]
-    end
 
-    subgraph Messaging [Event Broker: Apache Kafka]
-        OrderService -.->|Publish Outbox| Kafka[Kafka Event Streaming]
-        PaymentService -.->|Publish Outbox| Kafka
-        DeliveryService -.->|Publish Outbox| Kafka
-        
-        Kafka -.->|Subscribe| OrderService
-        Kafka -.->|Subscribe| DeliveryService
-        Kafka -.->|Index Menu Updates| SearchService
-    end
-    
-    subgraph Databases [Databases & Cache]
-        UserService --> Postgres[(PostgreSQL Database)]
-        OrderService --> Postgres
-        PaymentService --> Postgres
-        OrderService --> Redis[(Redis Cache)]
-    end
-```
+<img width="1536" height="1024" alt="ChatGPT Image Jul 6, 2026, 02_46_29 PM" src="https://github.com/user-attachments/assets/e3aabf34-795d-4beb-9c81-400e9d0bd3d2" />
+
 
 ---
 
@@ -62,36 +38,10 @@ graph TD
 ### 1. Distributed Transaction Consistency via Saga Pattern
 In a distributed microservice environment, maintaining ACID transactions across separate databases (e.g. Order DB and Payment DB) is a key challenge. Delivoos solves this using **Event-Driven Saga Orchestration**:
 
-```mermaid
-sequenceDiagram
-    participant OS as Order Service
-    participant PS as Payment Service
-    participant RS as Restaurant Service
-    
-    Note over OS: 1. Create Order - Pending State
-    OS->>PS: Publish OrderCreatedEvent
-    Note over PS: 2. Process Wallet Ledger
-    alt Payment Successful
-        PS->>OS: Publish PaymentCompletedEvent
-        Note over OS: 3. Update Order - Paid State
-        OS->>RS: Publish OrderPaidEvent
-        Note over RS: 4. Approve Restaurant
-        alt Restaurant Approves
-            RS->>OS: Publish OrderApprovedEvent
-            Note over OS: 5. Complete Order - Approved State
-        else Restaurant Rejects - Out of Stock
-            RS->>OS: Publish OrderRejectedEvent
-            Note over OS: 6. Trigger Compensation
-            OS->>PS: Publish RefundPaymentEvent
-            Note over PS: 7. Revert Wallet Funds
-            PS->>OS: Publish PaymentRefundedEvent
-            Note over OS: 8. Cancel Order - Cancelled State
-        end
-    else Insufficient Funds
-        PS->>OS: Publish PaymentFailedEvent
-        Note over OS: 6. Cancel Order - Cancelled State
-    end
-```
+<img width="1024" height="1536" alt="ChatGPT Image Jul 6, 2026, 02_51_32 PM" src="https://github.com/user-attachments/assets/7154518b-1b0a-4b26-b482-cb2374e2a6cf" />
+
+
+
 * **Happy Path**: Order Placed $\rightarrow$ Wallet Charged $\rightarrow$ Kitchen Accepts $\rightarrow$ Dispatched.
 * **Compensation Path**: If the kitchen rejects an order (e.g., out of stock) or a network timeout occurs, a compensation Saga is triggered. The Payment Service automatically reverses the ledger transaction, rolls back wallet credits, and releases reserved stock.
 
