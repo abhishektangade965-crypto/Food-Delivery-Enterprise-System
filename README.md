@@ -71,28 +71,28 @@ sequenceDiagram
     participant PS as Payment Service
     participant RS as Restaurant Service
     
-    Note over OS: 1. Create Order (PENDING)
+    Note over OS: 1. Create Order - Pending State
     OS->>PS: Publish OrderCreatedEvent
     Note over PS: 2. Process Wallet Ledger
     alt Payment Successful
         PS->>OS: Publish PaymentCompletedEvent
-        Note over OS: 3. Update Order (PAID)
+        Note over OS: 3. Update Order - Paid State
         OS->>RS: Publish OrderPaidEvent
         Note over RS: 4. Approve Restaurant
         alt Restaurant Approves
             RS->>OS: Publish OrderApprovedEvent
-            Note over OS: 5. Complete Order (APPROVED)
-        else Restaurant Rejects (Out of Stock)
+            Note over OS: 5. Complete Order - Approved State
+        else Restaurant Rejects - Out of Stock
             RS->>OS: Publish OrderRejectedEvent
             Note over OS: 6. Trigger Compensation
             OS->>PS: Publish RefundPaymentEvent
             Note over PS: 7. Revert Wallet Funds
             PS->>OS: Publish PaymentRefundedEvent
-            Note over OS: 8. Cancel Order (CANCELLED)
+            Note over OS: 8. Cancel Order - Cancelled State
         end
     else Insufficient Funds
         PS->>OS: Publish PaymentFailedEvent
-        Note over OS: 6. Cancel Order (CANCELLED)
+        Note over OS: 6. Cancel Order - Cancelled State
     end
 ```
 * **Happy Path**: Order Placed $\rightarrow$ Wallet Charged $\rightarrow$ Kitchen Accepts $\rightarrow$ Dispatched.
