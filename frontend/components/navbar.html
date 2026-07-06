@@ -1,0 +1,90 @@
+    <header id="app-header">
+        <div class="header-left">
+            <div class="brand-logo" onclick="navigateToPath('/')" style="cursor: pointer;">
+                <img src="assets/images/logo.png" alt="Delivoos" class="brand-logo-img">
+            </div>
+            
+            <nav class="top-nav-tabs" id="public-nav-tabs" aria-label="Public navigation">
+                <button class="nav-tab" onclick="navigateToPath('/')"><i class="fa-solid fa-house nav-icon"></i>Home</button>
+                <button class="nav-tab" onclick="scrollToElement('popular-restaurants')"><i class="fa-solid fa-store nav-icon"></i>Restaurants</button>
+                <button class="nav-tab" onclick="scrollToElement('categories')"><i class="fa-solid fa-table-cells-large nav-icon"></i>Categories</button>
+                <button class="nav-tab" onclick="scrollToElement('offers')"><i class="fa-solid fa-tag nav-icon"></i>Offers</button>
+                <button class="nav-tab" onclick="scrollToElement('features')"><i class="fa-solid fa-circle-info nav-icon"></i>About</button>
+                <button class="nav-tab" onclick="scrollToElement('pricing')"><i class="fa-solid fa-envelope nav-icon"></i>Contact</button>
+            </nav>
+
+            <nav class="top-nav-tabs" id="main-nav-tabs" aria-label="Global navigation" style="display: none;">
+                <button class="nav-tab" data-view="view-customer" tabindex="0"><i class="fa-solid fa-mobile-screen-button nav-icon"></i>Customer App</button>
+                <button class="nav-tab" data-view="view-restaurant" tabindex="0"><i class="fa-solid fa-utensils nav-icon"></i>KDS Dashboard</button>
+                <button class="nav-tab" data-view="view-driver" tabindex="0"><i class="fa-solid fa-truck nav-icon"></i>Driver Portal</button>
+                <button class="nav-tab" data-view="view-admin" tabindex="0"><i class="fa-solid fa-circle-nodes nav-icon"></i>Admin Hub</button>
+            </nav>
+        </div>
+
+        <div class="header-right" style="position: relative; display: flex; align-items: center; gap: 12px;">
+            <!-- Hidden low-use selectors to keep clean layout -->
+            <div class="lang-selector-wrapper" style="display: none;">
+                <select id="lang-select" aria-label="Language selection" class="header-select">
+                    <option value="EN">English (US)</option>
+                    <option value="ES">Español</option>
+                    <option value="HI">हिन्दी</option>
+                </select>
+            </div>
+            
+            <button class="header-icon-btn" id="theme-toggle-btn" aria-label="Toggle visual theme" style="display: none;">
+                <i class="fa-solid fa-moon" id="theme-icon" aria-hidden="true"></i>
+            </button>
+            
+            <!-- Mail/Inbox Icon (Visual parity & interactive mail requirements) -->
+            <button class="header-icon-btn" id="btn-mailbox-trigger" aria-label="View Mailbox" style="position: relative; display: none;">
+                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                <span class="badge" id="mailbox-inbox-badge" style="display: inline-block; background: var(--primary); color: white;" aria-live="polite">2</span>
+            </button>
+
+            <!-- Final suggested layout separator -->
+            <div class="header-divider"></div>
+
+            <!-- Notification Bell Icon (Ticket #28 compliance) -->
+            <button class="header-icon-btn" id="btn-notification-bell" aria-label="View notifications">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="badge" id="notification-badge" aria-live="polite">4</span>
+            </button>
+
+            <!-- Notifications Dropdown -->
+            <div id="notification-dropdown" class="dropdown-panel" style="display: none;">
+                <div class="dropdown-header">
+                    <h5>Notifications</h5>
+                    <button class="text-btn" id="btn-clear-notifications" style="font-size: 10px; color: var(--primary);">Clear All</button>
+                </div>
+                <div class="dropdown-body" id="notification-list-container">
+                    <div class="notification-item unread">
+                        <i class="fa-solid fa-pizza-slice color-primary"></i>
+                        <div>
+                            <p><strong>Order accepted!</strong> Bella Napoli started preparing your lunch.</p>
+                            <span>2 min ago</span>
+                        </div>
+                    </div>
+                    <div class="notification-item unread">
+                        <i class="fa-solid fa-wallet color-secondary"></i>
+                        <div>
+                            <p><strong>Wallet loaded!</strong> Added $50.00 to your ledger.</p>
+                            <span>1 hour ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="header-icon-btn cart-badge-btn" id="cart-indicator-btn" aria-label="View shopping cart">
+                <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                <span class="badge" id="cart-item-count" aria-live="polite" style="display: none;">0</span>
+            </button>
+
+            <div class="header-divider"></div>
+
+            <div id="guest-auth-buttons" style="display: flex; gap: 8px; align-items: center;">
+                <button class="header-btn" onclick="navigateToPath('/auth/select')" style="margin: 0;">Login</button>
+                <button class="header-btn" onclick="navigateToPath('/auth/customer/register')" style="margin: 0; background: var(--primary); color: white;">Sign Up</button>
+            </div>
+            <button class="header-btn" id="btn-logout" style="display: none; margin: 0;" onclick="handleLogout()">Sign Out</button>
+        </div>
+    </header>

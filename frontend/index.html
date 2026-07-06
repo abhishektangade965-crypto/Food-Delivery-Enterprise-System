@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF5A5F">
+    
+    <!-- SEO & Metadata (Ticket #30 compliance) -->
+    <title>Delivoos - Enterprise Food Delivery Platform</title>
+    <meta name="description" content="Orchestrate enterprise-level multi-region transactions, Saga workflow timelines, and real-time logistics tracking on Delivoos.">
+    <link rel="canonical" href="http://127.0.0.1:8080/">
+    <meta name="robots" content="index, follow">
+    
+    <!-- OpenGraph Metadata -->
+    <meta property="og:title" content="Delivoos - Enterprise Food Delivery Platform">
+    <meta property="og:description" content="Orchestrate enterprise-level multi-region transactions, Saga workflow timelines, and real-time logistics tracking on Delivoos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://127.0.0.1:8080/">
+    
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Delivoos - Enterprise Food Delivery Platform">
+    <meta name="twitter:description" content="Orchestrate enterprise-level multi-region transactions, Saga workflow timelines, and real-time logistics tracking on Delivoos.">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Delivoos",
+      "url": "http://127.0.0.1:8080/",
+      "applicationCategory": "FoodEstablishment",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires HTML5, Geolocation, JavaScript"
+    }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons with SRI Integrity (Ticket #9 compliance) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Leaflet Map Library with SRI -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Chart.js for real KPI analytics visualization (Ticket #18 compliance) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Platform Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <!-- Radial ambient layers -->
+    <div class="glow-sphere-1"></div>
+    <div class="glow-sphere-2"></div>
+
+    <!-- PWA Install Banner Overlay (Ticket #32 compliance) -->
+    <div id="pwa-install-banner" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h4>Install Delivo App</h4>
+            <p>Add Delivo to your home screen for fast offline transactions and live outbox updates.</p>
+            <div class="modal-btn-row">
+                <button class="modal-btn modal-btn-primary" id="btn-pwa-install-approve">Install</button>
+                <button class="modal-btn modal-btn-secondary" id="btn-pwa-install-dismiss">Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEWPORT ERROR SCREEN OVERLAYS (Ticket #14 compliance) -->
+    <!-- Offline Error Screen -->
+    <div id="error-screen-offline" class="error-fullscreen-overlay" style="display: none;">
+        <div class="error-card">
+            <i class="fa-solid fa-wifi-slash error-icon"></i>
+            <h3>Connection Lost</h3>
+            <p>You are currently offline. Check your network or request timeouts.</p>
+            <button class="btn-submit-order" id="btn-retry-connection" style="margin-top: 15px;">Retry Connection</button>
+        </div>
+    </div>
+
+    <!-- API Failure Error Dialog -->
+    <div id="error-dialog-api" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <i class="fa-solid fa-triangle-exclamation color-primary" style="font-size: 32px;"></i>
+            <h4>Platform API Service Interrupted</h4>
+            <p id="error-api-message">Distributed transaction service returned a 500 error state.</p>
+            <div class="modal-btn-row">
+                <button class="modal-btn modal-btn-secondary" id="btn-close-api-error">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Denied Error Dialog -->
+    <div id="error-dialog-gps" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <i class="fa-solid fa-location-crosshairs color-secondary" style="font-size: 32px;"></i>
+            <h4>GPS Geolocation Denied</h4>
+            <p>Please authorize address coordinate scanning inside browser settings to verify geofence parameters.</p>
+            <div class="modal-btn-row">
+                <button class="modal-btn modal-btn-primary" id="btn-close-gps-error">Authorize</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER & CONFIRM MODAL -->
+    <div id="toast-container" style="position: fixed; top: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 12px; pointer-events: none; max-width: 320px; width: 100%;"></div>
+    
+    <!-- Processing Payment Loader Overlay -->
+    <div id="payment-processing-loader" class="modal-overlay" style="display: none; z-index: 9999;">
+        <div class="modal-box" style="text-align: center; max-width: 320px;">
+            <i class="fa-solid fa-circle-notch fa-spin color-secondary" style="font-size: 48px; margin-bottom: 20px; color: var(--secondary);"></i>
+            <h4 style="margin-bottom: 8px;">Processing Payment...</h4>
+            <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Verifying wallet balance and booking order with restaurant.</p>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <i class="fa-solid fa-circle-question color-secondary" style="font-size: 36px; margin-bottom: 12px; display: block; text-align: center;"></i>
+            <h4 id="confirm-modal-title" style="text-align: center;">Confirm Action</h4>
+            <p id="confirm-modal-message" style="text-align: center; margin: 8px 0 20px 0; font-size: 13px; color: var(--text-muted);">Are you sure you want to proceed?</p>
+            <div class="modal-btn-row">
+                <button class="modal-btn modal-btn-primary" id="btn-confirm-yes">Yes, Proceed</button>
+                <button class="modal-btn modal-btn-secondary" id="btn-confirm-no">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOCATION SELECTOR MODAL -->
+    <div id="location-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <i class="fa-solid fa-location-dot color-primary" style="font-size: 36px; margin-bottom: 12px; display: block; text-align: center;"></i>
+            <h4 style="text-align: center;">Select Delivery Address</h4>
+            <div style="margin-top: 15px;">
+                <button class="landing-btn landing-btn-primary" onclick="triggerLocationDetect()" style="width: 100%; margin-bottom: 15px;">
+                    <i class="fa-solid fa-crosshairs"></i> Auto-Detect Location
+                </button>
+                <div class="input-group">
+                    <label>Enter Address Manually</label>
+                    <input type="text" id="manual-address-input" class="input-field" placeholder="Search building, street, or city..." style="width: 100%;">
+                </div>
+                <div style="margin-top: 15px;">
+                    <span style="font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 8px;">Saved Addresses</span>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="social-btn" onclick="selectSavedAddress('Home', 'Highway 48, Maharashtra, India')" style="justify-content: flex-start; text-align: left;">
+                            <i class="fa-solid fa-house" style="color: var(--secondary);"></i> <strong>Home</strong>: Highway 48, Maharashtra
+                        </button>
+                        <button class="social-btn" onclick="selectSavedAddress('Work', 'IT Tech Park, Bandra East, Mumbai, India')" style="justify-content: flex-start; text-align: left;">
+                            <i class="fa-solid fa-briefcase" style="color: var(--primary);"></i> <strong>Work</strong>: IT Tech Park, Mumbai
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-btn-row" style="margin-top: 20px;">
+                <button class="modal-btn modal-btn-primary" onclick="saveLocationSelection()">Confirm Address</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeLocationModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ITEM CUSTOMIZATION MODAL -->
+    <div id="customization-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 450px;">
+            <h4 id="custom-item-name" style="margin: 0 0 10px 0; font-family: var(--font-display); font-weight: 700;">Customize Dish</h4>
+            <p id="custom-item-desc" style="font-size: 11px; color: var(--text-muted); margin: 0 0 15px 0;">Configure portion size and optional add-ons.</p>
+            
+            <div class="custom-options-container" style="display: flex; flex-direction: column; gap: 15px;">
+                <!-- Portion Size -->
+                <div>
+                    <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px;">Portion Size</span>
+                    <div style="display: flex; gap: 10px;">
+                        <label class="checkbox-wrapper" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-sm); flex-grow: 1;">
+                            <input type="radio" name="portion-size" value="regular" checked>
+                            <span>Regular (Standard)</span>
+                        </label>
+                        <label class="checkbox-wrapper" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-sm); flex-grow: 1;">
+                            <input type="radio" name="portion-size" value="large">
+                            <span>Large (+$2.50)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Add-ons -->
+                <div>
+                    <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px;">Choose Add-ons</span>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label class="checkbox-wrapper" style="justify-content: space-between; background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-sm);">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="addon-cheese">
+                                <span>Extra Cheese</span>
+                            </div>
+                            <span style="color: var(--secondary); font-weight: 700;">+$1.50</span>
+                        </label>
+                        <label class="checkbox-wrapper" style="justify-content: space-between; background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-sm);">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="addon-sauce">
+                                <span>Extra Sauce</span>
+                            </div>
+                            <span style="color: var(--secondary); font-weight: 700;">+$0.75</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-btn-row" style="margin-top: 20px;">
+                <button class="modal-btn modal-btn-primary" onclick="confirmCustomizations()">Add to Cart</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeCustomizationModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GROUP ORDERING MODAL -->
+    <div id="group-order-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <i class="fa-solid fa-users color-secondary" style="font-size: 36px; margin-bottom: 12px; display: block; text-align: center;"></i>
+            <h4 style="text-align: center;">Group Ordering Session</h4>
+            <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 8px;">Invite friends to contribute items to your checkout cart.</p>
+            
+            <div style="margin-top: 15px;">
+                <div class="input-group">
+                    <label>Share Invite Link</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="group-invite-url" class="input-field" value="http://127.0.0.1:8080/#/group-order/session-908" readonly style="flex-grow: 1;">
+                        <button class="header-btn" onclick="copyInviteLink()" style="margin: 0; padding: 10px;">Copy</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px;">Active Members</span>
+                    <div id="group-members-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; padding: 6px; border-bottom: 1px solid var(--border);">
+                            <span>👑 Host (You)</span>
+                            <span style="color: var(--secondary); font-weight: 700;">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-btn-row" style="margin-top: 20px;">
+                <button class="modal-btn modal-btn-primary" onclick="simulateFriendJoin()">Mock Friend Join</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeGroupModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCHEDULER MODAL -->
+    <div id="scheduler-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <i class="fa-solid fa-calendar-days color-primary" style="font-size: 36px; margin-bottom: 12px; display: block; text-align: center;"></i>
+            <h4 style="text-align: center;">Schedule Delivery Order</h4>
+            <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                <div class="input-group">
+                    <label>Select Date</label>
+                    <input type="date" id="schedule-date-input" class="input-field" style="width: 100%;">
+                </div>
+                <div class="input-group">
+                    <label>Select Time</label>
+                    <input type="time" id="schedule-time-input" class="input-field" style="width: 100%;">
+                </div>
+                <div class="input-group">
+                    <label>Repeat Order</label>
+                    <select id="schedule-repeat-select" class="header-select" style="width: 100%;">
+                        <option value="none">Does not repeat</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="modal-btn-row" style="margin-top: 20px;">
+                <button class="modal-btn modal-btn-primary" onclick="confirmOrderSchedule()">Schedule Order</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeSchedulerModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <!-- POST-DELIVERY FEEDBACK MODAL -->
+    <div id="post-delivery-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 420px; text-align: center;">
+            <i class="fa-solid fa-circle-check color-secondary" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+            <h4 style="font-family: var(--font-display); font-weight: 700;">Order Delivered!</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Your food has been delivered safely by Rahul Sharma. How was your experience?</p>
+            
+            <!-- Stars Selection -->
+            <div style="display: flex; justify-content: center; gap: 10px; font-size: 24px; margin-bottom: 15px; color: var(--text-muted);">
+                <i class="fa-solid fa-star star-rating-btn" data-rating="1" onclick="setPostFeedbackRating(1)" style="cursor: pointer;"></i>
+                <i class="fa-solid fa-star star-rating-btn" data-rating="2" onclick="setPostFeedbackRating(2)" style="cursor: pointer;"></i>
+                <i class="fa-solid fa-star star-rating-btn" data-rating="3" onclick="setPostFeedbackRating(3)" style="cursor: pointer;"></i>
+                <i class="fa-solid fa-star star-rating-btn" data-rating="4" onclick="setPostFeedbackRating(4)" style="cursor: pointer;"></i>
+                <i class="fa-solid fa-star star-rating-btn" data-rating="5" onclick="setPostFeedbackRating(5)" style="cursor: pointer;"></i>
+            </div>
+            
+            <div class="input-row">
+                <textarea id="post-feedback-comments" class="input-field" placeholder="Write a review about the restaurant or delivery experience..." style="width: 100%; height: 70px; resize: none; font-size: 11px; padding: 8px;"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="header-btn" onclick="toggleFavoriteRestaurant()" style="flex-grow: 1; margin: 0; padding: 8px; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fa-solid fa-heart" id="fav-heart-icon" style="color: var(--text-muted);"></i> Favorite
+                </button>
+                <button class="header-btn" onclick="triggerReorder()" style="flex-grow: 1; margin: 0; padding: 8px; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fa-solid fa-rotate-left"></i> Reorder
+                </button>
+            </div>
+            
+            <div class="modal-btn-row" style="margin-top: 25px;">
+                <button class="modal-btn modal-btn-primary" onclick="submitPostFeedback()">Submit & Return</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Layout Wrapper -->
+    <div id="app-layout" style="display: block;">
+        <!-- Header Component -->
+        <include-component src="components/navbar.html"></include-component>
+
+        <!-- Main Workspace Area (Top Navigation Layout) -->
+        <main>
+            <!-- Dynamic Views (Compiled Server-Side via Server.java SSI) -->
+            <include-component src="components/landing.html"></include-component>
+            <include-component src="components/auth.html"></include-component>
+            <include-component src="components/customer.html"></include-component>
+            <include-component src="components/profile.html"></include-component>
+            <include-component src="components/checkout.html"></include-component>
+            <include-component src="components/order-success.html"></include-component>
+            <include-component src="components/map.html"></include-component>
+            <include-component src="components/restaurant.html"></include-component>
+            <include-component src="components/driver.html"></include-component>
+            <include-component src="components/admin.html"></include-component>
+            <include-component src="components/observability.html"></include-component>
+            <include-component src="components/support.html"></include-component>
+            <include-component src="components/mailbox.html"></include-component>
+            <include-component src="components/wallet.html"></include-component>
+
+            <!-- Footer Component -->
+            <include-component src="components/footer.html"></include-component>
+        </main>
+
+        <!-- Cart Component -->
+        <include-component src="components/cart.html"></include-component>
+    </div>
+
+    <!-- FLOATING SUPPORT CHAT WIDGET -->
+    <div id="support-chat-widget">
+        <!-- Chat Toggle Button -->
+        <button id="support-chat-toggle" onclick="toggleSupportChatWindow()" aria-label="Open support chat">
+            <i class="fa-solid fa-comment-dots" id="support-chat-icon"></i>
+        </button>
+        
+        <!-- Chat Window (Hidden by default) -->
+        <div id="support-chat-window" class="checkout-box" style="display: none; width: 300px; height: 400px; margin-bottom: 15px; flex-direction: column; padding: 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border); background: var(--bg); border-radius: var(--radius-md);">
+            <div style="background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-headset"></i>
+                    <strong>Delivo Support AI</strong>
+                </div>
+                <button onclick="toggleSupportChatWindow()" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="support-chat-messages" style="flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 11px;">
+                <div style="align-self: flex-start; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; max-width: 80%;">
+                    Hello! How can I help you with your order, wallet, or delivery today?
+                </div>
+            </div>
+            <div style="padding: 10px; border-top: 1px solid var(--border); display: flex; gap: 8px;">
+                <input type="text" id="support-chat-input" class="input-field" placeholder="Type a message..." style="margin: 0; flex-grow: 1; padding: 6px; font-size: 11px;" onkeypress="handleSupportChatKeyPress(event)">
+                <button class="header-btn" onclick="sendSupportChatMessage()" style="margin: 0; padding: 6px 12px; font-size: 11px;">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DRIVER CHAT WINDOW -->
+    <div id="driver-chat-window" class="modal-overlay" style="display: none; z-index: 10001;">
+        <div class="modal-box" style="max-width: 400px; padding: 0; overflow: hidden; border-radius: var(--radius-md); display: flex; flex-direction: column; height: 450px;">
+            <div style="background: var(--secondary); color: var(--bg); padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                        <i class="fa-solid fa-motorcycle" style="color: var(--secondary);"></i>
+                    </div>
+                    <div>
+                        <strong style="display: block; font-size: 12px;" id="driver-chat-name">Rider Rahul Sharma</strong>
+                        <span style="font-size: 9px; opacity: 0.8;" id="driver-chat-status">Online</span>
+                    </div>
+                </div>
+                <button onclick="closeDriverChat()" style="background: transparent; border: none; color: var(--bg); cursor: pointer; font-size: 16px;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="driver-chat-messages" style="flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 11px; background: rgba(0,0,0,0.02);">
+                <div style="align-self: flex-start; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; max-width: 80%;">
+                    Hi there, I am heading to pick up your order. Let me know if you have any delivery preferences!
+                </div>
+                <!-- Typing indicator -->
+                <div id="driver-typing-indicator" style="display: none; align-self: flex-start; color: var(--text-muted); font-size: 9px; font-style: italic;">
+                    Rahul is typing...
+                </div>
+            </div>
+            
+            <!-- Quick Replies -->
+            <div style="padding: 8px; border-top: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; background: rgba(255,255,255,0.01);">
+                <button class="header-btn" onclick="sendQuickReply('Leave at gate')" style="margin: 0; padding: 2px 8px; font-size: 9px;">Leave at gate</button>
+                <button class="header-btn" onclick="sendQuickReply('Do not ring bell')" style="margin: 0; padding: 2px 8px; font-size: 9px;">Don't ring bell</button>
+                <button class="header-btn" onclick="sendQuickReply('Call upon arrival')" style="margin: 0; padding: 2px 8px; font-size: 9px;">Call on arrival</button>
+            </div>
+            
+            <div style="padding: 10px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--bg);">
+                <input type="text" id="driver-chat-input" class="input-field" placeholder="Type message to rider..." style="margin: 0; flex-grow: 1; padding: 6px; font-size: 11px;" onkeypress="handleDriverChatKeyPress(event)">
+                <button class="header-btn" onclick="sendDriverChatMessage()" style="margin: 0; padding: 6px 12px; font-size: 11px; background: var(--secondary); color: var(--bg);">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>

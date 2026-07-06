@@ -1,0 +1,144 @@
+<!-- VIEW: WALLET & TRANSACTIONS SYSTEM -->
+<div id="view-wallet" class="app-view">
+    <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; align-items: start;">
+        
+        <!-- Left Column: Add Money Panel -->
+        <div class="checkout-box" style="margin-bottom: 0;">
+            <h4 style="margin-bottom: 15px;"><i class="fa-solid fa-wallet color-secondary" style="margin-right: 8px;"></i> Add Funds to Ledger</h4>
+            
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Current Wallet Balance</div>
+                    <div style="font-size: 28px; font-weight: 800; color: var(--secondary); font-family: var(--font-display);" id="wallet-balance-val">$1600.00</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="badge" style="background: var(--neon-green); color: white; font-size: 10px;">Ledger: Active</div>
+                </div>
+            </div>
+
+            <!-- Amount selection presets -->
+            <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">SELECT AMOUNT</label>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                <button class="header-btn preset-amount-btn" data-amount="10" style="padding: 10px;">+$10</button>
+                <button class="header-btn preset-amount-btn" data-amount="20" style="padding: 10px;">+$20</button>
+                <button class="header-btn preset-amount-btn" data-amount="50" style="padding: 10px;">+$50</button>
+                <button class="header-btn preset-amount-btn" data-amount="100" style="padding: 10px;">+$100</button>
+            </div>
+
+            <div style="position: relative; margin-bottom: 20px;">
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-main);">$</span>
+                <input type="number" id="wallet-input-amount" class="input-field" placeholder="Enter custom amount..." style="padding-left: 25px; margin: 0;">
+            </div>
+
+            <!-- Payment Method options -->
+            <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">PAYMENT METHOD</label>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                    <input type="radio" name="wallet-pay-mode" value="upi" checked>
+                    <span><i class="fa-solid fa-mobile-screen-button" style="color: var(--secondary); margin-right: 6px;"></i> UPI (Google Pay / PhonePe)</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                    <input type="radio" name="wallet-pay-mode" value="card">
+                    <span><i class="fa-solid fa-credit-card" style="color: var(--primary); margin-right: 6px;"></i> Credit / Debit Card</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                    <input type="radio" name="wallet-pay-mode" value="qr">
+                    <span><i class="fa-solid fa-qrcode" style="color: var(--secondary); margin-right: 6px;"></i> Scan UPI QR Code</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                    <input type="radio" name="wallet-pay-mode" value="netbanking">
+                    <span><i class="fa-solid fa-building-columns" style="color: var(--text-muted); margin-right: 6px;"></i> Net Banking</span>
+                </label>
+            </div>
+
+            <!-- Contextual Pay Form -->
+            <div id="wallet-context-form" style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
+                <!-- UPI Form by default -->
+                <div id="wallet-form-upi">
+                    <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">UPI ADDRESS</label>
+                    <input type="text" id="wallet-upi-id" class="input-field" placeholder="e.g. user@okaxis" style="margin: 0 0 10px 0;">
+                </div>
+                <!-- Card Form -->
+                <div id="wallet-form-card" style="display: none;">
+                    <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">CARD NUMBER</label>
+                    <input type="text" class="input-field" placeholder="xxxx xxxx xxxx xxxx" style="margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">EXPIRY</label>
+                            <input type="text" class="input-field" placeholder="MM/YY" style="margin: 0;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">CVV</label>
+                            <input type="password" class="input-field" placeholder="***" style="margin: 0;">
+                        </div>
+                    </div>
+                </div>
+                <!-- QR Code Form -->
+                <div id="wallet-form-qr" style="display: none; text-align: center; padding: 10px 0;">
+                    <div style="background: white; padding: 12px; display: inline-block; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                        <!-- Styled QR mock with FontAwesome -->
+                        <div style="width: 140px; height: 140px; border: 2px dashed #101421; display: flex; align-items: center; justify-content: center; color: #101421; font-size: 78px;">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Scan QR using BHIM, GPay, or Paytm</div>
+                </div>
+                <!-- Net Banking Form -->
+                <div id="wallet-form-netbanking" style="display: none;">
+                    <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">SELECT BANK</label>
+                    <select class="header-select" style="width: 100%; height: 38px; border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 0 10px; margin: 0;">
+                        <option value="SBI">State Bank of India</option>
+                        <option value="HDFC">HDFC Bank</option>
+                        <option value="ICICI">ICICI Bank</option>
+                        <option value="AXIS">Axis Bank</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-submit-order" id="btn-wallet-add-now" style="width: 100%; font-family: var(--font-display); background: var(--secondary);">Add Ledger Balance</button>
+        </div>
+
+        <!-- Right Column: Transactions Grid -->
+        <div class="checkout-box" style="margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h4 style="margin: 0;">Transaction History</h4>
+                <button class="text-btn" id="btn-export-wallet-csv" style="font-size: 12px; color: var(--secondary);"><i class="fa-solid fa-file-export"></i> Export CSV</button>
+            </div>
+
+            <!-- Filter and search controls -->
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="wallet-tx-search" class="input-field" placeholder="Search transactions..." style="margin: 0; font-size: 12px; padding: 8px 12px;">
+                <select id="wallet-tx-filter" class="header-select" style="height: 38px; border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 0 10px; font-size: 12px;">
+                    <option value="ALL">All Methods</option>
+                    <option value="UPI">UPI</option>
+                    <option value="CARD">Card</option>
+                    <option value="CASHBACK">Cashback</option>
+                    <option value="DEBIT">Debit/Orders</option>
+                </select>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="menu-crud-table" style="font-size: 11px;">
+                    <thead>
+                        <tr>
+                            <th>TX ID</th>
+                            <th>Date & Time</th>
+                            <th>Method</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wallet-transactions-tbody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="wallet-tx-empty-state" style="display: none; text-align: center; padding: 40px 10px; color: var(--text-muted); font-size: 13px;">
+                <i class="fa-solid fa-list-check" style="font-size: 24px; margin-bottom: 8px; display: block; color: var(--text-muted);"></i>
+                No matching transactions found.
+            </div>
+        </div>
+
+    </div>
+</div>

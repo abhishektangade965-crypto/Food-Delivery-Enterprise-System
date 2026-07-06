@@ -1,0 +1,99 @@
+<!-- VIEW: ORDER SUCCESS SCREEN -->
+<div id="view-order-success" class="app-view" style="display: none;">
+    <div class="checkout-box" style="max-width: 600px; margin: 30px auto; padding: 40px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+        
+        <!-- Success Icon/Animation Container -->
+        <div class="success-checkmark-wrapper" style="margin-bottom: 25px;">
+            <div class="success-icon-circle" style="width: 80px; height: 80px; border-radius: 50%; background: rgba(46, 196, 182, 0.1); border: 3px solid var(--secondary); display: flex; align-items: center; justify-content: center; margin: 0 auto; animation: pulse 2s infinite;">
+                <i class="fa-solid fa-check" style="font-size: 40px; color: var(--secondary);"></i>
+            </div>
+        </div>
+
+        <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--text-main); margin: 0 0 8px 0;">Payment Successful</h2>
+        <p id="success-amount-paid" style="font-size: 15px; color: var(--text-muted); font-weight: 600; margin: 0 0 25px 0;">$0.00 Paid Successfully</p>
+        
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- Detail rows -->
+        <div class="success-details-grid" style="display: flex; flex-direction: column; gap: 12px; text-align: left; margin: 20px 0; font-size: 13px;">
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Order ID:</span>
+                <strong id="success-order-id" style="color: var(--text-main);">ord_123456</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Payment ID:</span>
+                <strong id="success-payment-id" style="color: var(--text-main);">pay_123456</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Transaction ID:</span>
+                <strong id="success-transaction-id" style="color: var(--text-main);">tx_123456</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Restaurant Name:</span>
+                <strong id="success-restaurant-name" style="color: var(--text-main);">Bella Napoli Pizza</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Estimated Delivery Time (ETA):</span>
+                <strong id="success-eta" style="color: var(--secondary);">25 min</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+                <span style="color: var(--text-muted); flex-shrink: 0;">Delivery Address:</span>
+                <strong id="success-address" style="color: var(--text-main); text-align: right; word-break: break-word;">IT Tech Park, Bandra East, Mumbai</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Payment Method:</span>
+                <strong id="success-payment-method" style="color: var(--text-main);">CREDIT CARD</strong>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+
+        <!-- Timeline Section -->
+        <div style="text-align: left; margin: 25px 0;">
+            <h4 style="font-family: var(--font-display); font-size: 14px; font-weight: 700; margin-bottom: 15px; color: var(--text-main);">Order Timeline Status</h4>
+            <div class="success-timeline" style="display: flex; flex-direction: column; gap: 15px; position: relative; padding-left: 20px;">
+                <div style="position: absolute; left: 6px; top: 5px; bottom: 5px; width: 2px; background: var(--border);" id="success-timeline-line"></div>
+                
+                <div class="success-timeline-node" id="snode-payment" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                    <div class="snode-bullet" style="position: absolute; left: -20px; width: 14px; height: 14px; border-radius: 50%; background: var(--border); border: 3px solid var(--bg);"></div>
+                    <span style="font-weight: 600; color: var(--text-muted);">Payment Completed</span>
+                </div>
+                <div class="success-timeline-node" id="snode-confirmed" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                    <div class="snode-bullet" style="position: absolute; left: -20px; width: 14px; height: 14px; border-radius: 50%; background: var(--border); border: 3px solid var(--bg);"></div>
+                    <span style="font-weight: 600; color: var(--text-muted);">Waiting Restaurant Confirmation</span>
+                </div>
+                <div class="success-timeline-node" id="snode-preparing" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                    <div class="snode-bullet" style="position: absolute; left: -20px; width: 14px; height: 14px; border-radius: 50%; background: var(--border); border: 3px solid var(--bg);"></div>
+                    <span style="font-weight: 600; color: var(--text-muted);">Preparing Food</span>
+                </div>
+                <div class="success-timeline-node" id="snode-assigned" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                    <div class="snode-bullet" style="position: absolute; left: -20px; width: 14px; height: 14px; border-radius: 50%; background: var(--border); border: 3px solid var(--bg);"></div>
+                    <span style="font-weight: 600; color: var(--text-muted);">Driver Assigned</span>
+                </div>
+                <div class="success-timeline-node" id="snode-route" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                    <div class="snode-bullet" style="position: absolute; left: -20px; width: 14px; height: 14px; border-radius: 50%; background: var(--border); border: 3px solid var(--bg);"></div>
+                    <span style="font-weight: 600; color: var(--text-muted);">Out for Delivery</span>
+                </div>
+                <div class="success-timeline-node" id="snode-delivered" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                    <div class="snode-bullet" style="position: absolute; left: -20px; width: 14px; height: 14px; border-radius: 50%; background: var(--border); border: 3px solid var(--bg);"></div>
+                    <span style="font-weight: 600; color: var(--text-muted);">Delivered</span>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
+
+        <!-- Button actions row -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-submit-order" id="btn-success-track" style="flex: 1; margin: 0; background: var(--secondary); color: var(--bg); font-weight: 800;">Track Order</button>
+                <button class="header-btn" id="btn-success-invoice" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);">Download Invoice</button>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="header-btn" id="btn-success-view-order" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);">View Order</button>
+                <button class="header-btn" id="btn-success-home" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);">Back to Home</button>
+            </div>
+        </div>
+
+    </div>
+</div>

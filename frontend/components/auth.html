@@ -1,0 +1,306 @@
+<!-- VIEW: AUTHENTICATION CONTAINER -->
+<div id="view-auth" class="app-view">
+    <!-- SUBVIEW: ROLE SELECTOR -->
+    <div id="subview-role-select" class="auth-subview auth-container" style="display: flex;">
+        <div class="auth-box role-select-box">
+            <div class="auth-header">
+                <i class="fa-solid fa-user-shield auth-logo"></i>
+                <h3>Choose Account</h3>
+                <p>Continue as...</p>
+            </div>
+            
+            <div class="role-cards-container">
+                <!-- Customer Card -->
+                <div class="role-card-select" onclick="navigateToPath('/auth/customer/login')">
+                    <div class="role-icon-col">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="role-details-col">
+                        <h4>👤 Customer</h4>
+                        <ul>
+                            <li>Browse restaurants</li>
+                            <li>Track orders</li>
+                            <li>Wallet & Rewards</li>
+                        </ul>
+                    </div>
+                    <button class="landing-btn landing-btn-primary role-continue-btn">Continue</button>
+                </div>
+                
+                <!-- Admin Card -->
+                <div class="role-card-select" onclick="navigateToPath('/auth/admin/login')">
+                    <div class="role-icon-col">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div class="role-details-col">
+                        <h4>🛠 Administrator</h4>
+                        <ul>
+                            <li>Manage restaurants</li>
+                            <li>Drivers & Orders</li>
+                            <li>Live Analytics</li>
+                        </ul>
+                    </div>
+                    <button class="landing-btn landing-btn-secondary role-continue-btn">Continue</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="#" onclick="navigateToPath('/')" class="auth-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUBVIEW: CUSTOMER LOGIN -->
+    <div id="subview-customer-login" class="auth-subview auth-container" style="display: none;">
+        <div class="customer-auth-wrapper">
+            <!-- Left Side: Branding / Delivery Illustration / Benefits -->
+            <div class="customer-auth-left">
+                <div class="auth-branding">
+                    <img src="assets/images/logo.png" alt="Delivoos" class="auth-logo-img">
+                </div>
+                <div class="auth-illustration">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <div class="auth-benefits">
+                    <h4>Customer Benefits</h4>
+                    <ul>
+                        <li><i class="fa-solid fa-circle-check"></i> Live geofence tracking alerts</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Integrated cash ledger wallet</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Personalized coupon offers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Side: Login Form -->
+            <div class="auth-box customer-login-box">
+                <div style="margin-bottom: 20px;">
+                    <a href="#" onclick="navigateToPath('/auth/select')" class="auth-link"><i class="fa-solid fa-arrow-left"></i> Back to Selector</a>
+                </div>
+                <div class="auth-header">
+                    <h3>Customer Login</h3>
+                    <p>Welcome back! Sign in with your customer details.</p>
+                </div>
+                
+                <div class="auth-tabs" style="display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+                    <button type="button" class="auth-tab-btn active" id="btn-auth-pass" onclick="toggleCustomerAuthMode('pass')" style="flex-grow: 1; padding: 10px; background: transparent; border: none; color: var(--text-main); font-weight: 700; cursor: pointer; border-bottom: 2px solid var(--secondary);">Password</button>
+                    <button type="button" class="auth-tab-btn" id="btn-auth-otp" onclick="toggleCustomerAuthMode('otp')" style="flex-grow: 1; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer;">OTP Code</button>
+                </div>
+                
+                <form id="customer-login-form" onsubmit="handleAuthSubmit(event)">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="auth-email" class="input-field" placeholder="customer@delivo.com" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Password Field Group -->
+                    <div class="input-group" id="customer-pass-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="auth-password" class="input-field" placeholder="••••••••">
+                        </div>
+                    </div>
+                    
+                    <!-- OTP Field Group (Hidden by default) -->
+                    <div class="input-group" id="customer-otp-group" style="display: none;">
+                        <label>OTP Code</label>
+                        <div style="display: flex; gap: 8px;">
+                            <div class="input-wrapper" style="flex-grow: 1;">
+                                <i class="fa-solid fa-key"></i>
+                                <input type="text" id="auth-otp-code" class="input-field" placeholder="123456" style="padding-left: 40px; margin: 0; width: 100%;">
+                            </div>
+                            <button type="button" class="header-btn" onclick="sendAuthOtp()" style="margin: 0; padding: 10px; font-size: 11px;">Send OTP</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row-between">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="auth-remember">
+                            <span>Remember Me</span>
+                        </label>
+                        <a href="#" onclick="navigateToPath('/auth/forgot-password')" class="auth-link" id="auth-forgot-link">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn-submit-order auth-btn">Login</button>
+                </form>
+
+                <div class="social-login-separator">
+                    <span>Or Continue With</span>
+                </div>
+                <div class="social-login-buttons">
+                    <button class="social-btn"><i class="fa-brands fa-google"></i> Google</button>
+                    <button class="social-btn"><i class="fa-brands fa-apple"></i> Apple</button>
+                </div>
+
+                <div class="auth-footer">
+                    <span>New to Delivo?</span>
+                    <a href="#" class="auth-link" onclick="navigateToPath('/auth/customer/register')">Create Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUBVIEW: CUSTOMER REGISTER -->
+    <div id="subview-customer-register" class="auth-subview auth-container" style="display: none;">
+        <div class="auth-box">
+            <div style="margin-bottom: 20px;">
+                <a href="#" onclick="navigateToPath('/auth/customer/login')" class="auth-link"><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
+            </div>
+            <div class="auth-header">
+                <h3>Customer Registration</h3>
+                <p>Sign up to start placing orders</p>
+            </div>
+            
+            <form id="customer-register-form" onsubmit="handleRegisterSubmit(event)">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="reg-email" class="input-field" placeholder="customer@delivo.com" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="reg-password" class="input-field" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-check-double"></i>
+                        <input type="password" id="reg-confirm" class="input-field" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit-order auth-btn">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUBVIEW: ADMIN LOGIN -->
+    <div id="subview-admin-login" class="auth-subview auth-container" style="display: none;">
+        <div class="admin-auth-wrapper dark-theme-wrapper">
+            <!-- Left Side: Enterprise Analytics Panel -->
+            <div class="admin-auth-left">
+                <div class="auth-branding">
+                    <i class="fa-solid fa-user-shield brand-icon"></i>
+                    <h3>Admin Console</h3>
+                </div>
+                <div class="admin-live-metrics">
+                    <div class="metric-row">
+                        <span class="m-label">Revenue</span>
+                        <span class="m-value">$14,295.50</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="m-label">Orders Today</span>
+                        <span class="m-value">284</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="m-label">Active Drivers</span>
+                        <span class="m-value">38 online</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="m-label">Live Status</span>
+                        <span class="status-indicator-green">Operational</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Dark Glass Login Form -->
+            <div class="auth-box dark-glass-box">
+                <div style="margin-bottom: 20px;">
+                    <a href="#" onclick="navigateToPath('/auth/select')" class="auth-link"><i class="fa-solid fa-arrow-left"></i> Back to Selector</a>
+                </div>
+                <div class="auth-header">
+                    <h3>Administrator Login</h3>
+                    <p>Enter enterprise credentials to proceed.</p>
+                </div>
+                
+                <form id="admin-login-form" onsubmit="handleAuthSubmit(event)">
+                    <div class="input-group">
+                        <label>Username / Email</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="email" id="admin-email" class="input-field" placeholder="admin@delivo.com" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="admin-password" class="input-field" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Two-Factor Token (OTP)</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-key"></i>
+                            <input type="text" id="admin-otp" class="input-field" placeholder="123456" required>
+                        </div>
+                    </div>
+                    <div class="form-row-between">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="admin-remember">
+                            <span>Remember Device</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-submit-order auth-btn">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUBVIEW: FORGOT PASSWORD -->
+    <div id="subview-forgot-password" class="auth-subview auth-container" style="display: none;">
+        <div class="auth-box">
+            <div style="margin-bottom: 20px;">
+                <a href="#" onclick="navigateToPath('/auth/customer/login')" class="auth-link"><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
+            </div>
+            <div class="auth-header">
+                <h3>Forgot Password</h3>
+                <p>Send recovery instructions to your email</p>
+            </div>
+            
+            <form id="forgot-password-form" onsubmit="handleForgotSubmit(event)">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="forgot-email" class="input-field" placeholder="customer@delivo.com" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit-order auth-btn">Send Recovery Link</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUBVIEW: RESET PASSWORD -->
+    <div id="subview-reset-password" class="auth-subview auth-container" style="display: none;">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h3>Reset Password</h3>
+                <p>Enter your new password below</p>
+            </div>
+            
+            <form id="reset-password-form" onsubmit="handleResetSubmit(event)">
+                <div class="input-group">
+                    <label>New Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="reset-pass" class="input-field" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-check-double"></i>
+                        <input type="password" id="reset-confirm" class="input-field" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit-order auth-btn">Reset Password</button>
+            </form>
+        </div>
+    </div>
+</div>

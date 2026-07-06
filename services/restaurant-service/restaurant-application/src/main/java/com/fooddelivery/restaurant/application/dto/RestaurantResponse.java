@@ -1,0 +1,39 @@
+package com.fooddelivery.restaurant.application.dto;
+
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.UUID;
+
+public record RestaurantResponse(
+    UUID id,
+    UUID ownerId,
+    String name,
+    String slug,
+    String description,
+    List<String> cuisineTypes,
+    String status,
+    String approvalStatus,
+    boolean isActive,
+    boolean isFeatured,
+    BigDecimal rating,
+    Integer totalRatings,
+    BigDecimal minOrderAmount,
+    BigDecimal deliveryFee,
+    Integer avgDeliveryTimeMinutes,
+    Double latitude,
+    Double longitude,
+    String street,
+    String city,
+    String state,
+    String country,
+    String postalCode,
+    String bankDetails,
+    BigDecimal surgeMultiplier,
+    BigDecimal commissionRate,
+    List<MenuCategoryDto> categories,
+    List<RestaurantStaffDto> staff,
+    List<InventoryItemDto> inventory,
+    ZonedDateTime createdAt,
+    ZonedDateTime updatedAt
+) {}

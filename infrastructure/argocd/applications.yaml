@@ -1,0 +1,247 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: user-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/user-service
+        - name: service.port
+          value: '8001'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: restaurant-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/restaurant-service
+        - name: service.port
+          value: '8002'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: order-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/order-service
+        - name: service.port
+          value: '8003'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: payment-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/payment-service
+        - name: service.port
+          value: '8004'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: search-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/search-service
+        - name: service.port
+          value: '8005'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: notification-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/notification-service
+        - name: service.port
+          value: '8006'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: delivery-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/delivery-service
+        - name: service.port
+          value: '8008'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api-gateway
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/delivo/food-delivery-super-platform.git'
+    targetRevision: HEAD
+    path: infrastructure/helm
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: food-delivery/api-gateway
+        - name: service.port
+          value: '8080'
+        - name: envFromConfigMap
+          value: global-config
+        - name: envFromSecret
+          value: global-secrets
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: food-delivery-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

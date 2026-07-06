@@ -1,0 +1,978 @@
+server:
+  port: 8080
+  netty:
+    connection-timeout: 10s
+    idle-timeout: 60s
+  http2:
+    enabled: true
+
+spring:
+  application:
+    name: api-gateway
+
+  # ─── Redis (for rate limiter) ─────────────────────────────────────────────
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 20
+          min-idle: 5
+          max-wait: 1000ms
+
+  # ─── JWT RS256 Resource Server ────────────────────────────────────────────
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWK_SET_URI:http://localhost:8081/api/v1/auth/jwks}
+          issuer-uri: ${JWT_ISSUER_URI:https://auth.fooddelivery.com}
+
+  # ─── Spring Cloud Gateway ─────────────────────────────────────────────────
+  cloud:
+    gateway:
+      # Global CORS configuration
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - "https://*.fooddelivery.com"
+              - "http://localhost:[*]"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            exposedHeaders:
+              - X-Correlation-ID
+              - X-Request-ID
+              - X-RateLimit-Remaining
+              - X-RateLimit-Burst-Capacity
+            allowCredentials: true
+            maxAge: 3600
+
+      # Default filters applied to ALL routes
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 100
+            redis-rate-limiter.burstCapacity: 200
+            redis-rate-limiter.requestedTokens: 1
+            key-resolver: "#{@userKeyResolver}"
+        - name: SecureHeaders
+        - name: DedupeResponseHeader
+          args:
+            name: Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            strategy: RETAIN_UNIQUE
+        - AddResponseHeader=X-Content-Type-Options, nosniff
+        - AddResponseHeader=X-Frame-Options, DENY
+        - AddResponseHeader=X-XSS-Protection, 1; mode=block
+        - AddResponseHeader=Referrer-Policy, strict-origin-when-cross-origin
+        - AddResponseHeader=Permissions-Policy, "geolocation=(), microphone=(), camera=()"
+
+      # Metric tags for observability
+      metrics:
+        enabled: true
+        tags:
+          path:
+            enabled: true
+
+      # HttpClient tuning
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 30s
+        pool:
+          type: ELASTIC
+          max-idle-time: 15s
+          max-life-time: 60s
+        compression: true
+
+      routes:
+        # ── 1. User Service ────────────────────────────────────────────────
+        - id: user-service-public
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/register, /api/v1/users/login, /api/v1/users/refresh-token, /api/v1/users/forgot-password, /api/v1/users/reset-password, /api/v1/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userServiceCB
+                fallbackUri: forward:/fallback/user-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 500ms
+                  factor: 2
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 20
+                redis-rate-limiter.burstCapacity: 40
+                key-resolver: "#{@ipKeyResolver}"
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        - id: user-service-private
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userServiceCB
+                fallbackUri: forward:/fallback/user-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 500ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 2. Restaurant Service ──────────────────────────────────────────
+        - id: restaurant-service
+          uri: lb://restaurant-service
+          predicates:
+            - Path=/api/v1/restaurants/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: restaurantServiceCB
+                fallbackUri: forward:/fallback/restaurant-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 3. Menu Service ────────────────────────────────────────────────
+        - id: menu-service
+          uri: lb://menu-service
+          predicates:
+            - Path=/api/v1/menus/**, /api/v1/menu-items/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: menuServiceCB
+                fallbackUri: forward:/fallback/menu-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 4. Cart Service ────────────────────────────────────────────────
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/v1/carts/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: cartServiceCB
+                fallbackUri: forward:/fallback/cart-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 500ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 5. Order Service ───────────────────────────────────────────────
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderServiceCB
+                fallbackUri: forward:/fallback/order-service
+            - name: Retry
+              args:
+                retries: 1
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 2000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 30000
+
+        # ── 6. Inventory Service ───────────────────────────────────────────
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/api/v1/inventory/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: inventoryServiceCB
+                fallbackUri: forward:/fallback/inventory-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 500ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 7. Pricing Service ─────────────────────────────────────────────
+        - id: pricing-service
+          uri: lb://pricing-service
+          predicates:
+            - Path=/api/v1/pricing/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: pricingServiceCB
+                fallbackUri: forward:/fallback/pricing-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 8. Promotion Service ───────────────────────────────────────────
+        - id: promotion-service
+          uri: lb://promotion-service
+          predicates:
+            - Path=/api/v1/promotions/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: promotionServiceCB
+                fallbackUri: forward:/fallback/promotion-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 9. Coupon Service (alias of promotion) ─────────────────────────
+        - id: coupon-service
+          uri: lb://promotion-service
+          predicates:
+            - Path=/api/v1/coupons/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: promotionServiceCB
+                fallbackUri: forward:/fallback/promotion-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 10. Wallet Service ─────────────────────────────────────────────
+        - id: wallet-service
+          uri: lb://wallet-service
+          predicates:
+            - Path=/api/v1/wallets/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: walletServiceCB
+                fallbackUri: forward:/fallback/wallet-service
+            - name: Retry
+              args:
+                retries: 1
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 2000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 20000
+
+        # ── 11. Payment Service ────────────────────────────────────────────
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/payments/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: paymentServiceCB
+                fallbackUri: forward:/fallback/payment-service
+            - name: Retry
+              args:
+                retries: 1
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 2000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 30000
+
+        # ── 12. Delivery Service ───────────────────────────────────────────
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+            - Path=/api/v1/deliveries/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: deliveryServiceCB
+                fallbackUri: forward:/fallback/delivery-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 2000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 30000
+
+        # ── 13. Driver Service ─────────────────────────────────────────────
+        - id: driver-service
+          uri: lb://driver-service
+          predicates:
+            - Path=/api/v1/drivers/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: driverServiceCB
+                fallbackUri: forward:/fallback/driver-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 14. Notification Service ───────────────────────────────────────
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/notifications/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: notificationServiceCB
+                fallbackUri: forward:/fallback/notification-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 15. Search Service ─────────────────────────────────────────────
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/api/v1/search/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: searchServiceCB
+                fallbackUri: forward:/fallback/search-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 16. Review Service ─────────────────────────────────────────────
+        - id: review-service
+          uri: lb://review-service
+          predicates:
+            - Path=/api/v1/reviews/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: reviewServiceCB
+                fallbackUri: forward:/fallback/review-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 17. Recommendation Service ─────────────────────────────────────
+        - id: recommendation-service
+          uri: lb://recommendation-service
+          predicates:
+            - Path=/api/v1/recommendations/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: recommendationServiceCB
+                fallbackUri: forward:/fallback/recommendation-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 18. Fraud Detection Service ────────────────────────────────────
+        - id: fraud-detection-service
+          uri: lb://fraud-detection-service
+          predicates:
+            - Path=/api/v1/fraud/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: fraudServiceCB
+                fallbackUri: forward:/fallback/fraud-service
+            - name: Retry
+              args:
+                retries: 1
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 2000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 19. Analytics Service ──────────────────────────────────────────
+        - id: analytics-service
+          uri: lb://analytics-service
+          predicates:
+            - Path=/api/v1/analytics/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: analyticsServiceCB
+                fallbackUri: forward:/fallback/analytics-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 2000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 30000
+
+        # ── 20. Reporting Service ──────────────────────────────────────────
+        - id: reporting-service
+          uri: lb://reporting-service
+          predicates:
+            - Path=/api/v1/reports/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: reportingServiceCB
+                fallbackUri: forward:/fallback/reporting-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 3000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 60000
+
+        # ── 21. Admin Service ──────────────────────────────────────────────
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/api/v1/admin/**
+            - Header=X-User-Roles, .*ADMIN.*
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: adminServiceCB
+                fallbackUri: forward:/fallback/admin-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 30000
+
+        # ── 22. Audit Service ──────────────────────────────────────────────
+        - id: audit-service
+          uri: lb://audit-service
+          predicates:
+            - Path=/api/v1/audit/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: auditServiceCB
+                fallbackUri: forward:/fallback/audit-service
+            - name: Retry
+              args:
+                retries: 2
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 15000
+
+        # ── 23. Config Service ─────────────────────────────────────────────
+        - id: config-service
+          uri: lb://config-service
+          predicates:
+            - Path=/api/v1/configs/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: configServiceCB
+                fallbackUri: forward:/fallback/config-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 24. Feature Flag Service ───────────────────────────────────────
+        - id: feature-flag-service
+          uri: lb://feature-flag-service
+          predicates:
+            - Path=/api/v1/feature-flags/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: featureFlagServiceCB
+                fallbackUri: forward:/fallback/feature-flag-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY,GATEWAY_TIMEOUT,SERVICE_UNAVAILABLE
+                methods: GET
+                backoff:
+                  firstBackoff: 50ms
+                  maxBackoff: 1000ms
+                  factor: 2
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 10000
+
+        # ── 25. WebSocket / Real-time route ────────────────────────────────
+        - id: websocket-tracking
+          uri: lb:ws://delivery-service
+          predicates:
+            - Path=/ws/tracking/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: wsTrackingCB
+                fallbackUri: forward:/fallback/websocket
+          metadata:
+            connect-timeout: 5000
+            response-timeout: 0  # no timeout for websocket
+
+        # ── 26. Swagger / OpenAPI aggregation ──────────────────────────────
+        - id: swagger-aggregator
+          uri: lb://api-gateway
+          predicates:
+            - Path=/swagger-ui/**, /v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<service>.*), /api/v1/$\{service}/v3/api-docs
+
+# ─── Resilience4j Circuit Breakers ────────────────────────────────────────────
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 5s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        record-exceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.cloud.gateway.support.NotFoundException
+      restaurantServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 5s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      menuServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 5s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      cartServiceCB:
+        sliding-window-size: 10
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 20s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      orderServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 40
+        slow-call-rate-threshold: 70
+        slow-call-duration-threshold: 10s
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      inventoryServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      pricingServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      promotionServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      walletServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 40
+        slow-call-duration-threshold: 8s
+        wait-duration-in-open-state: 45s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      paymentServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 30
+        slow-call-rate-threshold: 60
+        slow-call-duration-threshold: 15s
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      deliveryServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 10s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      driverServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      notificationServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 20s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      searchServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 20s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      reviewServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      recommendationServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      fraudServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 40
+        wait-duration-in-open-state: 45s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      analyticsServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      reportingServiceCB:
+        sliding-window-size: 10
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      adminServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      auditServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      configServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      featureFlagServiceCB:
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+      wsTrackingCB:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+
+  timelimiter:
+    instances:
+      orderServiceCB:
+        timeout-duration: 30s
+        cancel-running-future: true
+      paymentServiceCB:
+        timeout-duration: 30s
+        cancel-running-future: true
+      reportingServiceCB:
+        timeout-duration: 60s
+        cancel-running-future: true
+
+# ─── Actuator / Management ─────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,gateway,circuitbreakers,loggers,env
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      group:
+        readiness:
+          include: redis, diskSpace
+        liveness:
+          include: ping
+    gateway:
+      enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        spring.cloud.gateway.requests: true
+      slo:
+        http.server.requests: 1ms, 5ms, 10ms, 50ms, 100ms, 500ms, 1s, 5s
+    tags:
+      application: ${spring.application.name}
+      environment: ${ENVIRONMENT:local}
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+    metrics:
+      export:
+        enabled: true
+        url: ${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:http://localhost:4318/v1/metrics}
+
+# ─── OpenTelemetry ─────────────────────────────────────────────────────────────
+otel:
+  exporter:
+    otlp:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}
+      timeout: 10s
+  resource:
+    attributes:
+      service.name: api-gateway
+      service.version: 1.0.0
+      deployment.environment: ${ENVIRONMENT:local}
+
+# ─── Logging ───────────────────────────────────────────────────────────────────
+logging:
+  level:
+    root: INFO
+    com.fooddelivery.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO
+    org.springframework.security: WARN
+    io.lettuce.core: WARN
+    reactor.netty: WARN
+    org.springframework.web.reactive: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId}/%X{spanId}] %-5level %logger{36} - %msg%n"
+  config: classpath:logback-spring.xml
+
+# ─── Gateway application-specific properties ──────────────────────────────────
+gateway:
+  jwt:
+    jwk-set-uri: ${JWK_SET_URI:http://localhost:8081/api/v1/auth/jwks}
+  rate-limit:
+    anonymous:
+      replenish-rate: 10
+      burst-capacity: 20
+    authenticated:
+      replenish-rate: 100
+      burst-capacity: 200
+    premium:
+      replenish-rate: 1000
+      burst-capacity: 2000
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,https://app.fooddelivery.com}
+  security:
+    admin-roles: ROLE_ADMIN, ROLE_SUPER_ADMIN
+    public-paths:
+      - /api/v1/users/register
+      - /api/v1/users/login
+      - /api/v1/users/refresh-token
+      - /api/v1/users/forgot-password
+      - /api/v1/users/reset-password
+      - /api/v1/auth/**
+      - /actuator/health/**
+      - /actuator/info
+      - /swagger-ui/**
+      - /v3/api-docs/**
+      - /webjars/**
+      - /favicon.ico
+      - /ws/**

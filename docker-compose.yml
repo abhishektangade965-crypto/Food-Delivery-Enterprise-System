@@ -1,0 +1,298 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: food-delivery-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: userdb,paymentdb,orderdb,restaurantdb,deliverydb,notificationdb
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/scripts/init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - food-delivery-network
+
+  # Redis Cluster cache instance
+  redis:
+    image: redis:7.2-alpine
+    container_name: food-delivery-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass redispassword123
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redispassword123", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - food-delivery-network
+
+  # Apache ZooKeeper
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: food-delivery-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - food-delivery-network
+
+  # Apache Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: food-delivery-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - food-delivery-network
+
+  # Elasticsearch Search engine
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    container_name: food-delivery-elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - food-delivery-network
+
+  # User Service
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user-service/user-container/Dockerfile
+    container_name: user-service
+    ports:
+      - "8001:8001"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/userdb
+      - SPRING_DATASOURCE_USERNAME=userservice
+      - SPRING_DATASOURCE_PASSWORD=userpassword123
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # Restaurant Service
+  restaurant-service:
+    build:
+      context: .
+      dockerfile: services/restaurant-service/restaurant-container/Dockerfile
+    container_name: restaurant-service
+    ports:
+      - "8002:8002"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/restaurantdb
+      - SPRING_DATASOURCE_USERNAME=restaurantservice
+      - SPRING_DATASOURCE_PASSWORD=restaurantpassword123
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # Order Service
+  order-service:
+    build:
+      context: .
+      dockerfile: services/order-service/order-container/Dockerfile
+    container_name: order-service
+    ports:
+      - "8003:8003"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/orderdb
+      - SPRING_DATASOURCE_USERNAME=orderservice
+      - SPRING_DATASOURCE_PASSWORD=orderpassword123
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # Payment Service
+  payment-service:
+    build:
+      context: .
+      dockerfile: services/payment-service/payment-container/Dockerfile
+    container_name: payment-service
+    ports:
+      - "8004:8004"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/paymentdb
+      - SPRING_DATASOURCE_USERNAME=paymentservice
+      - SPRING_DATASOURCE_PASSWORD=paymentpassword123
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # Search Service
+  search-service:
+    build:
+      context: .
+      dockerfile: services/search-service/search-container/Dockerfile
+    container_name: search-service
+    ports:
+      - "8005:8005"
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
+    depends_on:
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # Notification Service
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/notification-container/Dockerfile
+    container_name: notification-service
+    ports:
+      - "8006:8006"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/notificationdb
+      - SPRING_DATASOURCE_USERNAME=notificationservice
+      - SPRING_DATASOURCE_PASSWORD=notificationpassword123
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # Delivery Service
+  delivery-service:
+    build:
+      context: .
+      dockerfile: services/delivery-service/delivery-container/Dockerfile
+    container_name: delivery-service
+    ports:
+      - "8008:8008"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/deliverydb
+      - SPRING_DATASOURCE_USERNAME=deliveryservice
+      - SPRING_DATASOURCE_PASSWORD=deliverypassword123
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redispassword123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - food-delivery-network
+
+networks:
+  food-delivery-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

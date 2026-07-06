@@ -1,0 +1,28 @@
+# Java Compiler Outputs
+*.class
+/bin/
+/target/
+/build/
+.gradle/
+.settings/
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Logs
+*.log
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivo Core Engine - Enterprise Delivery Platform</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. PREMIUM DESIGN SYSTEM & THEME
+           ========================================================================== */
+        :root {
+            --bg: #070A13;
+            --surface: rgba(13, 18, 33, 0.75);
+            --surface-accent: rgba(22, 28, 45, 0.95);
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #FF2A54;
+            --primary-rgb: 255, 42, 84;
+            --primary-glow: rgba(255, 42, 84, 0.35);
+            --secondary: #00F5D4;
+            --secondary-glow: rgba(0, 245, 212, 0.35);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --neon-blue: #00E5FF;
+            --neon-green: #39FF14;
+            --neon-yellow: #FFE600;
+            --neon-purple: #BD00FF;
+            
+            --glass-bg: rgba(13, 18, 33, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+        }
+
+        /* Ambient Glow background layers */
+        .glow-sphere-1 {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            top: -200px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(var(--primary-rgb), 0.09) 0%, transparent 65%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .glow-sphere-2 {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            bottom: -300px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(0, 245, 212, 0.07) 0%, transparent 65%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           2. SIDEBAR PANEL
+           ========================================================================== */
+        aside {
+            background: var(--surface-accent);
+            border-right: 1px solid var(--border);
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .aside-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .aside-header i {
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px var(--primary-glow));
+        }
+
+        .aside-header h1 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .menu-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .menu-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .menu-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+
+        .menu-group {
+            margin-bottom: 20px;
+        }
+
+        .menu-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-left: 8px;
+            font-weight: 700;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 13.5px;
+            transition: var(--transition);
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 3px solid var(--primary);
+            padding-left: 11px;
+        }
+
+        .menu-item.active i {
+            color: var(--primary);
+            text-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        .system-status {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: var(--neon-green);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            box-shadow: 0 0 6px var(--neon-green);
+        }
+
+        /* ==========================================================================
+           3. MAIN LAYOUT AND HEADER
+           ========================================================================== */
+        main {
+            padding: 30px;
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-title h2 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 12.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            border-color: var(--primary);
+            background: rgba(255, 56, 92, 0.05);
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 4px;
+        }
+
+        /* ==========================================================================
+           4. GLOBAL VIEWS AND FORMS
+           ========================================================================== */
+        .app-view {
+            display: none;
+            animation: viewFadeIn 0.3s ease-out forwards;
+        }
+
+        .app-view.active {
+            display: block;
+        }
+
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-glass);
+            margin-bottom: 25px;
+        }
+
+        .card-box h4 {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-row {
+            margin-bottom: 12px;
+        }
+
+        .input-row label {
+            display: block;
+            font-size: 11.5px;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+
+        .input-row input, .input-row select {
+            width: 100%;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 13.5px;
+            outline: none;
+        }
+
+        .input-row input:focus {
+            border-color: var(--primary);
+        }
+
+        /* ==========================================================================
+           5. VIEW: CUSTOMER PORTAL
+           ========================================================================== */
+        .shop-hero {
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.12) 0%, transparent 60%);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .shop-hero-text h3 {
+            font-family: var(--font-display);
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .shop-hero-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            max-width: 480px;
+            line-height: 1.4;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            width: 380px;
+            margin-top: 15px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 13.5px;
+            width: 100%;
+        }
+
+        .search-bar i {
+            color: var(--primary);
+        }
+
+        .store-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .store-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .store-img {
+            height: 160px;
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(0,245,212,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            position: relative;
+        }
+
+        .store-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--primary);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .favorite-btn.active i {
+            color: #FFD253;
+        }
+
+        .store-info {
+            padding: 20px;
+        }
+
+        .store-info h4 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .store-info p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .store-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+
+        .store-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .store-meta i {
+            color: var(--primary);
+        }
+
+        /* Menu details */
+        .menu-item-row {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .menu-item-row:hover {
+            border-color: var(--primary);
+        }
+
+        .menu-item-desc h5 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .menu-item-desc p {
+            font-size: 12px;
+            color: var(--text-muted);
+            max-width: 580px;
+        }
+
+        .menu-item-action {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-price {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .action-add-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-add-btn:hover {
+            transform: scale(1.08);
+        }
+
+        /* Split bill & loyalty widgets */
+        .utility-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* In-App Support Chat Box */
+        .support-chat-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            font-size: 12px;
+        }
+
+        .chat-bubble {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .chat-bubble.bot {
+            background: rgba(255,255,255,0.06);
+            align-self: flex-start;
+        }
+
+        .chat-bubble.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .chat-input-area {
+            border-top: 1px solid var(--border);
+            display: flex;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            padding: 10px 15px;
+            color: var(--text-main);
+            font-size: 12px;
+        }
+
+        .chat-send-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        /* ==========================================================================
+           6. VIEW: REAL-TIME TRACKING
+           ========================================================================== */
+        .track-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 25px;
+        }
+
+        .saga-timeline-wrapper {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 25px;
+        }
+
+        .saga-timeline {
+            position: relative;
+            padding-left: 25px;
+            margin-top: 25px;
+        }
+
+        .saga-timeline::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 2px;
+            height: calc(100% - 10px);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .saga-timeline-fill {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 2px;
+            height: 0%;
+            background: var(--primary);
+            transition: height 2s ease;
+        }
+
+        .saga-node {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .saga-dot {
+            position: absolute;
+            left: -25px;
+            top: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--bg);
+        }
+
+        .saga-node.active .saga-dot {
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .saga-node.completed .saga-dot {
+            background: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+
+        .saga-node-text h6 {
+            font-family: var(--font-display);
+            font-size: 14.5px;
+            font-weight: 700;
+        }
+
+        .saga-node-text p {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .svg-map-wrapper {
+            background: #0D1221;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            height: 400px;
+        }
+
+        .svg-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ==========================================================================
+           7. VIEW: MERCHANT PORTAL
+           ========================================================================== */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .kanban-col {
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            min-height: 380px;
+        }
+
+        .kanban-col h4 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .kanban-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: var(--transition);
+        }
+
+        .kanban-card:hover {
+            border-color: var(--primary);
+        }
+
+        .kanban-card h5 {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .kanban-card p {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .kanban-card-actions {
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .kanban-card-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            font-size: 9px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .menu-crud-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        .menu-crud-table th, .menu-crud-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .menu-crud-table th {
+            font-family: var(--font-display);
+            font-weight: 700;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .menu-crud-table tr:hover {
+            background: rgba(255,255,255,0.01);
+        }
+
+        /* ==========================================================================
+           8. VIEW: DRIVER DASHBOARD
+           ========================================================================== */
+        .driver-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .earnings-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .earnings-total {
+            font-family: var(--font-display);
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin: 12px 0;
+        }
+
+        /* ==========================================================================
+           9. VIEW: ADMIN CONTROL PANEL
+           ========================================================================== */
+        .admin-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .admin-kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .admin-kpi-num {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-top: 6px;
+        }
+
+        /* ==========================================================================
+           10. VIEW: OBSERVABILITY CONSOLE
+           ========================================================================== */
+        .telemetry-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+        }
+
+        .log-terminal {
+            background: #040710;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: 'Space Grotesk', monospace;
+            padding: 15px;
+            height: 480px;
+            overflow-y: auto;
+            color: #39FF14;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        .log-line {
+            margin-bottom: 6px;
+            white-space: pre-wrap;
+        }
+
+        .trace-visualizer {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .trace-bar {
+            height: 22px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* ==========================================================================
+           11. INTERACTIVE BACKDROP & CART SLIDE
+           ========================================================================== */
+        .cart-slide {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: var(--surface-accent);
+            border-left: 1px solid var(--border);
+            box-shadow: var(--shadow-glass);
+            z-index: 500;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cart-slide.open {
+            right: 0;
+        }
+
+        .backdrop-tint {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(4px);
+            z-index: 400;
+            display: none;
+        }
+
+        .backdrop-tint.open {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Radial ambient layers -->
+    <div class="glow-sphere-1"></div>
+    <div class="glow-sphere-2"></div>
+
+    <!-- Side Navigation -->
+    <aside>
+        <div>
+            <div class="aside-header">
+                <i class="fa-solid fa-pizza-slice"></i>
+                <h1 id="app-logo-text">Delivo Super App</h1>
+            </div>
+            
+            <div class="menu-scroll">
+                <div class="menu-group">
+                    <div class="menu-title">Consumer Apps</div>
+                    <div class="menu-item active" onclick="switchView('view-customer', this)">
+                        <i class="fa-solid fa-bag-shopping"></i> Customer Store
+                    </div>
+                    <div class="menu-item" onclick="switchView('view-tracking', this)">
+                        <i class="fa-solid fa-map-location-dot"></i> Real-time Tracker
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <div class="menu-title">Merchant Services</div>
+                    <div class="menu-item" onclick="switchView('view-restaurant', this)">
+                        <i class="fa-solid fa-store"></i> Restaurant Board
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <div class="menu-title">Fleet Logistics</div>
+                    <div class="menu-item" onclick="switchView('view-driver', this)">
+                        <i class="fa-solid fa-motorcycle"></i> Driver Dashboard
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <div class="menu-title">Control & Metrics</div>
+                    <div class="menu-item" onclick="switchView('view-admin', this)">
+                        <i class="fa-solid fa-sliders"></i> Admin Control Center
+                    </div>
+                    <div class="menu-item" onclick="switchView('view-observability', this)">
+                        <i class="fa-solid fa-chart-line"></i> Observability Console
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-status">
+            <div class="status-indicator">
+                <div class="status-dot"></div> System Operational
+            </div>
+            <div style="opacity: 0.6; margin-top: 4px; font-size: 10px;" id="region-status-text">Active Region: Multicloud active</div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Dynamic Header -->
+        <header>
+            <div class="header-title">
+                <h2 id="view-title">Food Bounded Context Store</h2>
+                <p id="view-subtitle">Select catalog items matched via Elasticsearch queries</p>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="toggleLanguage()" id="lang-toggle-btn">
+                    <i class="fa-solid fa-language"></i> EN
+                </button>
+                <button class="header-btn cart-indicator" onclick="openCartSlide()">
+                    <i class="fa-solid fa-cart-shopping"></i> Cart
+                    <div class="badge" id="cart-item-count">0</div>
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================================================
+           VIEW: CUSTOMER STORE
+           ========================================================================== */ -->
+        <div id="view-customer" class="app-view active">
+            <div class="shop-hero">
+                <div class="shop-hero-text">
+                    <h3 id="hero-heading">Master Chef Specialties</h3>
+                    <p id="hero-subheading">Orchestrate transactions with under 2-second latency budget targets across global deployment regions.</p>
+                    
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 15px;">
+                        <div class="search-bar">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="search-bar-input" placeholder="Search menu items (Elasticsearch auto-suggester)..." oninput="triggerSearch(this.value)">
+                        </div>
+                        <!-- Voice Search Button -->
+                        <button class="header-btn" style="height: 44px; margin-top: 15px;" onclick="startVoiceSearch()" title="Voice Search">
+                            <i class="fa-solid fa-microphone" id="voice-search-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recently Viewed & Favorites widgets -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4 id="fav-box-title">My Favorites & Wishlist</h4>
+                    <div id="favorites-tray" style="font-size: 13px; color: var(--text-muted);">No favorites selected yet. Star a restaurant below!</div>
+                </div>
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4 id="rec-box-title">Recently Viewed</h4>
+                    <div id="recently-viewed-tray" style="font-size: 13px; color: var(--text-muted);">No stores viewed recently.</div>
+                </div>
+            </div>
+
+            <div class="grid-3" id="catalog-grid">
+                <!-- Render stores -->
+            </div>
+
+            <div id="restaurant-menu-details" style="display: none; margin-top: 30px;">
+                <div class="menu-header-bar">
+                    <h3 id="selected-restaurant-name" style="font-family: var(--font-display); font-size: 22px;">Restaurant Menu</h3>
+                    <button class="header-btn" onclick="showCatalog()"><i class="fa-solid fa-chevron-left"></i> Back to Restaurants</button>
+                </div>
+                <div id="menu-items-list">
+                    <!-- Render menu items -->
+                </div>
+            </div>
+
+            <!-- AI recommendations, loyalty, and split bill utilities -->
+            <div class="utility-box">
+                <div class="card-box">
+                    <h4>AI Meal Recommendations</h4>
+                    <div id="ai-rec-text" style="font-size: 13px; line-height: 1.4;">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--secondary);"></i> 
+                        Recommended: <strong style="color: var(--primary);">Spicy Diavola Pizza</strong> based on your interest in Pizza and current evening hour.
+                    </div>
+                </div>
+                <div class="card-box">
+                    <h4>Loyalty Points & Referral System</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Loyalty Balance</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--secondary);" id="loyalty-points-val">450 Points</div>
+                        </div>
+                        <button class="header-btn" onclick="generateReferral()">Get Referral Link</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="utility-box">
+                <div class="card-box">
+                    <h4>Split Bill Calculator</h4>
+                    <div class="input-row">
+                        <label>Number of members</label>
+                        <input type="number" id="split-bill-members" value="3" min="1" oninput="calculateBillSplit()">
+                    </div>
+                    <div style="font-size: 13px;">Split per member: <strong style="color: var(--neon-blue);" id="split-bill-amount">$0.00</strong></div>
+                </div>
+                
+                <div class="card-box">
+                    <h4>In-App Automated Support</h4>
+                    <div class="support-chat-box">
+                        <div class="chat-messages" id="support-chat-msg-area">
+                            <div class="chat-bubble bot">Hello! How can I assist you with your order saga details today?</div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-user-input" placeholder="Type support query...">
+                            <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+           VIEW: CHECKOUT FORM
+           ========================================================================== */ -->
+        <div id="view-checkout" class="app-view">
+            <div class="checkout-container">
+                <div class="checkout-box">
+                    <h4>Address Validation & Geofence Verification</h4>
+                    <div class="input-row">
+                        <label>Delivery Address</label>
+                        <input type="text" id="delivery-address-field" value="123 Main St, New York, NY 10001 (Inside Active Geofence Region)">
+                    </div>
+                    <div class="input-row">
+                        <label>Delivery Type</label>
+                        <select id="delivery-type-select">
+                            <option value="INSTANT">Instant Delivery (Military Speed)</option>
+                            <option value="SCHEDULED">Scheduled Delivery (Surge avoidance)</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>Contactless Delivery</label>
+                        <select id="contactless-delivery-select">
+                            <option value="YES">Yes, drop at my doorstep</option>
+                            <option value="NO">No, hand order to me directly</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>Payment Method Selection</label>
+                        <select id="payment-method-select">
+                            <option value="CARD">Credit/Debit Card (PCI-Compliant Storage)</option>
+                            <option value="WALLET">Delivo Core System Wallet</option>
+                            <option value="UPI">UPI Payment (Razorpay Gateway Integration)</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>Apply Coupon Code (Try: PROMO10)</label>
+                        <input type="text" id="promo-code-field" placeholder="Enter coupon code..." oninput="checkCoupon(this.value)">
+                        <div id="promo-status" style="font-size: 11px; margin-top: 5px; color: var(--neon-green);"></div>
+                    </div>
+                </div>
+                <div class="checkout-box">
+                    <h4>Order Value Ledger</h4>
+                    <div id="checkout-summary-items"></div>
+                    <div class="checkout-total-bar">
+                        <span>Grand Total</span>
+                        <span id="checkout-grand-total">$0.00</span>
+                    </div>
+                    <button class="btn-submit-order" onclick="dispatchOrderSaga()">Confirm Order & Start Saga</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+           VIEW: REAL-TIME TRACKER
+           ========================================================================== */ -->
+        <div id="view-tracking" class="app-view">
+            <div class="track-grid">
+                <div class="saga-timeline-wrapper">
+                    <h3 id="tracking-eta" style="font-family: var(--font-display); font-size: 32px; color: var(--primary);">12 Mins Remaining</h3>
+                    <p style="font-size: 12px; color: var(--text-muted);">Saga transaction id: <span id="saga-transaction-id" style="color: var(--text-main);"></span></p>
+                    
+                    <div class="saga-timeline">
+                        <div class="saga-timeline-fill" id="saga-timeline-fill-bar"></div>
+                        <div class="saga-node active" id="saga-node-placed">
+                            <div class="saga-dot"></div>
+                            <div class="saga-node-text">
+                                <h6>Order Placed & Validated</h6>
+                                <p>Saga orchestrator verified account credit ledger limits</p>
+                            </div>
+                        </div>
+                        <div class="saga-node" id="saga-node-preparing">
+                            <div class="saga-dot"></div>
+                            <div class="saga-node-text">
+                                <h6>Chef Approved & Preparing</h6>
+                                <p>Restaurant service confirmed ingredient-level stock reservations</p>
+                            </div>
+                        </div>
+                        <div class="saga-node" id="saga-node-delivering">
+                            <div class="saga-dot"></div>
+                            <div class="saga-node-text">
+                                <h6>Driver Dispatched & En Route</h6>
+                                <p>Logistics matches coordinates using Redis geospatial indexing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="svg-map-wrapper">
+                    <svg class="svg-canvas" viewBox="0 0 600 450" id="tracking-map-svg">
+                        <!-- Grid lines -->
+                        <path d="M 50 50 L 550 50 M 50 150 L 550 150 M 50 250 L 550 250 M 50 350 L 550 350 M 150 50 L 150 400 M 300 50 L 300 400 M 450 50 L 450 400" stroke="rgba(255,255,255,0.04)" stroke-width="4" fill="none"/>
+                        <!-- Route path -->
+                        <path id="route-polyline" d="M 300 150 L 300 350 L 150 350" stroke="var(--primary)" stroke-width="3" stroke-dasharray="6" fill="none" opacity="0.3"/>
+                        <!-- Target pins -->
+                        <circle cx="300" cy="150" r="8" fill="var(--secondary)" stroke="white" stroke-width="2"/>
+                        <circle cx="150" cy="350" r="8" fill="white" stroke="var(--primary)" stroke-width="2"/>
+                        <!-- Active Driver -->
+                        <circle id="map-driver-pin" cx="300" cy="150" r="10" fill="var(--primary)" stroke="white" stroke-width="2" opacity="0"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+           VIEW: RESTAURANT PORTAL
+           ========================================================================== */ -->
+        <div id="view-restaurant" class="app-view">
+            <!-- Dynamic Pricing & Surge Pricing toggles -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>Dynamic Surge Pricing Controller</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Current Pricing Multiplier</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--primary);" id="surge-multiplier-val">1.0x (Normal)</div>
+                        </div>
+                        <select id="surge-toggle" onchange="toggleSurge(this.value)" style="background: rgba(0,0,0,0.3); color: white; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);">
+                            <option value="1.0">Standard Pricing (1.0x)</option>
+                            <option value="1.3">Medium Demand Surge (1.3x)</option>
+                            <option value="1.7">Peak Load Surge (1.7x)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>Kitchen Load Prediction (KDS)</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        <i class="fa-solid fa-brain" style="color: var(--neon-purple);"></i>
+                        AI Workload Forecast: <strong style="color: var(--secondary);">High Demand Warning</strong> in next 30 minutes. Recommended prep buffer: 5 mins.
+                    </div>
+                </div>
+            </div>
+
+            <div class="kanban-board">
+                <div class="kanban-col">
+                    <h4>Incoming Orders <span id="count-pending" style="color: var(--primary);">0</span></h4>
+                    <div id="kanban-pending-list"></div>
+                </div>
+                <div class="kanban-col">
+                    <h4>In Preparation <span id="count-prep" style="color: var(--neon-yellow);">0</span></h4>
+                    <div id="kanban-prep-list"></div>
+                </div>
+                <div class="kanban-col">
+                    <h4>Completed / Out <span id="count-done" style="color: var(--neon-green);">0</span></h4>
+                    <div id="kanban-done-list"></div>
+                </div>
+            </div>
+
+            <div class="checkout-box" style="margin-top: 40px;">
+                <h4>Ingredient Inventory Management</h4>
+                <table class="menu-crud-table">
+                    <thead>
+                        <tr>
+                            <th>Ingredient Name</th>
+                            <th>Stock Count</th>
+                            <th>Critical Reorder Threshold</th>
+                            <th>Status Indicator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>San Marzano Tomato Sauce</td>
+                            <td>120 Liters</td>
+                            <td>20 Liters</td>
+                            <td><span style="color: var(--neon-green);"><i class="fa-solid fa-circle-check"></i> Stock Optimal</span></td>
+                        </tr>
+                        <tr>
+                            <td>Dough Flour Bags</td>
+                            <td>85 Bags</td>
+                            <td>15 Bags</td>
+                            <td><span style="color: var(--neon-green);"><i class="fa-solid fa-circle-check"></i> Stock Optimal</span></td>
+                        </tr>
+                        <tr>
+                            <td>Mozzarella Cheese Blocks</td>
+                            <td>4 Blocks</td>
+                            <td>5 Blocks</td>
+                            <td><span style="color: var(--primary);"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alert</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+           VIEW: DRIVER DASHBOARD
+           ========================================================================== */ -->
+        <div id="view-driver" class="app-view">
+            <div class="driver-dashboard">
+                <div class="earnings-panel">
+                    <h4>Logistics Wallet Balance</h4>
+                    <div class="earnings-total" id="driver-wallet-balance">$420.50</div>
+                    <button class="btn-submit-order" style="background: var(--secondary); color: var(--bg);" onclick="requestPayout()">Request Automated Payout</button>
+                </div>
+                <div class="checkout-box">
+                    <h4>Driver Verification & Security check</h4>
+                    <div style="font-size: 13px; line-height: 1.5; margin-bottom: 15px;">
+                        <i class="fa-solid fa-face-recognition" style="color: var(--secondary);"></i>
+                        Biometric Face Verification Status: <strong style="color: var(--neon-green);">Verified</strong>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.5;">
+                        <i class="fa-solid fa-key" style="color: var(--primary);"></i>
+                        Security Policy: OTP validation check active on client dropoff.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+           VIEW: ADMIN PANEL
+           ========================================================================== */ -->
+        <div id="view-admin" class="app-view">
+            <!-- A/B testing widgets -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>A/B Testing Control Node</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        Experiment Key: `search-ranking-v2`<br>
+                        Variant A (Collaborative): <strong style="color: var(--secondary);">22% conversion</strong><br>
+                        Variant B (Personalized): <strong style="color: var(--neon-green);">28% conversion (Winner)</strong>
+                    </div>
+                </div>
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>General Ledger Service</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        Double-entry ledger status: <strong style="color: var(--neon-green);">Balanced</strong><br>
+                        Total Debit Ledger value: $1,420,550.00<br>
+                        Total Credit Ledger value: $1,420,550.00
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-kpi-grid">
+                <div class="admin-kpi-card">
+                    <div>System Throughput</div>
+                    <div class="admin-kpi-num">102K events/s</div>
+                </div>
+                <div class="admin-kpi-card">
+                    <div>Active Clusters</div>
+                    <div class="admin-kpi-num" style="color: var(--neon-green);">3 Regions</div>
+                </div>
+                <div class="admin-kpi-card">
+                    <div>Saga Success Rate</div>
+                    <div class="admin-kpi-num">99.98%</div>
+                </div>
+                <div class="admin-kpi-card">
+                    <div>Rate Limit Blocks</div>
+                    <div class="admin-kpi-num" style="color: var(--primary);">4 Blocks/m</div>
+                </div>
+            </div>
+
+            <div class="checkout-box">
+                <h4>Fraud Monitoring & Anomaly Logs</h4>
+                <table class="menu-crud-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Anomaly Type</th>
+                            <th>Risk Score</th>
+                            <th>Action Decision</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>9da3f1b4-...</td>
+                            <td>Duplicate checkout within 5 seconds</td>
+                            <td><span style="color: var(--neon-yellow);">Risk Score: 0.65</span></td>
+                            <td><button class="kanban-card-btn" style="background: var(--neon-yellow); color: var(--bg);">Review Account</button></td>
+                        </tr>
+                        <tr>
+                            <td>f47a11de-...</td>
+                            <td>Location anomaly (IP location mismatch)</td>
+                            <td><span style="color: var(--primary);">Risk Score: 0.95</span></td>
+                            <td><button class="kanban-card-btn">Block Account</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+           VIEW: OBSERVABILITY CONSOLE
+           ========================================================================== */ -->
+        <div id="view-observability" class="app-view">
+            <!-- CDC & SLO dashboard -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>SLO / Error Budget Dashboard</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        Target Uptime: 99.9% | Current: <strong style="color: var(--neon-green);">99.95%</strong><br>
+                        Remaining Error Budget: <strong style="color: var(--secondary);">0.05%</strong> (approx. 21.6 mins remaining)
+                    </div>
+                </div>
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>CDC (Change Data Capture) visualizer</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        Source: `orderdb.orders` table | Engine: Debezium<br>
+                        Event type: <strong style="color: var(--primary);">INSERT</strong> streamed to topic `order-events`
+                    </div>
+                </div>
+            </div>
+
+            <div class="telemetry-layout">
+                <div>
+                    <h4 style="margin-bottom: 15px; font-family: var(--font-display);">Distributed Log Terminal Feed</h4>
+                    <div class="log-terminal" id="log-feed-terminal">
+                        <!-- Live log stream -->
+                    </div>
+                </div>
+                <div class="trace-visualizer">
+                    <h4 style="margin-bottom: 15px; font-family: var(--font-display);">Zipkin Span Tracing Budget</h4>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Total span duration budget: 350ms</div>
+                    
+                    <div class="trace-bar" style="background: var(--primary); width: 100%;">API-Gateway [80ms]</div>
+                    <div class="trace-bar" style="background: var(--neon-blue); width: 80%; margin-left: 20px;">Order-Service [120ms]</div>
+                    <div class="trace-bar" style="background: var(--neon-yellow); width: 40%; margin-left: 60px;">Payment-Service [60ms]</div>
+                    <div class="trace-bar" style="background: var(--neon-green); width: 25%; margin-left: 60px;">Inventory-Service [40ms]</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Slideout Cart Panel -->
+    <div class="backdrop-tint" onclick="toggleCartSlide()"></div>
+    <div class="cart-slide" id="cart-slideout">
+        <div>
+            <div class="cart-header" style="border: none; padding: 0; margin-bottom: 25px;">
+                <h3>Active Checkout Cart</h3>
+                <button class="cart-close-btn" onclick="toggleCartSlide()">&times;</button>
+            </div>
+            <div id="cart-items-list-container">
+                <!-- Items list -->
+            </div>
+        </div>
+        <div>
+            <div class="checkout-total-bar" style="margin-bottom: 20px;">
+                <span>Subtotal</span>
+                <span id="cart-slide-subtotal">$0.00</span>
+            </div>
+            <button class="cart-checkout-btn" onclick="goToCheckout()">Proceed to Billing</button>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       12. CORE JS LOGIC & EVENT STREAM GENERATOR
+       ========================================================================== */ -->
+    <script>
+        // Store and Catalog Data
+        const mockStores = [
+            { id: "d290f1d6-53b7-4c0a-ae8d-ec44a864cfd8", name: "Bella Napoli Pizza", cuisine: "Pizza & Italian", rating: "4.9", time: "15 min", desc: "Sourdough pizza baked at 500 degrees, using D.O.P. ingredients." },
+            { id: "a897b2c6-d98c-4a30-84a6-7fdebc3992df", name: "GBK Gourmet Burger", cuisine: "Burgers & Fast Food", rating: "4.8", time: "20 min", desc: "Gourmet smash burgers with aged beef cheese and premium cuts." },
+            { id: "3c98b2df-12bc-443e-a10c-f3bc30df29cb", name: "Sake Sushi House", cuisine: "Asian & Sushi", rating: "4.7", time: "25 min", desc: "Fresh sashimis, temakis, and nigiris sliced fresh daily." }
+        ];
+
+        const mockMenus = {
+            "d290f1d6-53b7-4c0a-ae8d-ec44a864cfd8": [
+                { id: "m1", name: "Sourdough Margherita", price: 15.99, desc: "San Marzano sauce, fresh mozzarella, organic basil, olive oil." },
+                { id: "m2", name: "Calabrian Spicy Diavola", price: 17.99, desc: "Spicy salame, chili flakes, honey glaze." }
+            ],
+            "a897b2c6-d98c-4a30-84a6-7fdebc3992df": [
+                { id: "m3", name: "Double Smash Cheese", price: 13.99, desc: "Double Angus beef, cheddar cheese, burger sauce." },
+                { id: "m4", name: "Truffle Fries", price: 5.99, desc: "Crispy skin-on fries, black truffle seasoning." }
+            ],
+            "3c98b2df-12bc-443e-a10c-f3bc30df29cb": [
+                { id: "m5", name: "Salmon Sashimi Platter", price: 21.99, desc: "12 slices of fresh Atlantic salmon sashimi." },
+                { id: "m6", name: "Crispy Prawn Tempura", price: 12.99, desc: "Lightly battered tempura prawns with sweet chili dip." }
+            ]
+        };
+
+        // App States
+        let cartItems = [];
+        let activeCuisineFilter = 'All';
+        let currentOpenRestaurant = null;
+        let selectedPayment = 'CARD';
+        let appliedDiscount = 0;
+        let activeOrderSaga = null;
+        let currentLang = 'EN';
+        let favorites = [];
+        let recentlyViewed = [];
+
+        // Dynamic multi-language dictionary
+        const translationDict = {
+            'EN': {
+                'title': 'Food Bounded Context Store',
+                'sub': 'Select catalog items matched via Elasticsearch queries',
+                'hero-h': 'Master Chef Specialties',
+                'hero-sub': 'Orchestrate transactions with under 2-second latency budget targets across global deployment regions.',
+                'fav-t': 'My Favorites & Wishlist',
+                'rec-t': 'Recently Viewed'
+            },
+            'HI': {
+                'title': 'खाद्य सीमाबद्ध संदर्भ स्टोर',
+                'sub': 'इलास्टिकसर्च प्रश्नों के माध्यम से मिलान किए गए कैटलॉग आइटम चुनें',
+                'hero-h': 'मास्टर शेफ विशेषताएँ',
+                'hero-sub': 'वैश्विक परिनियोजन क्षेत्रों में 2-सेकंड से कम विलंबता बजट लक्ष्यों के साथ लेनदेन का आयोजन करें।',
+                'fav-t': 'मेरी पसंदीदा और इच्छासूची',
+                'rec-t': 'हाल ही में देखा गया'
+            },
+            'ES': {
+                'title': 'Tienda de Contexto de Alimentos',
+                'sub': 'Seleccione artículos del catálogo emparejados mediante consultas de Elasticsearch',
+                'hero-h': 'Especialidades de Master Chef',
+                'hero-sub': 'Orqueste transacciones con objetivos de presupuesto de latencia de menos de 2 segundos en regiones globales.',
+                'fav-t': 'Mis Favoritos',
+                'rec-t': 'Visto Recientemente'
+            }
+        };
+
+        // Toggle Language
+        function toggleLanguage() {
+            const langs = ['EN', 'HI', 'ES'];
+            let nextIdx = (langs.indexOf(currentLang) + 1) % langs.length;
+            currentLang = langs[nextIdx];
+            document.getElementById('lang-toggle-btn').innerHTML = `<i class="fa-solid fa-language"></i> ${currentLang}`;
+            
+            const t = translationDict[currentLang];
+            document.getElementById('view-title').innerText = t['title'];
+            document.getElementById('view-subtitle').innerText = t['sub'];
+            document.getElementById('hero-heading').innerText = t['hero-h'];
+            document.getElementById('hero-subheading').innerText = t['hero-sub'];
+            document.getElementById('fav-box-title').innerText = t['fav-t'];
+            document.getElementById('rec-box-title').innerText = t['rec-t'];
+        }
+
+        // Voice Search (Speech Recognition)
+        function startVoiceSearch() {
+            const mic = document.getElementById('voice-search-icon');
+            const input = document.getElementById('search-bar-input');
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Voice recognition is not supported on this browser version.");
+                return;
+            }
+            
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            
+            mic.style.color = '#39FF14'; // turn green during recording
+            recognition.start();
+            
+            recognition.onresult = function(event) {
+                const speechResult = event.results[0][0].transcript;
+                input.value = speechResult;
+                triggerSearch(speechResult);
+                mic.style.color = 'var(--primary)';
+            };
+
+            recognition.onerror = function() {
+                mic.style.color = 'var(--primary)';
+            };
+        }
+
+        // In-App Chat Simulation
+        function sendChatMessage() {
+            const input = document.getElementById('chat-user-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            const chatArea = document.getElementById('support-chat-msg-area');
+            chatArea.innerHTML += `<div class="chat-bubble user">${msg}</div>`;
+            input.value = '';
+            
+            setTimeout(() => {
+                let botReply = "I have queried the CDC outbox event logs. Your saga state is completely consistent.";
+                if (msg.toLowerCase().includes('refund')) {
+                    botReply = "Refund initiated successfully under saga compensation rules. Fund settlement complete.";
+                }
+                chatArea.innerHTML += `<div class="chat-bubble bot">${botReply}</div>`;
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 1000);
+        }
+
+        // View Navigator
+        function switchView(viewId, element) {
+            document.querySelectorAll('.app-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(viewId).classList.add('active');
+
+            if (element) {
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                element.classList.add('active');
+            }
+
+            // Sync Header Titles
+            const titleMap = {
+                'view-customer': ['Food Bounded Context Store', 'Select catalog items matched via Elasticsearch queries'],
+                'view-checkout': ['Billing & Address Validation', 'Finalize transaction ledger limits'],
+                'view-tracking': ['Real-Time Tracking Orchestrator', 'Monitor Saga workflow lifecycle state events'],
+                'view-restaurant': ['Restaurant Kanban Desk', 'Manage order queues and inventory states'],
+                'view-driver': ['Fleet Logistics Board', 'Monitor active route deliveries and payouts'],
+                'view-admin': ['System Operations Dashboard', 'Global telemetry metrics and fraud thresholds'],
+                'view-observability': ['Observability Console Feed', 'Distributed sleuth JSON tracing logs']
+            };
+
+            const headerInfo = titleMap[viewId];
+            if (headerInfo) {
+                document.getElementById('view-title').innerText = headerInfo[0];
+                document.getElementById('view-subtitle').innerText = headerInfo[1];
+            }
+        }
+
+        // Toggle Favorites
+        function toggleFavorite(storeId, event) {
+            event.stopPropagation();
+            const btn = document.getElementById(`fav-btn-${storeId}`);
+            const index = favorites.indexOf(storeId);
+            
+            if (index > -1) {
+                favorites.splice(index, 1);
+                btn.classList.remove('active');
+            } else {
+                favorites.push(storeId);
+                btn.classList.add('active');
+            }
+            updateFavoritesTray();
+        }
+
+        function updateFavoritesTray() {
+            const tray = document.getElementById('favorites-tray');
+            if (favorites.length === 0) {
+                tray.innerText = "No favorites selected yet. Star a restaurant below!";
+                return;
+            }
+            const favNames = favorites.map(fId => mockStores.find(s => s.id === fId).name);
+            tray.innerHTML = favNames.map(name => `<span class="store-tag" style="position:relative; margin-right: 5px;">${name}</span>`).join(' ');
+        }
+
+        // Dynamic Pricing Surge
+        function toggleSurge(val) {
+            const rate = parseFloat(val);
+            const surgeVal = document.getElementById('surge-multiplier-val');
+            if (rate > 1.0) {
+                surgeVal.innerText = `${rate}x (Surge Active)`;
+                surgeVal.style.color = 'var(--primary)';
+            } else {
+                surgeVal.innerText = "1.0x (Normal)";
+                surgeVal.style.color = 'var(--secondary)';
+            }
+            // Recalculate bill with surge pricing
+            updateCartCounter();
+        }
+
+        // Cart Actions
+        function openCartSlide() {
+            document.getElementById('cart-slideout').classList.add('open');
+            document.querySelector('.backdrop-tint').classList.add('open');
+        }
+
+        function toggleCartSlide() {
+            document.getElementById('cart-slideout').classList.remove('open');
+            document.querySelector('.backdrop-tint').classList.remove('open');
+        }
+
+        function addToCart(itemId, storeId) {
+            const item = mockMenus[storeId].find(i => i.id === itemId);
+            if (!item) return;
+
+            const existing = cartItems.find(c => c.id === itemId);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cartItems.push({ ...item, qty: 1, storeId });
+            }
+            updateCartCounter();
+            addLog("cart-service", `Added item ${item.name} to cart. Status: Active`);
+        }
+
+        function updateCartCounter() {
+            const count = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
+            document.getElementById('cart-item-count').innerText = count;
+
+            const subtotal = cartItems.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
+            
+            // Apply surge multiplier if active
+            const surgeVal = parseFloat(document.getElementById('surge-toggle').value);
+            const pricedSubtotal = subtotal * surgeVal;
+
+            document.getElementById('cart-slide-subtotal').innerText = `$${pricedSubtotal.toFixed(2)}`;
+            document.getElementById('checkout-grand-total').innerText = `$${(pricedSubtotal - (pricedSubtotal * appliedDiscount)).toFixed(2)}`;
+            
+            calculateBillSplit();
+        }
+
+        function calculateBillSplit() {
+            const subtotal = cartItems.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
+            const members = parseInt(document.getElementById('split-bill-members').value) || 1;
+            const split = subtotal / members;
+            document.getElementById('split-bill-amount').innerText = `$${split.toFixed(2)}`;
+        }
+
+        function goToCheckout() {
+            toggleCartSlide();
+            
+            const summary = document.getElementById('checkout-summary-items');
+            summary.innerHTML = '';
+            cartItems.forEach(item => {
+                summary.innerHTML += `
+                    <div class="summary-item">
+                        <span>${item.qty}x ${item.name}</span>
+                        <span>$${(item.price * item.qty).toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            switchView('view-checkout');
+        }
+
+        function checkCoupon(code) {
+            const status = document.getElementById('promo-status');
+            if (code === 'PROMO10') {
+                appliedDiscount = 0.10;
+                status.innerText = "Coupon PROMO10 applied: 10% Discount active!";
+            } else {
+                appliedDiscount = 0;
+                status.innerText = "";
+            }
+            updateCartCounter();
+        }
+
+        // Place Order - Start Saga Workflow
+        function dispatchOrderSaga() {
+            if (cartItems.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+
+            const transactionId = "tx_" + Math.random().toString(36).substr(2, 9);
+            document.getElementById('saga-transaction-id').innerText = transactionId;
+            switchView('view-tracking');
+
+            // Initialize Progress
+            const fill = document.getElementById('saga-timeline-fill-bar');
+            fill.style.height = '0%';
+            document.getElementById('saga-node-placed').className = 'saga-node active';
+            document.getElementById('saga-node-preparing').className = 'saga-node';
+            document.getElementById('saga-node-delivering').className = 'saga-node';
+
+            // Add Order to Restaurant Kanban
+            addOrderToKanban(transactionId);
+
+            addLog("order-service", `Order creation saga initiated. Transaction ID: ${transactionId}`);
+            
+            // Step 1 -> Step 2
+            setTimeout(() => {
+                document.getElementById('saga-node-placed').className = 'saga-node completed';
+                document.getElementById('saga-node-preparing').className = 'saga-node active';
+                fill.style.height = '50%';
+                addLog("payment-service", `Payment validation successful. Wallet balance debited.`);
+                addLog("restaurant-service", `Chef approved order ${transactionId}. Initiating ingredient reservation.`);
+            }, 3000);
+        }
+
+        // Kanban Order Sync
+        function addOrderToKanban(txId) {
+            const container = document.getElementById('kanban-pending-list');
+            const itemsSummary = cartItems.map(c => `${c.qty}x ${c.name}`).join(', ');
+            
+            container.innerHTML += `
+                <div class="kanban-card" id="k-card-${txId}">
+                    <h5>Order Reference: ${txId}</h5>
+                    <p>Items: ${itemsSummary}</p>
+                    <div class="kanban-card-actions">
+                        <button class="kanban-card-btn" onclick="advanceKanban('${txId}')">Advance Status</button>
+                    </div>
+                </div>
+            `;
+            updateKanbanCounters();
+        }
+
+        function advanceKanban(txId) {
+            const card = document.getElementById(`k-card-${txId}`);
+            if (!card) return;
+
+            const currentParent = card.parentElement.id;
+            if (currentParent === 'kanban-pending-list') {
+                document.getElementById('kanban-prep-list').appendChild(card);
+                addLog("restaurant-service", `Order ${txId} state advanced to: PREPARING`);
+            } else if (currentParent === 'kanban-prep-list') {
+                document.getElementById('kanban-done-list').appendChild(card);
+                addLog("delivery-service", `Order ${txId} dispatched. Driver geohash matching active.`);
+                
+                // Trigger delivery driver map movement
+                triggerDriverMovement(txId);
+            }
+            updateKanbanCounters();
+        }
+
+        function updateKanbanCounters() {
+            document.getElementById('count-pending').innerText = document.getElementById('kanban-pending-list').children.length;
+            document.getElementById('count-prep').innerText = document.getElementById('kanban-prep-list').children.length;
+            document.getElementById('count-done').innerText = document.getElementById('kanban-done-list').children.length;
+        }
+
+        // Driver map navigation animation
+        function triggerDriverMovement(txId) {
+            switchView('view-tracking');
+            const fill = document.getElementById('saga-timeline-fill-bar');
+            document.getElementById('saga-node-preparing').className = 'saga-node completed';
+            document.getElementById('saga-node-delivering').className = 'saga-node active';
+            fill.style.height = '100%';
+
+            const driverPin = document.getElementById('map-driver-pin');
+            const route = document.getElementById('route-polyline');
+            driverPin.setAttribute('opacity', '1');
+            route.setAttribute('opacity', '1');
+
+            let steps = 0;
+            const points = [
+                {x: 300, y: 150}, {x: 300, y: 200}, {x: 300, y: 250},
+                {x: 300, y: 300}, {x: 300, y: 350}, {x: 250, y: 350},
+                {x: 200, y: 350}, {x: 150, y: 350}
+            ];
+
+            const interval = setInterval(() => {
+                if (steps >= points.length) {
+                    clearInterval(interval);
+                    document.getElementById('tracking-eta').innerText = "Order Delivered!";
+                    document.getElementById('saga-node-delivering').className = 'saga-node completed';
+                    addLog("delivery-service", `Order ${txId} marked as DELIVERED by fleet driver.`);
+                    
+                    // Add earnings to driver wallet
+                    addDriverEarnings();
+                    return;
+                }
+                const pt = points[steps];
+                driverPin.setAttribute('cx', pt.x);
+                driverPin.setAttribute('cy', pt.y);
+                
+                const lat = (40.7128 - (steps * 0.001)).toFixed(4);
+                const lon = (-74.0060 + (steps * 0.001)).toFixed(4);
+                document.getElementById('coordinates-log').innerText = `${lat}° N, ${lon}° W`;
+
+                steps++;
+            }, 1000);
+        }
+
+        // Payout transfer
+        function addDriverEarnings() {
+            const currentBalance = parseFloat(document.getElementById('driver-wallet-balance').innerText.replace('$', ''));
+            const newBalance = currentBalance + 15.75;
+            document.getElementById('driver-wallet-balance').innerText = `$${newBalance.toFixed(2)}`;
+        }
+
+        function requestPayout() {
+            alert("Payout processing successful. Funds transferred to target bank account registry.");
+            document.getElementById('driver-wallet-balance').innerText = "$0.00";
+        }
+
+        // Search & Elasticsearch matching simulation
+        function triggerSearch(query) {
+            const catalog = document.getElementById('catalog-grid');
+            if (!query) {
+                renderCatalog(mockStores);
+                return;
+            }
+
+            const filtered = mockStores.filter(s => 
+                s.name.toLowerCase().includes(query.toLowerCase()) || 
+                s.cuisine.toLowerCase().includes(query.toLowerCase())
+            );
+            renderCatalog(filtered);
+            addLog("search-service", `Elasticsearch query executed: "${query}" - Matches found: ${filtered.length}`);
+        }
+
+        // Render catalog stores
+        function renderCatalog(stores) {
+            const container = document.getElementById('catalog-grid');
+            container.innerHTML = '';
+            stores.forEach(s => {
+                container.innerHTML += `
+                    <div class="store-card" onclick="openMenu('${s.id}')">
+                        <div class="store-img">
+                            <i class="fa-solid fa-store"></i>
+                            <div class="store-tag">${s.cuisine}</div>
+                            <button class="favorite-btn" id="fav-btn-${s.id}" onclick="toggleFavorite('${s.id}', event)">
+                                <i class="fa-solid fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="store-info">
+                            <h4>${s.name}</h4>
+                            <p>${s.desc}</p>
+                            <div class="store-meta">
+                                <span><i class="fa-solid fa-star"></i> ${s.rating}</span>
+                                <span><i class="fa-solid fa-clock"></i> ${s.time}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openMenu(storeId) {
+            const store = mockStores.find(s => s.id === storeId);
+            if (!store) return;
+
+            document.getElementById('catalog-grid').style.display = 'none';
+            document.getElementById('restaurant-menu-details').style.display = 'block';
+            document.getElementById('selected-restaurant-name').innerText = store.name;
+
+            const list = document.getElementById('menu-items-list');
+            list.innerHTML = '';
+            mockMenus[storeId].forEach(item => {
+                list.innerHTML += `
+                    <div class="menu-item-row">
+                        <div class="menu-item-desc">
+                            <h5>${item.name}</h5>
+                            <p>${item.desc}</p>
+                        </div>
+                        <div class="menu-item-action">
+                            <span class="menu-price">$${item.price.toFixed(2)}</span>
+                            <button class="action-add-btn" onclick="addToCart('${item.id}', '${storeId}')">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Update recently viewed tray
+            if (recentlyViewed.indexOf(store.name) === -1) {
+                recentlyViewed.push(store.name);
+                if (recentlyViewed.length > 3) recentlyViewed.shift();
+                updateRecentlyViewedTray();
+            }
+        }
+
+        function updateRecentlyViewedTray() {
+            const tray = document.getElementById('recently-viewed-tray');
+            tray.innerHTML = recentlyViewed.map(name => `<span class="store-tag" style="position:relative; margin-right: 5px; background:var(--neon-blue);">${name}</span>`).join(' ');
+        }
+
+        function showCatalog() {
+            document.getElementById('catalog-grid').style.display = 'grid';
+            document.getElementById('restaurant-menu-details').style.display = 'none';
+        }
+
+        // ==========================================================================
+        // 12. TELEMETRY LOG GENERATOR (OBSERVABILITY FEED)
+        // ==========================================================================
+        function addLog(service, message) {
+            const terminal = document.getElementById('log-feed-terminal');
+            const date = new Date().toISOString();
+            const traceId = "tr_" + Math.random().toString(36).substr(2, 9);
+            const spanId = "sp_" + Math.random().toString(36).substr(2, 9);
+            
+            const logEntry = `{"timestamp": "${date}", "service": "${service}", "trace_id": "${traceId}", "span_id": "${spanId}", "level": "INFO", "message": "${message}"}`;
+            
+            if (terminal) {
+                terminal.innerHTML += `<div class="log-line">${logEntry}</div>`;
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        }
+
+        // Periodically output background log feeds to simulate event traffic
+        setInterval(() => {
+            const services = ["api-gateway", "user-service", "restaurant-service", "order-service", "payment-service", "delivery-service", "notification-service", "fraud-detection-service", "analytics-service"];
+            const msgs = [
+                "Incoming REST request routed via API Gateway.",
+                "Redis Cache lookup resolved successfully.",
+                "Kafka topic message consumed.",
+                "OpenTelemetry trace exported to Jaeger backends.",
+                "Prometheus scrape request processed.",
+                "Outbox table scheduler polling completed.",
+                "Geohash coordinate matches validated.",
+                "SQL query timing profile: 8.5ms execution."
+            ];
+            const randomService = services[Math.floor(Math.random() * services.length)];
+            const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            addLog(randomService, randomMsg);
+        }, 3000);
+
+        // Initial setup
+        renderCatalog(mockStores);
+        addLog("api-gateway", "Service Discovery registration completed. All nodes online.");
+    </script>
+</body>
+</html>
+

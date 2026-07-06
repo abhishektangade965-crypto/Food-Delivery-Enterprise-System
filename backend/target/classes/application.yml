@@ -1,0 +1,34 @@
+server:
+  port: 8081
+
+app:
+  jwtSecret: "CHANGE_ME_TO_A_VERY_LONG_STRONG_SECRET_FOR_SIGNING_THE_JWT_KEYS_12345"
+  jwtExpirationMs: 3600000 # 1 hour
+  refreshTokenExpirationMs: 86400000 # 24 hours
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:food_delivery;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: your_email@example.com
+    password: your_email_password
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

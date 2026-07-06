@@ -1,0 +1,166 @@
+        <!-- VIEW: CUSTOMER APP -->
+        <div id="view-customer" class="app-view">
+            <!-- Upper Hero & Widgets Layout Grid -->
+            <div class="hero-layout">
+                <!-- Left: Hero Card with Search Input inside it -->
+                <div class="hero-card">
+                    <h2 id="hero-heading">The <span>Super Platform</span> For Global Delivery</h2>
+                    <p id="hero-subheading">Order from your favorite local restaurants with lightning-fast delivery and trusted real-time tracking.</p>
+                    <div class="search-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                        <input type="text" id="search-bar-input" class="search-input" placeholder="Search menus, cuisines, or restaurants...">
+                    </div>
+                </div>
+
+                <!-- Right Side Widgets Column -->
+                <div class="widgets-column">
+                    <!-- Core Account Wallet Card -->
+                    <div class="widget-card wallet-widget">
+                        <div class="widget-header">
+                            <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                            <h4>Core Account Wallet</h4>
+                        </div>
+                        <div class="wallet-balance-row">
+                            <span class="balance" id="customer-wallet-display">$1600.00</span>
+                            <span class="loyalty" id="customer-loyalty-display">Loyalty Points: 450 pts</span>
+                        </div>
+                        <div class="quick-topup-row" style="display: flex; gap: 8px; margin-top: 15px; align-items: center;">
+                            <span style="font-weight: 700; color: var(--text-muted);">$</span>
+                            <input type="number" id="quick-topup-input" class="input-field" value="50" min="1" max="100" style="width: 70px; padding: 5px; margin: 0;" aria-label="Top-up Amount">
+                            <button class="btn-quick-topup" id="btn-quick-topup">Quick Top-up</button>
+                        </div>
+                    </div>
+
+                    <!-- AI Smart Recommendations Card -->
+                    <div class="widget-card recommendations-widget">
+                        <div class="widget-header">
+                            <i class="fa-solid fa-brain" aria-hidden="true"></i>
+                            <h4>AI Smart Recommendations</h4>
+                        </div>
+                        <div class="rec-items-list" id="ai-rec-list">
+                            <div class="rec-item">
+                                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=48&h=48&q=80" alt="Truffle Mushroom Pizza" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                <div class="rec-details">
+                                    <h5>Truffle Mushroom Pizza</h5>
+                                    <p>Based on hot trending orders</p>
+                                </div>
+                            </div>
+                            <div class="rec-item">
+                                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=48&h=48&q=80" alt="Organic Keto Salad" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                <div class="rec-details">
+                                    <h5>Organic Keto Salad</h5>
+                                    <p>Matches your healthy filter</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browse Bounded Cuisines Section -->
+            <div class="section-container">
+                <h3>Browse Bounded Cuisines</h3>
+                <div class="food-grid">
+                    <button class="food-category-card" data-category="All" aria-label="All cuisines">
+                        <i class="fa-solid fa-utensils"></i> All
+                    </button>
+                    <button class="food-category-card" data-category="Pizza" aria-label="Pizza & Pasta">
+                        <i class="fa-solid fa-pizza-slice"></i> Pizza & Pasta
+                    </button>
+                    <button class="food-category-card" data-category="Burgers" aria-label="Burgers">
+                        <i class="fa-solid fa-hamburger"></i> Burgers
+                    </button>
+                    <button class="food-category-card active" data-category="Sushi" aria-label="Sushi & Asian">
+                        <i class="fa-solid fa-bowl-rice"></i> Sushi & Asian
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active Restaurants Grid -->
+            <div class="section-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Active Restaurants</h3>
+                    <div class="filter-sort-controls">
+                        <select id="restaurant-sort" class="header-select" style="margin: 0; padding: 5px 10px;">
+                            <option value="default">Sort: Recommended</option>
+                            <option value="rating">Top Rated</option>
+                            <option value="distance">Nearest Distance</option>
+                            <option value="time">Fastest Delivery</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="popularity">Popularity (Most Reviewed)</option>
+                            <option value="newest">Newest Merchants</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="catalog-grid" id="catalog-grid">
+                    <!-- Skeleton Shimmer cards loaded dynamically on init -->
+                    <div class="skeleton-card"><div class="skeleton-image shimmer"></div><div class="skeleton-title shimmer"></div><div class="skeleton-text shimmer"></div></div>
+                    <div class="skeleton-card"><div class="skeleton-image shimmer"></div><div class="skeleton-title shimmer"></div><div class="skeleton-text shimmer"></div></div>
+                </div>
+                
+                <!-- End of results state (Screenshot 8 compliance) -->
+                <div id="catalog-end-state" style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px dashed var(--border); font-size: 13px; color: var(--text-muted);">
+                    <i class="fa-solid fa-flag-checkered" style="margin-right: 8px; color: var(--secondary);"></i>
+                    You've reached the end of the Delivo active local catalog. 30 local merchants verified.
+                </div>
+            </div>
+
+            <!-- Restaurant Menu Details view -->
+            <div id="restaurant-menu-details" style="display: none; margin-top: 30px;">
+                <div style="margin-bottom: 20px;">
+                    <button class="header-btn" id="btn-back-to-catalog" style="margin: 0;"><i class="fa-solid fa-arrow-left"></i> Back to Restaurants</button>
+                </div>
+                
+                <div class="checkout-box restaurant-detail-header-card" style="margin-bottom: 24px; padding: 24px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.0) 100%); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+                    <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+                        <img id="detail-restaurant-photo" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&h=200&q=80" alt="Restaurant Photo" style="width: 250px; height: 150px; border-radius: var(--radius-md); object-fit: cover; border: 1px solid var(--border);">
+                        <div style="flex-grow: 1;">
+                            <h3 id="selected-restaurant-name" style="margin: 0 0 8px 0; font-family: var(--font-display); font-size: 24px; font-weight: 800;">Bella Napoli Pizza</h3>
+                            <p id="detail-restaurant-desc" style="font-size: 12px; color: var(--text-muted); margin: 0 0 12px 0;">Traditional wood-fired pizzas crafted with imported San Marzano tomatoes.</p>
+                            
+                            <div style="display: flex; gap: 20px; font-size: 11px; flex-wrap: wrap; margin-bottom: 12px; color: var(--text-muted);">
+                                <span><i class="fa-solid fa-star" style="color: #FFB703;"></i> <strong style="color: var(--text-main);" id="detail-restaurant-rating">4.2</strong> (120+ reviews)</span>
+                                <span><i class="fa-solid fa-clock"></i> <strong style="color: var(--text-main);" id="detail-restaurant-time">20 min</strong></span>
+                                <span><i class="fa-solid fa-route"></i> <strong style="color: var(--text-main);" id="detail-restaurant-distance">2.4 km</strong></span>
+                                <span><i class="fa-solid fa-wallet"></i> Min. Order: <strong style="color: var(--text-main);">$10.00</strong></span>
+                            </div>
+                            
+                            <!-- Offers taglist -->
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <span class="badge" style="background: rgba(46, 196, 182, 0.1); color: var(--secondary); border: 1px solid rgba(46,196,182,0.2);"><i class="fa-solid fa-tag"></i> 50% OFF up to $10</span>
+                                <span class="badge" style="background: rgba(255, 90, 95, 0.1); color: var(--primary); border: 1px solid rgba(255,90,95,0.2);"><i class="fa-solid fa-gift"></i> Free Garlic Bread on orders > $25</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                        <h4 style="margin: 0; font-weight: 700;">Menu Categories</h4>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="menu-search-wrapper" style="position: relative; width: 200px;">
+                                <input type="text" id="menu-search-input" class="input-field" placeholder="Search menu..." style="padding-left: 30px; margin: 0;">
+                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px;"></i>
+                            </div>
+                            <select id="menu-sort-select" class="header-select" style="margin: 0;">
+                                <option value="default">Sort: Default</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; margin-top: 15px;">
+                        <!-- Left Sticky Sidebar Categories -->
+                        <div id="menu-categories-sidebar" style="position: sticky; top: 10px; display: flex; flex-direction: column; gap: 8px; background: rgba(15, 19, 26, 0.4); border: 1px solid var(--border); padding: 12px; border-radius: 8px; max-height: calc(100vh - 160px); overflow-y: auto;">
+                            <!-- Loaded dynamically: Starters, Main Course, etc. -->
+                        </div>
+                        <!-- Right Content Menu List -->
+                        <div id="menu-items-list" style="display: flex; flex-direction: column; gap: 30px; scroll-behavior: smooth; max-height: calc(100vh - 160px); overflow-y: auto; padding-right: 8px;">
+                            <!-- Menu categories sections loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

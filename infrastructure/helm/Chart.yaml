@@ -1,0 +1,6 @@
+apiVersion: v2
+name: delivo-microservice
+description: A common Helm chart for Delivo OS Microservices
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
