@@ -18,32 +18,29 @@ The platform utilizes a microservices architecture coordinated via Event-Driven 
 graph TD
     Client[Client Browser / Mobile] -->|HTTPS Requests| APIGateway[API Gateway: Spring Cloud Gateway]
     
-    subgraph Microservices Stack
-        APIGateway -->|Routing & Auth| UserService[User Service]
-        APIGateway -->|Order Lifecycle| OrderService[Order Service]
-        APIGateway -->|Wallet & Ledger| PaymentService[Payment Service]
-        APIGateway -->|Rider Matching| DeliveryService[Delivery Service]
-        APIGateway -->|Search Catalog| SearchService[Search Service]
+    subgraph Services [Microservices Stack]
+        APIGateway --> UserService[User Service]
+        APIGateway --> OrderService[Order Service]
+        APIGateway --> PaymentService[Payment Service]
+        APIGateway --> DeliveryService[Delivery Service]
+        APIGateway --> SearchService[Search Service]
     end
 
-    subgraph Event Broker & Storage
-        OrderService -.->|Publish Outbox Events| Kafka[Apache Kafka Cluster]
-        PaymentService -.->|Publish Outbox Events| Kafka
-        DeliveryService -.->|Publish Outbox Events| Kafka
+    subgraph Messaging [Event Broker: Apache Kafka]
+        OrderService -.->|Publish Outbox| Kafka[Kafka Event Streaming]
+        PaymentService -.->|Publish Outbox| Kafka
+        DeliveryService -.->|Publish Outbox| Kafka
         
-        Kafka -.->|Subscribe to Events| OrderService
-        Kafka -.->|Subscribe to Events| DeliveryService
+        Kafka -.->|Subscribe| OrderService
+        Kafka -.->|Subscribe| DeliveryService
         Kafka -.->|Index Menu Updates| SearchService
-        
-        OrderService === Postgres1[(PostgreSQL DB)]
-        PaymentService === Postgres2[(PostgreSQL DB)]
-        UserService === Postgres3[(PostgreSQL DB)]
-        
-        OrderService === Redis[(Redis Cache)]
     end
     
-    subgraph Local Prototyping
-        Client -->|Local Dev| LocalServer[Server.java Standalone Server]
+    subgraph Databases [Databases & Cache]
+        UserService --> Postgres[(PostgreSQL Database)]
+        OrderService --> Postgres
+        PaymentService --> Postgres
+        OrderService --> Redis[(Redis Cache)]
     end
 ```
 
