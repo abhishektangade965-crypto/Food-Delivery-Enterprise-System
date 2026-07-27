@@ -280,6 +280,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     checkAuthOnLoad();
 
+    // Debounced window resize event listener for charts and dynamic canvas layouts
+    let chartResizeTimer = null;
+    window.addEventListener("resize", () => {
+        if (chartResizeTimer) clearTimeout(chartResizeTimer);
+        chartResizeTimer = setTimeout(() => {
+            const chartCanvasElements = document.querySelectorAll("canvas");
+            chartCanvasElements.forEach(canvas => {
+                if (canvas && typeof canvas.resize === "function") {
+                    canvas.resize();
+                }
+            });
+        }, 100);
+    });
+
     // Load wallet and profiles
     syncLocalWalletBalances();
     renderDynamicFaqs();

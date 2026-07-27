@@ -2855,3 +2855,18 @@ button:active,
         display: none;
     }
 }
+
+/* Tooltip Z-Index & Sub-360px Responsive Overrides */
+[data-tooltip]::after, .tooltip-bubble, #support-chat-toggle::after {
+    z-index: 1050 !important;
+}
+
+@media (max-width: 360px) {
+    body, .landing-location-bar, #app-header {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    .restaurant-card {
+        margin: 0 4px;
+    }
+}
