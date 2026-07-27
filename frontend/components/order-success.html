@@ -86,12 +86,12 @@
         <!-- Button actions row -->
         <div style="display: flex; flex-direction: column; gap: 10px;">
             <div style="display: flex; gap: 12px;">
-                <button class="btn-submit-order" id="btn-success-track" style="flex: 1; margin: 0; background: var(--secondary); color: var(--bg); font-weight: 800;">Track Order</button>
-                <button class="header-btn" id="btn-success-invoice" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);">Download Invoice</button>
+                <button class="btn-submit-order" id="btn-success-track" onclick="trackCurrentSuccessOrder()" style="flex: 1; margin: 0; background: var(--secondary); color: var(--bg); font-weight: 800; cursor: pointer;">Track Order</button>
+                <button class="header-btn" id="btn-success-invoice" onclick="downloadCurrentSuccessInvoice()" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); cursor: pointer;">Download Invoice</button>
             </div>
             <div style="display: flex; gap: 12px;">
-                <button class="header-btn" id="btn-success-view-order" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);">View Order</button>
-                <button class="header-btn" id="btn-success-home" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);">Back to Home</button>
+                <button class="header-btn" id="btn-success-view-order" onclick="viewCurrentSuccessOrder()" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); cursor: pointer;">View Order</button>
+                <button class="header-btn" id="btn-success-home" onclick="navigateToPath('/customer/dashboard')" style="flex: 1; margin: 0; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); cursor: pointer;">Back to Home</button>
             </div>
         </div>
 
