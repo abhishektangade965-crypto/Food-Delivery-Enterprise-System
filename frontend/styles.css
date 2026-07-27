@@ -163,7 +163,6 @@ section[id], div[id], [id^="popular-restaurants"], [id^="categories"], [id^="off
     height: 56px;
     width: auto;
     object-fit: contain;
-    mix-blend-mode: multiply;
     transition: transform 0.2s ease;
 }
 

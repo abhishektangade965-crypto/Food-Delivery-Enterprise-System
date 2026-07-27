@@ -40,10 +40,10 @@
                     <h4 style="margin-top: 25px;">Driver Courier Tip</h4>
                     <div class="tip-options-row" style="display: flex; gap: 10px; margin-top: 10px;">
                         <button class="header-btn tip-btn active" data-tip="0">No Tip</button>
-                        <button class="header-btn tip-btn" data-tip="2.00">$2.00</button>
-                        <button class="header-btn tip-btn" data-tip="3.00">$3.00</button>
-                        <button class="header-btn tip-btn" data-tip="5.00">$5.00</button>
-                        <input type="number" id="custom-tip-amount" class="input-field" placeholder="Custom Tip" min="0" max="100" style="width: 100px; margin: 0; padding: 5px;">
+                        <button class="header-btn tip-btn" data-tip="20">₹20</button>
+                        <button class="header-btn tip-btn" data-tip="30">₹30</button>
+                        <button class="header-btn tip-btn" data-tip="50">₹50</button>
+                        <input type="number" id="custom-tip-amount" class="input-field" placeholder="Custom Tip" min="0" max="500" style="width: 100px; margin: 0; padding: 5px;">
                     </div>
 
                     <h4 style="margin-top: 25px;">Delivery Instructions</h4>
@@ -79,27 +79,27 @@
                     <div class="price-calculations" style="border-top: 1px dashed var(--border); padding-top: 15px; display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
                         <div style="display: flex; justify-content: space-between;">
                             <span>Subtotal Items Cost:</span>
-                            <span id="checkout-subtotal">$0.00</span>
+                            <span id="checkout-subtotal">₹0.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span>Taxes & VAT (8.25%):</span>
-                            <span id="checkout-taxes">$0.00</span>
+                            <span>Taxes & GST (5%):</span>
+                            <span id="checkout-taxes">₹0.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <span>Delivery Platform Fee:</span>
-                            <span id="checkout-delivery-fee">$3.99</span>
+                            <span id="checkout-delivery-fee">₹35.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <span>Courier Partner Tip:</span>
-                            <span id="checkout-tip">$0.00</span>
+                            <span id="checkout-tip">₹0.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; color: var(--secondary); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 5px;">
                             <span>Total Ledger Due:</span>
-                            <span id="checkout-grand-total">$0.00</span>
+                            <span id="checkout-grand-total">₹0.00</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 13px; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 5px;">
                             <span>Remaining Wallet Balance:</span>
-                            <span id="checkout-remaining-balance">$0.00</span>
+                            <span id="checkout-remaining-balance">₹0.00</span>
                         </div>
                     </div>
 
