@@ -246,7 +246,30 @@ let orderHistory = [
 // ==========================================================================
 // INIT APP & BIND EVENT DELEGATORS (TICKET #2 COMPLIANCE)
 // ==========================================================================
-document.addEventListener("DOMContentLoaded", () => {
+async function loadStaticComponentsFallback() {
+    const includes = document.querySelectorAll("include-component[src]");
+    if (includes.length === 0) return;
+    for (const el of includes) {
+        const src = el.getAttribute("src");
+        if (src) {
+            try {
+                const res = await fetch(src);
+                if (res.ok) {
+                    const html = await res.text();
+                    const temp = document.createElement("div");
+                    temp.innerHTML = html;
+                    el.replaceWith(...temp.childNodes);
+                }
+            } catch (e) {
+                console.warn("Component fetch fallback error:", e);
+            }
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadStaticComponentsFallback();
+
     // Apply visual theme from cache
     const cachedTheme = localStorage.getItem("delivo-theme") || "light";
     document.body.setAttribute("data-theme", cachedTheme);
