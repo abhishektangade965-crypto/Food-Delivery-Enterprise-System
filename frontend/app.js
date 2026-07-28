@@ -1,6 +1,25 @@
-// ==========================================================================
-// DELIVO APP.JS - ENTERPRISE MARKETPLACE & LOGISTICS ROUTER
-// ==========================================================================
+// Initialize Supabase Client for delivo-food-delivery
+const SUPABASE_URL = window.SUPABASE_URL || "https://lswbhfldjcrvtyqrcqng.supabase.co";
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxzd2JoZmxkamNydnR5cXJjcW5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1MzA0NDUsImV4cCI6MjA1NDEwNjQ0NX0";
+let supabase = null;
+
+function initSupabaseClient() {
+    try {
+        if (window.supabase && typeof window.supabase.createClient === "function") {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("Connected to Supabase project:", SUPABASE_URL);
+        }
+    } catch (e) {
+        console.warn("Supabase init status:", e.message);
+    }
+}
+
+// Trigger client init
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSupabaseClient);
+} else {
+    initSupabaseClient();
+}
 
 // Global Store & Database States
 let cartItems = [];
