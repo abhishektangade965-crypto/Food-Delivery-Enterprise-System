@@ -1,0 +1,38 @@
+        <!-- VIEW: OBSERVABILITY CONSOLE -->
+        <div id="view-observability" class="app-view">
+            <!-- CDC & SLO dashboard -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>SLO / Error Budget Dashboard</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        Target Uptime: 99.9% | Current: <strong style="color: var(--neon-green);">99.95%</strong><br>
+                        Remaining Error Budget: <strong style="color: var(--secondary);">0.05%</strong> (approx. 21.6 mins remaining)
+                    </div>
+                </div>
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>CDC (Change Data Capture) visualizer</h4>
+                    <div style="font-size: 13px; line-height: 1.4;">
+                        Source: `orderdb.orders` table | Engine: Debezium<br>
+                        Event type: <strong style="color: var(--primary);">INSERT</strong> streamed to topic `order-events`
+                    </div>
+                </div>
+            </div>
+
+            <div class="telemetry-layout">
+                <div>
+                    <h4 style="margin-bottom: 15px; font-family: var(--font-display);">Distributed Log Terminal Feed</h4>
+                    <div class="log-terminal" id="log-feed-terminal">
+                        <!-- Live log stream -->
+                    </div>
+                </div>
+                <div class="trace-visualizer">
+                    <h4 style="margin-bottom: 15px; font-family: var(--font-display);">Zipkin Span Tracing Budget</h4>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Total span duration budget: 350ms</div>
+                    
+                    <div class="trace-bar" style="background: var(--primary); width: 100%;">API-Gateway [80ms]</div>
+                    <div class="trace-bar" style="background: var(--neon-blue); width: 80%; margin-left: 20px;">Order-Service [120ms]</div>
+                    <div class="trace-bar" style="background: var(--neon-yellow); width: 40%; margin-left: 60px;">Payment-Service [60ms]</div>
+                    <div class="trace-bar" style="background: var(--neon-green); width: 25%; margin-left: 60px;">Inventory-Service [40ms]</div>
+                </div>
+            </div>
+        </div>

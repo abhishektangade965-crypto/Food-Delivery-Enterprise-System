@@ -1,0 +1,21 @@
+{
+  "name": "Delivo OS",
+  "short_name": "Delivo",
+  "description": "Globally Scalable Food Delivery Platform",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#FF6B6B",
+  "icons": [
+    {
+      "src": "assets/images/restaurants/bella_napoli.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "assets/images/restaurants/bella_napoli.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+        <!-- VIEW: RESTAURANT KANBAN / KDS -->
+        <div id="view-restaurant" class="app-view">
+            <div class="kds-dashboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                <div class="kds-column">
+                    <div class="kds-column-header">
+                        <h4>Pending Orders (<span id="count-pending">0</span>)</h4>
+                    </div>
+                    <div class="kds-column-list" id="kanban-pending-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                <div class="kds-column">
+                    <div class="kds-column-header">
+                        <h4>Preparing Food (<span id="count-prep">0</span>)</h4>
+                    </div>
+                    <div class="kds-column-list" id="kanban-prep-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                <div class="kds-column">
+                    <div class="kds-column-header">
+                        <h4>Packed & Ready (<span id="count-ready">0</span>)</h4>
+                    </div>
+                    <div class="kds-column-list" id="kanban-ready-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+                <div class="kds-column">
+                    <div class="kds-column-header">
+                        <h4>Dispatched / Done (<span id="count-done">0</span>)</h4>
+                    </div>
+                    <div class="kds-column-list" id="kanban-done-list">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>

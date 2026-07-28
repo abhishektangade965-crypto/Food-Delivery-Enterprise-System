@@ -1,0 +1,30 @@
+        <!-- VIEW: CONTACT SUPPORT -->
+        <div id="view-support" class="app-view">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>Support Help FAQ</h4>
+                    <div id="faq-accordion-list">
+                        <!-- Loaded dynamically from array data for Ticket #28 compliance -->
+                    </div>
+                </div>
+
+                <div class="card-box" style="margin-bottom: 0;">
+                    <h4>Open Support Ticket</h4>
+                    <form id="support-ticket-form">
+                        <div class="input-row">
+                            <label for="contact-name">Your Name</label>
+                            <input type="text" id="contact-name" class="input-field" placeholder="Enter name..." required>
+                        </div>
+                        <div class="input-row">
+                            <label for="contact-email">Email Address</label>
+                            <input type="email" id="contact-email" class="input-field" placeholder="Enter email..." required>
+                        </div>
+                        <div class="input-row">
+                            <label for="contact-msg">Support Query Message</label>
+                            <textarea id="contact-msg" style="width: 100%; min-height: 80px; padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: rgba(0,0,0,0.25); color: white;" placeholder="Describe issue..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit-order" style="margin-top: 15px;">Submit Support Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,43 @@
+<!-- VIEW: MAILBOX SYSTEM -->
+<div id="view-mailbox" class="app-view">
+    <div class="checkout-box" style="padding: 0; display: grid; grid-template-columns: 200px 300px 1fr; height: calc(100vh - 140px); min-height: 500px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden;">
+        
+        <!-- Left Pane: Folders & Compose -->
+        <div style="border-right: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 8px; background: rgba(0, 0, 0, 0.02);">
+            <button class="btn-submit-order" id="btn-mailbox-compose" style="width: 100%; margin-bottom: 15px; font-size: 13px; font-family: var(--font-display); background: var(--primary);">
+                <i class="fa-solid fa-pen" style="margin-right: 6px;"></i> Compose
+            </button>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <button class="mailbox-folder-btn active" data-folder="inbox" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: none; border: none; color: var(--text-main); font-size: 13px; font-weight: 500; text-align: left; width: 100%; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    <span><i class="fa-solid fa-inbox" style="margin-right: 8px; width: 16px;"></i> Inbox</span>
+                    <span class="badge" id="mailbox-unread-count" style="background: var(--primary); color: white; font-size: 9px; padding: 2px 6px;">3</span>
+                </button>
+                <button class="mailbox-folder-btn" data-folder="sent" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 500; text-align: left; width: 100%; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    <span><i class="fa-solid fa-paper-plane" style="margin-right: 8px; width: 16px;"></i> Sent</span>
+                </button>
+                <button class="mailbox-folder-btn" data-folder="drafts" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 500; text-align: left; width: 100%; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    <span><i class="fa-solid fa-file-lines" style="margin-right: 8px; width: 16px;"></i> Drafts</span>
+                </button>
+                <button class="mailbox-folder-btn" data-folder="trash" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 500; text-align: left; width: 100%; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                    <span><i class="fa-solid fa-trash" style="margin-right: 8px; width: 16px;"></i> Trash</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Middle Pane: Message List -->
+        <div style="border-right: 1px solid var(--border); display: flex; flex-direction: column; background: rgba(0, 0, 0, 0.01);">
+            <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                <input type="text" id="mailbox-search" class="input-field" placeholder="Search emails..." style="width: 100%; margin: 0; font-size: 12px; padding: 8px 12px;">
+            </div>
+            <div id="mailbox-message-list" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column;">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Right Pane: Detail / Compose Panel -->
+        <div id="mailbox-content-pane" style="padding: 20px; display: flex; flex-direction: column; overflow-y: auto; background: rgba(0, 0, 0, 0.02);">
+            <!-- Dynamically populated -->
+        </div>
+
+    </div>
+</div>
