@@ -3361,15 +3361,21 @@ function handleAuthSubmit(event) {
 }
 
 // ==========================================================================
-// EMAIL OTP VERIFICATION SYSTEM
+// EMAIL OTP VERIFICATION SYSTEM (DYNAMIC RANDOM GENERATOR)
 // ==========================================================================
 let pendingOtpEmail = "";
 let pendingOtpCallback = null;
 let otpTimerInterval = null;
+let currentGeneratedOtp = "";
+
+function generateRandom6DigitOtp() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 function openOtpModal(email, onVerifiedCallback) {
     pendingOtpEmail = email || "user@delivo.com";
     pendingOtpCallback = onVerifiedCallback;
+    currentGeneratedOtp = generateRandom6DigitOtp();
 
     let modal = document.getElementById("email-otp-modal");
     if (!modal) {
@@ -3386,11 +3392,11 @@ function openOtpModal(email, onVerifiedCallback) {
                 <i class="fa-solid fa-envelope-circle-check"></i>
             </div>
             <h3 style="margin:0 0 8px 0; font-size:20px; font-weight:700; color:var(--text-main);">Email OTP Verification</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin:0 0 20px 0;">We sent a 6-digit security code to <br><strong style="color:var(--secondary);">${pendingOtpEmail}</strong></p>
+            <p style="font-size:13px; color:var(--text-muted); margin:0 0 20px 0;">We sent a random 6-digit security code to <br><strong style="color:var(--secondary);">${pendingOtpEmail}</strong></p>
 
             <div style="margin-bottom:20px;">
-                <input type="text" id="otp-input-code" value="123456" maxlength="6" style="width:100%; letter-spacing:12px; font-size:24px; font-weight:800; text-align:center; padding:12px; border-radius:8px; border:2px solid var(--primary); background:var(--bg); color:var(--text-main);" placeholder="123456" autofocus />
-                <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Demo OTP auto-filled: <strong>123456</strong></div>
+                <input type="text" id="otp-input-code" value="${currentGeneratedOtp}" maxlength="6" style="width:100%; letter-spacing:12px; font-size:24px; font-weight:800; text-align:center; padding:12px; border-radius:8px; border:2px solid var(--primary); background:var(--bg); color:var(--text-main);" placeholder="------" autofocus />
+                <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Random OTP generated: <strong style="color:var(--neon-green);" id="otp-code-hint">${currentGeneratedOtp}</strong></div>
             </div>
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:12px;">
@@ -3423,19 +3429,22 @@ function startOtpCountdown() {
         if (secEl) secEl.innerText = seconds;
         if (seconds <= 0) {
             clearInterval(otpTimerInterval);
-            if (timerDisp) timerDisp.innerHTML = `<span style="color:var(--neon-green)">OTP Expired</span>`;
+            if (timerDisp) timerDisp.innerHTML = `<span style="color:var(--primary)">OTP Expired</span>`;
             if (resendBtn) {
                 resendBtn.disabled = false;
-                resendBtn.style.color = "var(--primary)";
+                resendBtn.style.color = "var(--secondary)";
             }
         }
     }, 1000);
 }
 
 function resendOtpCode() {
-    showToast(`New 6-digit OTP code sent to ${pendingOtpEmail}`, "info");
+    currentGeneratedOtp = generateRandom6DigitOtp();
+    showToast(`New random OTP generated: ${currentGeneratedOtp}`, "info");
     const input = document.getElementById("otp-input-code");
-    if (input) input.value = "123456";
+    if (input) input.value = currentGeneratedOtp;
+    const hint = document.getElementById("otp-code-hint");
+    if (hint) hint.innerText = currentGeneratedOtp;
     startOtpCountdown();
 }
 
@@ -3446,7 +3455,7 @@ function verifyOtpCode() {
         return;
     }
 
-    if (code === "123456") {
+    if (code === currentGeneratedOtp) {
         if (otpTimerInterval) clearInterval(otpTimerInterval);
         closeOtpModal();
         showToast("Email verified successfully!", "success");
@@ -3454,7 +3463,7 @@ function verifyOtpCode() {
             pendingOtpCallback();
         }
     } else {
-        showToast("Invalid OTP code. Please enter demo code 123456.", "error");
+        showToast(`Invalid OTP code. Please enter code ${currentGeneratedOtp}`, "error");
     }
 }
 
