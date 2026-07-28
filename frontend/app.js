@@ -109,54 +109,54 @@ const faqData = [
 
 // Rich Mock Databases (30+ Restaurants, 100+ Foods generated dynamically)
 const mockRestaurantsData = [
-    { name: "Bella Napoli Pizza", cuisine: "Pizza & Pasta", image: "images/bella_napoli_pizza.png", desc: "Traditional wood-fired pizzas crafted with imported San Marzano tomatoes." },
-    { name: "GBK Gourmet Burger", cuisine: "Burgers & Fast Food", image: "images/gourmet_burger_kitchen.png", desc: "Premium prime-rib custom burgers layered with sharp cheddar and avocado." },
-    { name: "Sake Sushi House", cuisine: "Asian & Sushi", image: "images/sake_sushi_house.png", desc: "Freshly sliced sashimi grade salmon and signature handcrafted sushi rolls." },
-    { name: "Beijing Bites Wok", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=80", desc: "Classic stir-fried noodles, sweet & sour chicken, and steamed dumplings." },
-    { name: "Pasta Palace Bistro", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=80", desc: "Creamy fettuccine alfredo and traditional Italian carbonara." },
-    { name: "Waffle Garden Desserts", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80", desc: "Warm Belgian waffles drizzled with organic honey and fresh berries." },
-    { name: "Green Garden Salad", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=80", desc: "Crisp organic baby greens, toasted quinoa, and cold-pressed olive oils." },
-    { name: "Burger Craft", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=80", desc: "Juicy flame-grilled patties served with seasoned sweet potato fries." },
-    { name: "Taco Loco Mexican", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=300&q=80", desc: "Soft corn tortilla tacos loaded with grilled steak, onions, and fresh cilantro." },
-    { name: "Curry Bistro", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=300&q=80", desc: "Slow-simmered rich butter chicken and traditional clay-oven garlic naan." },
-    { name: "Tandoori Nights", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=80", desc: "Fusion pizzas topped with spiced tandoori paneer and mint chutney." },
-    { name: "Healthy Bowl Cafe", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=80", desc: "High-protein vegan bowls topped with organic edamame and sesame seeds." },
-    { name: "Biryani Express", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=80", desc: "Traditional slow-cooked basmati rice loaded with aromatic saffron spices." },
-    { name: "Cake House Bakeries", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&w=300&q=80", desc: "Red velvet layer cakes, gluten-free brownies, and chocolate fudge." },
-    { name: "Sol Sushi Lounge", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=300&q=80", desc: "Modern sushi bar serving premium tempura rolls and hot sake tea." }
+    { name: "Bella Napoli Pizza", cuisine: "Pizza & Pasta", image: "assets/images/bella_napoli_pizza.png", desc: "Traditional wood-fired pizzas crafted with imported San Marzano tomatoes." },
+    { name: "GBK Gourmet Burger", cuisine: "Burgers & Fast Food", image: "assets/images/gourmet_burger_kitchen.png", desc: "Premium prime-rib custom burgers layered with sharp cheddar and avocado." },
+    { name: "Sake Sushi House", cuisine: "Asian & Sushi", image: "assets/images/sake_sushi_house.png", desc: "Freshly sliced sashimi grade salmon and signature handcrafted sushi rolls." },
+    { name: "Beijing Bites Wok", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=70", desc: "Classic stir-fried noodles, sweet & sour chicken, and steamed dumplings." },
+    { name: "Pasta Palace Bistro", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70", desc: "Creamy fettuccine alfredo and traditional Italian carbonara." },
+    { name: "Waffle Garden Desserts", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=70", desc: "Warm Belgian waffles drizzled with organic honey and fresh berries." },
+    { name: "Green Garden Salad", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=70", desc: "Crisp organic baby greens, toasted quinoa, and cold-pressed olive oils." },
+    { name: "Burger Craft", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=70", desc: "Juicy flame-grilled patties served with seasoned sweet potato fries." },
+    { name: "Taco Loco Mexican", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=300&q=70", desc: "Soft corn tortilla tacos loaded with grilled steak, onions, and fresh cilantro." },
+    { name: "Curry Bistro", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=300&q=70", desc: "Slow-simmered rich butter chicken and traditional clay-oven garlic naan." },
+    { name: "Tandoori Nights", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=70", desc: "Fusion pizzas topped with spiced tandoori paneer and mint chutney." },
+    { name: "Healthy Bowl Cafe", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=70", desc: "High-protein vegan bowls topped with organic edamame and sesame seeds." },
+    { name: "Biryani Express", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70", desc: "Traditional slow-cooked basmati rice loaded with aromatic saffron spices." },
+    { name: "Cake House Bakeries", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&w=300&q=70", desc: "Red velvet layer cakes, gluten-free brownies, and chocolate fudge." },
+    { name: "Sol Sushi Lounge", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=300&q=70", desc: "Modern sushi bar serving premium tempura rolls and hot sake tea." }
 ];
 
 const uniqueRestaurantImages = [
-    "images/bella_napoli_pizza.png",
-    "images/gourmet_burger_kitchen.png",
-    "images/sake_sushi_house.png",
-    "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1484723091739-30a097e8f929?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1493770308161-fdc199e7c1d8?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80"
+    "assets/images/bella_napoli_pizza.png",
+    "assets/images/gourmet_burger_kitchen.png",
+    "assets/images/sake_sushi_house.png",
+    "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1484723091739-30a097e8f929?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1493770308161-fdc199e7c1d8?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=300&q=70",
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=70"
 ];
 
 const mockStores = [];
@@ -1916,7 +1916,7 @@ function openMenu(storeId, searchFilter = "", sortBy = "default") {
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:15px;">
-                            <span style="font-weight:700; color:var(--text-main); font-size:13px;">$${item.price.toFixed(2)}</span>
+                            <span style="font-weight:700; color:var(--text-main); font-size:13px;">₹${item.price.toFixed(2)}</span>
                             ${actionHtml}
                         </div>
                     </div>
@@ -3360,58 +3360,178 @@ function handleAuthSubmit(event) {
     });
 }
 
+// ==========================================================================
+// EMAIL OTP VERIFICATION SYSTEM
+// ==========================================================================
+let pendingOtpEmail = "";
+let pendingOtpCallback = null;
+let otpTimerInterval = null;
+
+function openOtpModal(email, onVerifiedCallback) {
+    pendingOtpEmail = email || "user@delivo.com";
+    pendingOtpCallback = onVerifiedCallback;
+
+    let modal = document.getElementById("email-otp-modal");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "email-otp-modal";
+        modal.className = "modal-overlay";
+        modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:9999;";
+        document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+        <div class="modal-box" style="background:var(--surface); border:1px solid var(--border); border-radius:16px; width:90%; max-width:440px; padding:30px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.4); animation: modalSlideUp 0.3s ease;">
+            <div style="width:60px; height:60px; border-radius:50%; background:rgba(255,90,95,0.1); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 15px auto; border:2px solid var(--primary);">
+                <i class="fa-solid fa-envelope-circle-check"></i>
+            </div>
+            <h3 style="margin:0 0 8px 0; font-size:20px; font-weight:700; color:var(--text-main);">Email OTP Verification</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin:0 0 20px 0;">We sent a 6-digit security code to <br><strong style="color:var(--secondary);">${pendingOtpEmail}</strong></p>
+
+            <div style="margin-bottom:20px;">
+                <input type="text" id="otp-input-code" value="123456" maxlength="6" style="width:100%; letter-spacing:12px; font-size:24px; font-weight:800; text-align:center; padding:12px; border-radius:8px; border:2px solid var(--primary); background:var(--bg); color:var(--text-main);" placeholder="123456" autofocus />
+                <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Demo OTP auto-filled: <strong>123456</strong></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:12px;">
+                <span id="otp-timer-display" style="color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-clock"></i> Resend code in <strong id="otp-seconds">60</strong>s</span>
+                <button id="btn-resend-otp" onclick="resendOtpCode()" style="background:none; border:none; color:var(--secondary); font-weight:700; cursor:pointer; font-size:12px;" disabled>Resend OTP</button>
+            </div>
+
+            <div style="display:flex; gap:12px;">
+                <button class="btn-submit-order" onclick="verifyOtpCode()" style="flex:1; margin:0; padding:12px; background:var(--primary); font-weight:700;">Verify & Proceed</button>
+                <button class="header-btn" onclick="closeOtpModal()" style="padding:12px; margin:0; background:rgba(255,255,255,0.05); border:1px solid var(--border);">Cancel</button>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = "flex";
+    startOtpCountdown();
+}
+
+function startOtpCountdown() {
+    let seconds = 60;
+    const secEl = document.getElementById("otp-seconds");
+    const resendBtn = document.getElementById("btn-resend-otp");
+    const timerDisp = document.getElementById("otp-timer-display");
+    
+    if (resendBtn) resendBtn.disabled = true;
+
+    if (otpTimerInterval) clearInterval(otpTimerInterval);
+    otpTimerInterval = setInterval(() => {
+        seconds--;
+        if (secEl) secEl.innerText = seconds;
+        if (seconds <= 0) {
+            clearInterval(otpTimerInterval);
+            if (timerDisp) timerDisp.innerHTML = `<span style="color:var(--neon-green)">OTP Expired</span>`;
+            if (resendBtn) {
+                resendBtn.disabled = false;
+                resendBtn.style.color = "var(--primary)";
+            }
+        }
+    }, 1000);
+}
+
+function resendOtpCode() {
+    showToast(`New 6-digit OTP code sent to ${pendingOtpEmail}`, "info");
+    const input = document.getElementById("otp-input-code");
+    if (input) input.value = "123456";
+    startOtpCountdown();
+}
+
+function verifyOtpCode() {
+    const code = document.getElementById("otp-input-code").value.trim();
+    if (!code || code.length !== 6) {
+        showToast("Please enter a valid 6-digit OTP code.", "warning");
+        return;
+    }
+
+    if (code === "123456") {
+        if (otpTimerInterval) clearInterval(otpTimerInterval);
+        closeOtpModal();
+        showToast("Email verified successfully!", "success");
+        if (typeof pendingOtpCallback === "function") {
+            pendingOtpCallback();
+        }
+    } else {
+        showToast("Invalid OTP code. Please enter demo code 123456.", "error");
+    }
+}
+
+function closeOtpModal() {
+    if (otpTimerInterval) clearInterval(otpTimerInterval);
+    const modal = document.getElementById("email-otp-modal");
+    if (modal) modal.style.display = "none";
+}
+
 function handleRegisterSubmit(event) {
     event.preventDefault();
     const email = document.getElementById("reg-email").value.trim();
     const password = document.getElementById("reg-password").value;
     const confirm = document.getElementById("reg-confirm").value;
 
+    if (!email) {
+        showToast("Please enter a valid email address!", "warning");
+        return;
+    }
+
     if (password !== confirm) {
         showToast("Passwords do not match!", "error");
         return;
     }
 
-    fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email: email, password: password })
-    })
-    .then(res => {
-        if (!res.ok) {
-            if (res.status === 404) {
-                return "Mock registration success (Dev Server)";
+    // Trigger Email OTP Verification Workflow
+    openOtpModal(email, () => {
+        fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email, password: password })
+        })
+        .then(res => {
+            if (!res.ok) {
+                if (res.status === 404) {
+                    return "Mock registration success (Dev Server)";
+                }
+                return res.text().then(text => { throw new Error(text) });
             }
-            return res.text().then(text => { throw new Error(text) });
-        }
-        return res.text();
-    })
-    .then(msg => {
-        showToast("Registration successful! Logging you in...", "success");
-        localStorage.setItem("delivo-token", "demo-registered-token");
-        localStorage.setItem("delivo-email", email);
-        localStorage.setItem("delivo-role", "CUSTOMER");
-        
-        const tabs = document.getElementById("main-nav-tabs");
-        const logoutBtn = document.getElementById("btn-logout");
-        if (tabs) tabs.style.display = "flex";
-        if (logoutBtn) logoutBtn.style.display = "block";
-        
-        setTimeout(() => {
-            navigateToPath("/customer/dashboard");
-        }, 500);
-    })
-    .catch(err => {
-        showToast(err.message, "error");
+            return res.text();
+        })
+        .then(msg => {
+            showToast("Registration successful! Logging you in...", "success");
+            localStorage.setItem("delivo-token", "demo-registered-token");
+            localStorage.setItem("delivo-email", email);
+            localStorage.setItem("delivo-role", "CUSTOMER");
+            
+            const tabs = document.getElementById("main-nav-tabs");
+            const logoutBtn = document.getElementById("btn-logout");
+            if (tabs) tabs.style.display = "flex";
+            if (logoutBtn) logoutBtn.style.display = "block";
+            
+            setTimeout(() => {
+                navigateToPath("/customer/dashboard");
+            }, 500);
+        })
+        .catch(err => {
+            showToast(err.message, "error");
+        });
     });
 }
 
 function handleForgotSubmit(event) {
     event.preventDefault();
     const email = document.getElementById("forgot-email").value.trim();
-    showToast(`Password recovery link dispatched to ${email}`, "info");
-    toggleAuthForm("login");
+    if (!email) {
+        showToast("Please enter your registered email.", "warning");
+        return;
+    }
+
+    // Trigger Email OTP for Password Reset
+    openOtpModal(email, () => {
+        showToast(`Password recovery link dispatched to ${email}`, "info");
+        toggleAuthForm("login");
+    });
 }
 
 function handleLogout() {
