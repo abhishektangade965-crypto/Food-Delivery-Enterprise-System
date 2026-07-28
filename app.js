@@ -653,22 +653,10 @@ function triggerAiSuggestions() {
 }
 
 function showAuthPage(role) {
-    const targetRole = role || "CUSTOMER";
-    if (!localStorage.getItem("delivo-token")) {
-        localStorage.setItem("delivo-token", "demo-static-token");
-        localStorage.setItem("delivo-email", targetRole === "ADMIN" ? "admin@delivo.com" : "customer@delivo.com");
-        localStorage.setItem("delivo-role", targetRole);
-        
-        const tabs = document.getElementById("main-nav-tabs");
-        const logoutBtn = document.getElementById("btn-logout");
-        if (tabs) tabs.style.display = "flex";
-        if (logoutBtn) logoutBtn.style.display = "block";
-    }
-
-    if (targetRole === "ADMIN") {
-        navigateToPath("/admin/dashboard");
+    if (role === "ADMIN") {
+        navigateToPath("/auth/admin/login");
     } else {
-        navigateToPath("/customer/dashboard");
+        navigateToPath("/auth/customer/login");
     }
 }
 
