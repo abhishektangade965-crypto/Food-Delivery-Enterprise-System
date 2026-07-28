@@ -27,7 +27,9 @@
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Delivoos - Enterprise Food Delivery Platform">
-    <meta name="twitter:description" content="Orchestrate enterprise-level multi-region transactions, Saga workflow timelines, and real-time logistics tracking on Delivoos.">
+    <!-- Security CSP Header -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; font-src 'self' https: data:;">
+    <link rel="manifest" href="manifest.json">
     
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -35,10 +37,26 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Delivoos",
-      "url": "http://127.0.0.1:8080/",
+      "url": "https://food-delivery-enterprise-system.vercel.app/",
       "applicationCategory": "FoodEstablishment",
       "operatingSystem": "All",
       "browserRequirements": "Requires HTML5, Geolocation, JavaScript"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Delivoos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Delivoos is an enterprise food delivery super platform with real-time order tracking, dynamic surge pricing, and instant wallet settlement."
+          }
+        }
+      ]
     }
     </script>
 
