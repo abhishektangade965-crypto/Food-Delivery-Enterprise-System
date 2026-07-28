@@ -277,28 +277,16 @@ async function loadStaticComponentsFallback() {
     for (const el of includes) {
         const src = el.getAttribute("src");
         if (src) {
-            let loadedHtml = null;
-            const pathsToTry = [src, `./${src}`, `/${src}`];
-            for (const path of pathsToTry) {
-                try {
-                    const res = await fetch(path);
-                    if (res.ok) {
-                        const text = await res.text();
-                        if (text && text.trim().length > 0) {
-                            loadedHtml = text;
-                            break;
-                        }
-                    }
-                } catch (e) {
-                    // Continue to next path candidate
+            try {
+                const res = await fetch(src);
+                if (res.ok) {
+                    const html = await res.text();
+                    const temp = document.createElement("div");
+                    temp.innerHTML = html;
+                    el.replaceWith(...temp.childNodes);
                 }
-            }
-            if (loadedHtml) {
-                const temp = document.createElement("div");
-                temp.innerHTML = loadedHtml;
-                el.replaceWith(...temp.childNodes);
-            } else {
-                console.warn(`Could not load component fallback for: ${src}`);
+            } catch (e) {
+                console.warn("Component fetch fallback error:", e);
             }
         }
     }
