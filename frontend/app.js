@@ -2121,6 +2121,67 @@ function checkCoupon(code) {
     updateCartCounter();
 }
 
+// ==========================================================================
+// SUPABASE REALTIME ORDER MANAGEMENT
+// ==========================================================================
+async function saveOrderToSupabase(orderData) {
+    if (!supabase) return null;
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .insert([
+                {
+                    user_email: localStorage.getItem('delivo-email') || "customer@delivo.com",
+                    restaurant_name: orderData.restaurantName,
+                    amount: orderData.amount,
+                    payment_method: orderData.paymentMethod,
+                    items: orderData.items,
+                    status: "PENDING"
+                }
+            ])
+            .select();
+            
+        if (error) {
+            console.error("Supabase insert error:", error);
+            return null;
+        }
+        
+        console.log("Order saved to Supabase Postgres:", data ? data[0] : null);
+        return data && data.length > 0 ? data[0] : null;
+    } catch (e) {
+        console.warn("Supabase order insert note:", e);
+        return null;
+    }
+}
+
+function listenToLiveSupabaseOrder(orderId) {
+    if (!supabase) return;
+    try {
+        supabase
+            .channel(`order-updates-${orderId}`)
+            .on('postgres_changes', 
+                { 
+                    event: 'UPDATE', 
+                    schema: 'public', 
+                    table: 'orders', 
+                    filter: `id=eq.${orderId}` 
+                }, 
+                payload => {
+                    const newStatus = payload.new ? payload.new.status : "PREPARING";
+                    console.log("Realtime order status update received from Supabase WebSocket:", newStatus);
+                    
+                    if (typeof updateSuccessTimeline === "function") {
+                        updateSuccessTimeline(newStatus);
+                    }
+                    showToast(`🔔 Realtime Order Update: Status is now ${newStatus}`, "info");
+                }
+            )
+            .subscribe();
+    } catch (e) {
+        console.warn("Supabase realtime channel note:", e);
+    }
+}
+
 // Place Order Saga
 function dispatchOrderSaga() {
     if (cartItems.length === 0) {
@@ -2152,6 +2213,16 @@ function dispatchOrderSaga() {
 
         const restaurantName = document.getElementById("selected-restaurant-name") ? document.getElementById("selected-restaurant-name").innerText : "Bella Napoli Pizza";
         const itemsList = cartItems.map(i => `${i.qty}x ${i.name}`).join(", ");
+
+        const orderData = {
+            restaurantName: restaurantName,
+            amount: totalVal,
+            paymentMethod: modeTitle,
+            items: itemsList
+        };
+
+        // Save Order to Supabase Database
+        saveOrderToSupabase(orderData);
         
         // Post payment to backend API
         fetch("/api/orders/pay", {
@@ -4176,9 +4247,12 @@ function showOrderSuccessPage(orderId) {
         if (addrEl) addrEl.innerText = order.address;
 
         const pmEl = document.getElementById("success-payment-method");
-        if (pmEl) pmEl.innerText = order.paymentMethod;
-
         updateSuccessTimeline(order.currentStatus);
+
+        // Connect to Supabase Real-Time WebSocket Channel for Live Updates
+        if (typeof listenToLiveSupabaseOrder === "function") {
+            listenToLiveSupabaseOrder(order.orderId);
+        }
 
         // Bind button actions
         const btnTrack = document.getElementById("btn-success-track");
