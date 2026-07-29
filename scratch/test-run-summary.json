@@ -1,0 +1,380 @@
+[
+  {
+    "id": "1.1",
+    "name": "page renders without white screen",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.2",
+    "name": "load under 3s on default network",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.3",
+    "name": "zero unhandled JS runtime errors",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.4",
+    "name": "page title correct",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.5",
+    "name": "canonical URL correct",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.6",
+    "name": "meta description present",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.7",
+    "name": "og:title present",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.8",
+    "name": "og:url present",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.9",
+    "name": "og:image is absolute URL",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.10",
+    "name": "theme-color = #FF5A5F",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.11",
+    "name": "robots = index, follow",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.12",
+    "name": "favicon present",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "1.13",
+    "name": "no broken images (404)",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "2.1",
+    "name": "/manifest.json returns 200",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "2.2",
+    "name": "manifest has name, icons, start_url",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "2.3",
+    "name": "PWA install banner visible on load",
+    "status": "SKIP",
+    "detail": "PWA install banner not visible on load (SKIP)"
+  },
+  {
+    "id": "2.4",
+    "name": "PWA Later button dismisses banner",
+    "status": "SKIP",
+    "detail": "Later button not found (SKIP)"
+  },
+  {
+    "id": "3.1",
+    "name": "logo present and clickable",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "3.2",
+    "name": "nav links all visible",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "3.3",
+    "name": "mobile hamburger visible at 375px",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "3.4",
+    "name": "mobile menu opens on hamburger click",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "3.5",
+    "name": "cart badge visible",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "4.1",
+    "name": "demo/sandbox notice visible on load",
+    "status": "SKIP",
+    "detail": "Demo banner notice not visible (SKIP)"
+  },
+  {
+    "id": "4.2",
+    "name": "\"Mock Friend Join\" NOT visible — must say \"Simulate Member Join\"",
+    "status": "FAIL",
+    "detail": "Found \"Mock Friend Join\" text in DOM (1 instances)"
+  },
+  {
+    "id": "5.1",
+    "name": "search bar visible and focusable",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "5.2",
+    "name": "typing \"Pizza\" filters results",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "5.3",
+    "name": "clearing search restores all results",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "5.4",
+    "name": "no-match search shows empty state",
+    "status": "FAIL",
+    "detail": "Found 30 cards for non-matching query"
+  },
+  {
+    "id": "6.1",
+    "name": "store cards render",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "6.2",
+    "name": "cards have name text",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "6.3",
+    "name": "favourite heart toggle works",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "7.1",
+    "name": "clicking dish opens modal",
+    "status": "SKIP",
+    "detail": "locator.click: Timeout 5000ms exceeded."
+  },
+  {
+    "id": "7.2",
+    "name": "Large portion +₹40 option present",
+    "status": "SKIP",
+    "detail": "Large portion option not visible (SKIP)"
+  },
+  {
+    "id": "7.3",
+    "name": "Extra Cheese +₹30 addon present",
+    "status": "SKIP",
+    "detail": "Extra cheese addon not visible (SKIP)"
+  },
+  {
+    "id": "7.4",
+    "name": "Cancel closes modal without adding to cart",
+    "status": "SKIP",
+    "detail": "Cancel button not found (SKIP)"
+  },
+  {
+    "id": "7.5",
+    "name": "ESC key closes modal",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "8.1",
+    "name": "cart drawer opens",
+    "status": "SKIP",
+    "detail": "Cart drawer not visible (SKIP)"
+  },
+  {
+    "id": "8.2",
+    "name": "empty cart shows empty state message",
+    "status": "SKIP",
+    "detail": "Empty cart message not visible (SKIP)"
+  },
+  {
+    "id": "8.3",
+    "name": "promo code DELIVO10 applies discount",
+    "status": "SKIP",
+    "detail": "locator.fill: Timeout 5000ms exceeded."
+  },
+  {
+    "id": "8.4",
+    "name": "invalid promo shows error",
+    "status": "SKIP",
+    "detail": "locator.fill: Timeout 5000ms exceeded."
+  },
+  {
+    "id": "8.5",
+    "name": "delivery fee ₹35 shown in cart",
+    "status": "SKIP",
+    "detail": "Delivery fee ₹35 not visible in cart (SKIP)"
+  },
+  {
+    "id": "9.1",
+    "name": "address modal opens",
+    "status": "SKIP",
+    "detail": "locator.click: Timeout 5000ms exceeded."
+  },
+  {
+    "id": "9.2",
+    "name": "saved address Home: Highway 48 visible",
+    "status": "SKIP",
+    "detail": "Home: Highway 48 address not visible (SKIP)"
+  },
+  {
+    "id": "9.3",
+    "name": "saved address Work: IT Tech Park visible",
+    "status": "SKIP",
+    "detail": "Work: IT Tech Park address not visible (SKIP)"
+  },
+  {
+    "id": "10.1",
+    "name": "\"Mock Friend Join\" text must NOT exist in DOM",
+    "status": "FAIL",
+    "detail": "Found 1 instances of \"Mock Friend Join\" in DOM"
+  },
+  {
+    "id": "10.2",
+    "name": "group order modal opens",
+    "status": "SKIP",
+    "detail": "Group order button not found (SKIP)"
+  },
+  {
+    "id": "10.3",
+    "name": "copy invite link button present",
+    "status": "SKIP",
+    "detail": "Copy invite link button not visible (SKIP)"
+  },
+  {
+    "id": "11.1",
+    "name": "schedule modal opens",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "11.2",
+    "name": "repeat options present",
+    "status": "FAIL",
+    "detail": "locator.count: Unexpected token \"=\" while parsing css selector \"option:has-text(\"Daily\"), text=Daily\". Did you mean to CSS.escape it?"
+  },
+  {
+    "id": "11.3",
+    "name": "cancel closes without scheduling",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "12.1",
+    "name": "support chat widget visible",
+    "status": "SKIP",
+    "detail": "Support AI chat widget not visible (SKIP)"
+  },
+  {
+    "id": "12.2",
+    "name": "chat input accepts text",
+    "status": "SKIP",
+    "detail": "Chat widget button not found (SKIP)"
+  },
+  {
+    "id": "13.1",
+    "name": "offline banner appears when network disabled",
+    "status": "SKIP",
+    "detail": "Offline error banner not visible when offline (SKIP)"
+  },
+  {
+    "id": "13.2",
+    "name": "retry button visible when offline",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "14.1",
+    "name": "375px — no horizontal scroll",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "14.2",
+    "name": "768px — page renders",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "14.3",
+    "name": "1280px — page renders",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "14.4",
+    "name": "1920px — no content stretch beyond max-width",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "15.1",
+    "name": "all images have alt attribute",
+    "status": "PASS",
+    "detail": "Observed expected behavior in live DOM"
+  },
+  {
+    "id": "15.2",
+    "name": "skip to main content link present",
+    "status": "SKIP",
+    "detail": "Skip to main content link not present (SKIP)"
+  },
+  {
+    "id": "15.3",
+    "name": "modal ESC closes correctly",
+    "status": "SKIP",
+    "detail": "locator.click: Timeout 5000ms exceeded."
+  },
+  {
+    "id": "16.1",
+    "name": "wallet balance ₹1600.00 displayed somewhere",
+    "status": "SKIP",
+    "detail": "Wallet balance ₹1600.00 not visible on landing (SKIP)"
+  },
+  {
+    "id": "16.2",
+    "name": "wallet nav link accessible",
+    "status": "SKIP",
+    "detail": "Wallet link not found (SKIP)"
+  }
+]

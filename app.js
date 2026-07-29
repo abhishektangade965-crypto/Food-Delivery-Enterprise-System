@@ -821,6 +821,8 @@ function handleHashChange() {
         const customerView = document.getElementById("view-customer");
         if (customerView) customerView.classList.add("active");
         
+        checkLoyaltyMilestone();
+        
         const mainTabs = document.getElementById("main-nav-tabs");
         const publicTabs = document.getElementById("public-nav-tabs");
         const guestAuthBtn = document.getElementById("guest-auth-buttons");
@@ -2496,6 +2498,65 @@ function syncLocalWalletBalances() {
     if (el) el.innerText = `₹${walletBalance.toFixed(2)}`;
     const wVal = document.getElementById("wallet-balance-val");
     if (wVal) wVal.innerText = `₹${walletBalance.toFixed(2)}`;
+    checkLoyaltyMilestone();
+}
+
+function checkLoyaltyMilestone() {
+    const banner = document.getElementById("loyalty-milestone-banner");
+    const display = document.getElementById("customer-loyalty-display");
+    if (display) {
+        display.innerText = `Loyalty Points: ${loyaltyPoints} pts`;
+    }
+    if (loyaltyPoints >= 450) {
+        if (banner) banner.style.display = "flex";
+    } else {
+        if (banner) banner.style.display = "none";
+    }
+}
+
+function redeemLoyaltyPoints() {
+    if (loyaltyPoints < 450) {
+        showToast(`You currently have ${loyaltyPoints} pts. Reach the 450 pts limit to claim your ₹100 Wallet Reward!`, "info");
+        return;
+    }
+
+    showConfirm("Redeem 450 Loyalty Points Limit Reward", "You have reached the 450 Loyalty Points limit milestone! Redeem 450 points now for an instant ₹100.00 Wallet Credit?", () => {
+        loyaltyPoints -= 450;
+        walletBalance += 100.00;
+        
+        syncLocalWalletBalances();
+        checkLoyaltyMilestone();
+
+        // Write reward transaction ledger entry
+        walletLedger.unshift({
+            id: "tx_ledger_" + Math.floor(100000 + Math.random() * 900000),
+            time: new Date().toISOString().replace('T', ' ').substring(0, 19),
+            type: "TOPUP",
+            amount: 100.00,
+            bal: walletBalance
+        });
+
+        // Add Notification Bell Dropdown item
+        const notifList = document.getElementById("notification-list-container");
+        if (notifList) {
+            notifList.insertAdjacentHTML("afterbegin", `
+                <div class="notification-item unread">
+                    <i class="fa-solid fa-award color-secondary"></i>
+                    <div>
+                        <p><strong>Loyalty Tier Milestone Redeemed!</strong> Added ₹100.00 credit for 450 pts milestone limit.</p>
+                        <span>Just now</span>
+                    </div>
+                </div>
+            `);
+            const notifBadge = document.getElementById("notification-badge");
+            if (notifBadge) {
+                const count = parseInt(notifBadge.innerText) || 0;
+                notifBadge.innerText = count + 1;
+            }
+        }
+
+        showToast("🎁 Reward Claimed! ₹100.00 instant credit added to your Delivoos Wallet.", "success");
+    });
 }
 
 function topUpCustomerWallet() {
