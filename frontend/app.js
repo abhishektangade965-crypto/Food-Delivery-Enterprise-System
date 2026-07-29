@@ -780,6 +780,17 @@ function handleHashChange() {
 
     // Auth Views
     if (path.startsWith("/auth/")) {
+        // Fix double-login bug: If user is ALREADY authenticated, redirect immediately to dashboard
+        if (token) {
+            showToast(`Already signed in as ${localStorage.getItem("delivo-email") || "User"}.`, "info");
+            if (role === "ADMIN") {
+                window.location.hash = "/admin/dashboard";
+            } else {
+                window.location.hash = "/customer/dashboard";
+            }
+            return;
+        }
+
         const authView = document.getElementById("view-auth");
         if (authView) authView.classList.add("active");
 
@@ -3451,9 +3462,9 @@ function handleAuthSubmit(event) {
             if (logoutBtn) logoutBtn.style.display = "block";
             
             if (primaryRole === "ADMIN") {
-                switchView("view-admin");
+                navigateToPath("/admin/dashboard");
             } else {
-                switchView("view-customer");
+                navigateToPath("/customer/dashboard");
             }
         }
     })
@@ -3656,7 +3667,7 @@ function handleLogout() {
     if (logoutBtn) logoutBtn.style.display = "none";
     
     showToast("Logged out successfully.", "info");
-    switchView("view-landing");
+    navigateToPath("/");
 }
 
 // ==========================================================================
