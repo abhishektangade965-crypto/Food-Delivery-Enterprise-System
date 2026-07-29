@@ -128,54 +128,54 @@ const faqData = [
 
 // Rich Mock Databases (30+ Restaurants, 100+ Foods generated dynamically)
 const mockRestaurantsData = [
-    { name: "Bella Napoli Pizza", cuisine: "Pizza & Pasta", image: "assets/images/bella_napoli_pizza.png", desc: "Traditional wood-fired pizzas crafted with imported San Marzano tomatoes." },
-    { name: "GBK Gourmet Burger", cuisine: "Burgers & Fast Food", image: "assets/images/gourmet_burger_kitchen.png", desc: "Premium prime-rib custom burgers layered with sharp cheddar and avocado." },
-    { name: "Sake Sushi House", cuisine: "Asian & Sushi", image: "assets/images/sake_sushi_house.png", desc: "Freshly sliced sashimi grade salmon and signature handcrafted sushi rolls." },
-    { name: "Beijing Bites Wok", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=70", desc: "Classic stir-fried noodles, sweet & sour chicken, and steamed dumplings." },
-    { name: "Pasta Palace Bistro", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70", desc: "Creamy fettuccine alfredo and traditional Italian carbonara." },
-    { name: "Waffle Garden Desserts", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=70", desc: "Warm Belgian waffles drizzled with organic honey and fresh berries." },
-    { name: "Green Garden Salad", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=70", desc: "Crisp organic baby greens, toasted quinoa, and cold-pressed olive oils." },
-    { name: "Burger Craft", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=70", desc: "Juicy flame-grilled patties served with seasoned sweet potato fries." },
-    { name: "Taco Loco Mexican", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=300&q=70", desc: "Soft corn tortilla tacos loaded with grilled steak, onions, and fresh cilantro." },
-    { name: "Curry Bistro", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=300&q=70", desc: "Slow-simmered rich butter chicken and traditional clay-oven garlic naan." },
-    { name: "Tandoori Nights", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=70", desc: "Fusion pizzas topped with spiced tandoori paneer and mint chutney." },
-    { name: "Healthy Bowl Cafe", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=70", desc: "High-protein vegan bowls topped with organic edamame and sesame seeds." },
-    { name: "Biryani Express", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70", desc: "Traditional slow-cooked basmati rice loaded with aromatic saffron spices." },
-    { name: "Cake House Bakeries", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&w=300&q=70", desc: "Red velvet layer cakes, gluten-free brownies, and chocolate fudge." },
-    { name: "Sol Sushi Lounge", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=300&q=70", desc: "Modern sushi bar serving premium tempura rolls and hot sake tea." }
+    { name: "Bella Napoli Pizza", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80", desc: "Traditional wood-fired pizzas crafted with imported San Marzano tomatoes." },
+    { name: "GBK Gourmet Burger", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80", desc: "Premium prime-rib custom burgers layered with sharp cheddar and avocado." },
+    { name: "Sake Sushi House", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80", desc: "Freshly sliced sashimi grade salmon and signature handcrafted sushi rolls." },
+    { name: "Beijing Bites Wok", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=600&q=80", desc: "Classic stir-fried noodles, sweet & sour chicken, and steamed dumplings." },
+    { name: "Pasta Palace Bistro", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80", desc: "Creamy fettuccine alfredo and traditional Italian carbonara." },
+    { name: "Waffle Garden Desserts", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=600&q=80", desc: "Warm Belgian waffles drizzled with organic honey and fresh berries." },
+    { name: "Green Garden Salad", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80", desc: "Crisp organic baby greens, toasted quinoa, and cold-pressed olive oils." },
+    { name: "Burger Craft", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80", desc: "Juicy flame-grilled patties served with seasoned sweet potato fries." },
+    { name: "Taco Loco Mexican", cuisine: "Burgers & Fast Food", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80", desc: "Soft corn tortilla tacos loaded with grilled steak, onions, and fresh cilantro." },
+    { name: "Curry Bistro", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=600&q=80", desc: "Slow-simmered rich butter chicken and traditional clay-oven garlic naan." },
+    { name: "Tandoori Nights", cuisine: "Pizza & Pasta", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=80", desc: "Fusion pizzas topped with spiced tandoori paneer and mint chutney." },
+    { name: "Healthy Bowl Cafe", cuisine: "healthy Choices", image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80", desc: "High-protein vegan bowls topped with organic edamame and sesame seeds." },
+    { name: "Biryani Express", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80", desc: "Traditional slow-cooked basmati rice loaded with aromatic saffron spices." },
+    { name: "Cake House Bakeries", cuisine: "Desserts & Cakes", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80", desc: "Red velvet layer cakes, gluten-free brownies, and chocolate fudge." },
+    { name: "Sol Sushi Lounge", cuisine: "Asian & Sushi", image: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80", desc: "Modern sushi bar serving premium tempura rolls and hot sake tea." }
 ];
 
 const uniqueRestaurantImages = [
-    "assets/images/bella_napoli_pizza.png",
-    "assets/images/gourmet_burger_kitchen.png",
-    "assets/images/sake_sushi_house.png",
-    "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1484723091739-30a097e8f929?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1493770308161-fdc199e7c1d8?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=300&q=70",
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=70"
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1585938338392-50a592202c7b?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80"
 ];
 
 const mockStores = [];
@@ -211,26 +211,26 @@ for (let i = 1; i <= 30; i++) {
     // Populate dynamic menus divided into starters, mains, pizzas, burgers, drinks, and desserts
     mockMenus[storeId] = [
         // Starters
-        { id: `${storeId}-m1`, name: "Mozzarella Sticks", price: 6.99, desc: "Crispy fried mozzarella cheese served with warm marinara dip.", calories: 380, image: "https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=80&h=80&q=80", category: "Starters" },
-        { id: `${storeId}-m2`, name: "Garlic Parmesan Bread", price: 5.99, desc: "Toasted artisan sourdough brushed with garlic butter and parsley.", calories: 290, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=80&h=80&q=80", category: "Starters" },
+        { id: `${storeId}-m1`, name: "Mozzarella Sticks", price: 6.99, desc: "Crispy fried mozzarella cheese served with warm marinara dip.", calories: 380, image: "https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=300&q=80", category: "Starters" },
+        { id: `${storeId}-m2`, name: "Garlic Parmesan Bread", price: 5.99, desc: "Toasted artisan sourdough brushed with garlic butter and parsley.", calories: 290, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=300&q=80", category: "Starters" },
         
         // Mains
-        { id: `${storeId}-m3`, name: "Pesto Penne Pasta", price: 14.99, desc: "Fresh basil pesto sauce tossed with pine nuts and cherry tomatoes.", calories: 720, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=80&h=80&q=80", category: "Main Course" },
-        { id: `${storeId}-m4`, name: "Beijing Orange Chicken", price: 13.99, desc: "Crispy chicken breast chunks tossed in sweet citrus orange glaze.", calories: 680, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=80&h=80&q=80", category: "Main Course" },
+        { id: `${storeId}-m3`, name: "Pesto Penne Pasta", price: 14.99, desc: "Fresh basil pesto sauce tossed with pine nuts and cherry tomatoes.", calories: 720, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
+        { id: `${storeId}-m4`, name: "Beijing Orange Chicken", price: 13.99, desc: "Crispy chicken breast chunks tossed in sweet citrus orange glaze.", calories: 680, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
         
         // Pizza
-        { id: `${storeId}-m5`, name: "Margherita Classic Pizza", price: 12.99, desc: "Mozzarella, organic sweet basil, and extra virgin olive oil.", calories: 650, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d001?auto=format&fit=crop&w=80&h=80&q=80", category: "Pizza" },
-        { id: `${storeId}-m6`, name: "Truffle Mushroom Pizza", price: 16.99, desc: "Wild mushrooms, white truffle oil, and creamy ricotta cheese.", calories: 850, image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=80&h=80&q=80", category: "Pizza" },
+        { id: `${storeId}-m5`, name: "Margherita Classic Pizza", price: 12.99, desc: "Mozzarella, organic sweet basil, and extra virgin olive oil.", calories: 650, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d001?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
+        { id: `${storeId}-m6`, name: "Truffle Mushroom Pizza", price: 16.99, desc: "Wild mushrooms, white truffle oil, and creamy ricotta cheese.", calories: 850, image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
         
         // Burgers
-        { id: `${storeId}-m7`, name: "Classic Cheddar Burger", price: 9.99, desc: "Flame-grilled angus beef, sharp cheddar, lettuce, and secret sauce.", calories: 750, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=80&h=80&q=80", category: "Burgers" },
-        { id: `${storeId}-m8`, name: "Bacon Avocado Burger", price: 12.99, desc: "Crispy bacon, sliced avocado, swiss cheese, and garlic aioli.", calories: 920, image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=80&h=80&q=80", category: "Burgers" },
+        { id: `${storeId}-m7`, name: "Classic Cheddar Burger", price: 9.99, desc: "Flame-grilled angus beef, sharp cheddar, lettuce, and secret sauce.", calories: 750, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
+        { id: `${storeId}-m8`, name: "Bacon Avocado Burger", price: 12.99, desc: "Crispy bacon, sliced avocado, swiss cheese, and garlic aioli.", calories: 920, image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
         
         // Drinks
-        { id: `${storeId}-m9`, name: "Cold-Pressed Detox Juice", price: 5.99, desc: "Fresh organic cucumber, green apple, spinach, and ginger root.", calories: 80, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=80&h=80&q=80", category: "Drinks" },
+        { id: `${storeId}-m9`, name: "Cold-Pressed Detox Juice", price: 5.99, desc: "Fresh organic cucumber, green apple, spinach, and ginger root.", calories: 80, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=300&q=80", category: "Drinks" },
         
         // Desserts
-        { id: `${storeId}-m10`, name: "Double Chocolate Belgian Waffle", price: 8.99, desc: "Topped with warm dark fudge, milk chocolate chips, and whipped cream.", calories: 720, image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=80&h=80&q=80", category: "Desserts" }
+        { id: `${storeId}-m10`, name: "Double Chocolate Belgian Waffle", price: 8.99, desc: "Topped with warm dark fudge, milk chocolate chips, and whipped cream.", calories: 720, image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80", category: "Desserts" }
     ];
 }
 
