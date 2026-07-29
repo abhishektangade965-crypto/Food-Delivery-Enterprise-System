@@ -50,7 +50,7 @@ let couponDatabase = [
 
 // Mailbox Database (Ticket Visual Inbox parity compliance)
 let mockEmails = [
-    { id: "mail_1", folder: "inbox", from: "Delivo Support", subject: "Welcome to Delivo OS!", body: "Hi Alice,\n\nWelcome to your enterprise food delivery orchestrator. Explore microservice latencies, place test orders, and configure security flags inside the admin console.\n\nBest,\nDelivo Team", date: "2026-07-02 10:00", read: false },
+    { id: "mail_1", folder: "inbox", from: "Delivoos Support", subject: "Welcome to Delivoos!", body: "Hi Alice,\n\nWelcome to your enterprise food delivery orchestrator. Explore microservice latencies, place test orders, and configure security flags inside the admin console.\n\nBest,\nDelivoos Team", date: "2026-07-02 10:00", read: false },
     { id: "mail_2", folder: "inbox", from: "General Ledger Service", subject: "Daily Ledger Balance Reconciled", body: "Ledger report for 2026-07-01:\nTotal Debit: $1,420,550.00\nTotal Credit: $1,420,550.00\nStatus: Balanced.\nNo anomalies detected.", date: "2026-07-02 08:30", read: true },
     { id: "mail_3", folder: "inbox", from: "Fraud Monitoring System", subject: "Security Alert: Spoofing attempt blocked", body: "An anomaly score of 92% was flagged on user usr_9088 due to rapid double-submit checkout attempts. IP address blocked.", date: "2026-07-01 19:45", read: false },
     { id: "mail_4", folder: "drafts", from: "You", subject: "Refund request for order #tx_p90814", body: "Draft email requesting transaction ledger refund for cryptocurrency portal failure...", date: "2026-07-02 12:15", read: true }
@@ -2207,14 +2207,14 @@ function dispatchOrderSaga() {
     const selectedModeEl = document.querySelector('input[name="payment-method"]:checked');
     const selectedMode = selectedModeEl ? selectedModeEl.value : "CARD";
 
-    // Only validate wallet balance if Delivo System Wallet is selected
+    // Only validate wallet balance if Delivoos System Wallet is selected
     if (selectedMode === "WALLET" && walletBalance < totalVal) {
         showToast("Insufficient wallet balance! Please add funds to your wallet.", "error");
         return;
     }
 
     let modeTitle = "Credit / Debit Card";
-    if (selectedMode === "WALLET") modeTitle = "Delivo System Wallet";
+    if (selectedMode === "WALLET") modeTitle = "Delivoos System Wallet";
     else if (selectedMode === "UPI") modeTitle = "UPI (GPay / PhonePe)";
     else if (selectedMode === "COD") modeTitle = "Cash on Delivery (COD)";
 
@@ -3084,7 +3084,7 @@ function downloadReceipt(txId) {
     if (!log) return;
 
     let doc = `=========================================
-DELIVO OS TRANSACTION INVOICE RECEIPT
+DELIVOOS TRANSACTION INVOICE RECEIPT
 =========================================
 Transaction ID: ${log.id}
 Date & Time:    ${log.time}
@@ -3093,7 +3093,7 @@ Amount:         ₹${log.amount.toFixed(2)}
 Remaining Bal:  ₹${log.bal.toFixed(2)}
 Status:         SETTLED & CLEARED
 =========================================
-Thank you for using Delivo OS!
+Thank you for using DELIVOOS!
 `;
     const blob = new Blob([doc], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
@@ -3278,7 +3278,7 @@ function triggerFlyingDot(event) {
 
 // Footer policy overlay
 function openLegalModal(docName) {
-    const text = `DELIVO OS LEGAL CHARTER - ${docName.toUpperCase()}
+    const text = `DELIVOOS LEGAL CHARTER - ${docName.toUpperCase()}
     
     This legal charter constitutes a binding agreement conforming to ISO 27001 data sovereignty guidelines. 
     1. Wallet deposits remain fully bonded in the system credit ledger.
@@ -4560,7 +4560,7 @@ function updateLiveTrackingTimeline(status) {
 }
 
 function downloadInvoice(order) {
-    let invoiceContent = `DELIVO TRANSACTION INVOICE\n`;
+    let invoiceContent = `DELIVOOS TRANSACTION INVOICE\n`;
     invoiceContent += `==========================================\n`;
     invoiceContent += `Order ID: ${order.orderId}\n`;
     invoiceContent += `Payment ID: ${order.paymentId}\n`;
