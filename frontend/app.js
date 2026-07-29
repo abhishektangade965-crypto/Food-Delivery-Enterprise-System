@@ -185,7 +185,7 @@ const mockMenus = {};
 for (let i = 1; i <= 30; i++) {
     const base = mockRestaurantsData[(i - 1) % mockRestaurantsData.length];
     const storeId = `store-${i}`;
-    const restName = i <= 15 ? base.name : `${base.name} (East Branch)`;
+    const restName = i <= 15 ? base.name : `?{base.name} (East Branch)`;
     
     // Assign coordinates in Maharashtra, India
     const lat = 19.7515 + (Math.sin(i) * 0.15);
@@ -196,7 +196,7 @@ for (let i = 1; i <= 30; i++) {
         name: restName,
         cuisine: base.cuisine,
         rating: (4.1 + (i * 0.13) % 0.8).toFixed(1),
-        time: `${15 + (i * 5) % 25} min`,
+        time: `?{15 + (i * 5) % 25} min`,
         desc: base.desc,
         image: uniqueRestaurantImages[i - 1] || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80",
         reviewsCount: 50 + (i * 18) % 350,
@@ -211,26 +211,26 @@ for (let i = 1; i <= 30; i++) {
     // Populate dynamic menus divided into starters, mains, pizzas, burgers, drinks, and desserts
     mockMenus[storeId] = [
         // Starters
-        { id: `${storeId}-m1`, name: "Mozzarella Sticks", price: 6.99, desc: "Crispy fried mozzarella cheese served with warm marinara dip.", calories: 380, image: "https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=300&q=80", category: "Starters" },
-        { id: `${storeId}-m2`, name: "Garlic Parmesan Bread", price: 5.99, desc: "Toasted artisan sourdough brushed with garlic butter and parsley.", calories: 290, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=300&q=80", category: "Starters" },
+        { id: `?{storeId}-m1`, name: "Mozzarella Sticks", price: 6.99, desc: "Crispy fried mozzarella cheese served with warm marinara dip.", calories: 380, image: "https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=300&q=80", category: "Starters" },
+        { id: `?{storeId}-m2`, name: "Garlic Parmesan Bread", price: 5.99, desc: "Toasted artisan sourdough brushed with garlic butter and parsley.", calories: 290, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=300&q=80", category: "Starters" },
         
         // Mains
-        { id: `${storeId}-m3`, name: "Pesto Penne Pasta", price: 14.99, desc: "Fresh basil pesto sauce tossed with pine nuts and cherry tomatoes.", calories: 720, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
-        { id: `${storeId}-m4`, name: "Beijing Orange Chicken", price: 13.99, desc: "Crispy chicken breast chunks tossed in sweet citrus orange glaze.", calories: 680, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
+        { id: `?{storeId}-m3`, name: "Pesto Penne Pasta", price: 14.99, desc: "Fresh basil pesto sauce tossed with pine nuts and cherry tomatoes.", calories: 720, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
+        { id: `?{storeId}-m4`, name: "Beijing Orange Chicken", price: 13.99, desc: "Crispy chicken breast chunks tossed in sweet citrus orange glaze.", calories: 680, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
         
         // Pizza
-        { id: `${storeId}-m5`, name: "Margherita Classic Pizza", price: 12.99, desc: "Mozzarella, organic sweet basil, and extra virgin olive oil.", calories: 650, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d001?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
-        { id: `${storeId}-m6`, name: "Truffle Mushroom Pizza", price: 16.99, desc: "Wild mushrooms, white truffle oil, and creamy ricotta cheese.", calories: 850, image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
+        { id: `?{storeId}-m5`, name: "Margherita Classic Pizza", price: 12.99, desc: "Mozzarella, organic sweet basil, and extra virgin olive oil.", calories: 650, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d001?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
+        { id: `?{storeId}-m6`, name: "Truffle Mushroom Pizza", price: 16.99, desc: "Wild mushrooms, white truffle oil, and creamy ricotta cheese.", calories: 850, image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
         
         // Burgers
-        { id: `${storeId}-m7`, name: "Classic Cheddar Burger", price: 9.99, desc: "Flame-grilled angus beef, sharp cheddar, lettuce, and secret sauce.", calories: 750, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
-        { id: `${storeId}-m8`, name: "Bacon Avocado Burger", price: 12.99, desc: "Crispy bacon, sliced avocado, swiss cheese, and garlic aioli.", calories: 920, image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
+        { id: `?{storeId}-m7`, name: "Classic Cheddar Burger", price: 9.99, desc: "Flame-grilled angus beef, sharp cheddar, lettuce, and secret sauce.", calories: 750, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
+        { id: `?{storeId}-m8`, name: "Bacon Avocado Burger", price: 12.99, desc: "Crispy bacon, sliced avocado, swiss cheese, and garlic aioli.", calories: 920, image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
         
         // Drinks
-        { id: `${storeId}-m9`, name: "Cold-Pressed Detox Juice", price: 5.99, desc: "Fresh organic cucumber, green apple, spinach, and ginger root.", calories: 80, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=300&q=80", category: "Drinks" },
+        { id: `?{storeId}-m9`, name: "Cold-Pressed Detox Juice", price: 5.99, desc: "Fresh organic cucumber, green apple, spinach, and ginger root.", calories: 80, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=300&q=80", category: "Drinks" },
         
         // Desserts
-        { id: `${storeId}-m10`, name: "Double Chocolate Belgian Waffle", price: 8.99, desc: "Topped with warm dark fudge, milk chocolate chips, and whipped cream.", calories: 720, image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80", category: "Desserts" }
+        { id: `?{storeId}-m10`, name: "Double Chocolate Belgian Waffle", price: 8.99, desc: "Topped with warm dark fudge, milk chocolate chips, and whipped cream.", calories: 720, image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80", category: "Desserts" }
     ];
 }
 
@@ -700,7 +700,7 @@ function filterCategory(category) {
             landingGrid.innerHTML += `
                 <div class="store-card" onclick="showAuthPage('CUSTOMER')">
                     <div class="store-img">
-                        <img src="${s.image}" alt="${s.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
+                        <img src="?{s.image}" alt="?{s.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
                         <div class="store-tag">${s.cuisine}</div>
                         <button class="favorite-btn" id="landing-fav-btn-${s.id}">
                             <i class="fa-solid fa-star"></i>
@@ -1107,16 +1107,16 @@ function handleGlobalClicks(e) {
 
     if (e.target.closest("#btn-request-payout")) {
         const balanceDisplay = document.getElementById("driver-wallet-balance");
-        const balance = balanceDisplay ? parseFloat(balanceDisplay.innerText.replace("$", "")) : 0;
+        const balance = balanceDisplay ? parseFloat(balanceDisplay.innerText.replace("?", "")) : 0;
         if (balance <= 0) {
             showToast("No earnings available for payout!", "warning");
             return;
         }
         showConfirm("Request Courier Payout", `Transfer $${balance.toFixed(2)} driver earnings to your registered bank account?`, () => {
             showToast(`Payout of $${balance.toFixed(2)} requested successfully! The amount will be transferred to your registered bank account.`, "success");
-            if (balanceDisplay) balanceDisplay.innerText = "$0.00";
+            if (balanceDisplay) balanceDisplay.innerText = "?0.00";
             const todayEarn = document.getElementById("driver-today-earnings");
-            if (todayEarn) todayEarn.innerText = "$0.00";
+            if (todayEarn) todayEarn.innerText = "?0.00";
             const todayTrips = document.getElementById("driver-today-deliveries");
             if (todayTrips) todayTrips.innerText = "0 trips";
             addLog("driver-service", `Courier earnings payout requested: $${balance.toFixed(2)}`);
@@ -1221,7 +1221,7 @@ function renderKdsBoard() {
                 </div>
                 <div class="kds-card-items" style="margin-bottom:10px; font-size:11px; line-height:1.4; color:var(--text-main); font-weight:500;">${ord.items}</div>
                 <div style="display:flex; gap:8px; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:8px;">
-                    <img src="${avatar}" alt="${ord.customerName}" style="width:24px; height:24px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
+                    <img src="?{avatar}" alt="?{ord.customerName}" style="width:24px; height:24px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
                     <div style="flex-grow:1; min-width:0;">
                         <div style="font-weight:700; font-size:10px; color:var(--text-main); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${ord.customerName || 'Guest'}</div>
                         <div style="font-size:9px; color:var(--text-muted);">Amount: $${ord.amount.toFixed(2)}</div>
@@ -1617,7 +1617,7 @@ function triggerDriverMovement(txId) {
         interpolateBetweenPoints(startPt, endPt, 2500, (coords) => {
             driverMarker.setLatLng(coords);
             leafletMap.panTo(coords);
-            document.getElementById("live-distance-val").innerText = `${(2.4 - (segmentIndex * 0.4)).toFixed(1)} km`;
+            document.getElementById("live-distance-val").innerText = `?{(2.4 - (segmentIndex * 0.4)).toFixed(1)} km`;
         });
     }
 
@@ -1797,7 +1797,7 @@ function initAdminChart() {
         // Update System Throughput text card dynamically as well
         const tp = document.getElementById("metric-throughput");
         if (tp) {
-            tp.innerText = `${(100 + Math.random() * 15).toFixed(1)}K events/s`;
+            tp.innerText = `?{(100 + Math.random() * 15).toFixed(1)}K events/s`;
         }
     }, 3000);
 }
@@ -1837,7 +1837,7 @@ function renderCatalog(stores) {
         container.innerHTML += `
             <div class="store-card" onclick="openMenu('${s.id}')">
                 <div class="store-img">
-                    <img src="${s.image}" alt="${s.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="?{s.image}" alt="?{s.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
                     <div class="store-tag">${s.cuisine}</div>
                     <button class="favorite-btn" id="fav-btn-${s.id}">
                         <i class="fa-solid fa-star"></i>
@@ -1919,7 +1919,7 @@ function openMenu(storeId, searchFilter = "", sortBy = "default") {
 
             // Append category section to list
             let sectionHtml = `
-                <div id="${catId}" class="menu-category-section">
+                <div id="?{catId}" class="menu-category-section">
                     <h5 style="color: var(--secondary); font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 12px; font-family: var(--font-display);">${cat.toUpperCase()}</h5>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
             `;
@@ -1939,7 +1939,7 @@ function openMenu(storeId, searchFilter = "", sortBy = "default") {
                         <div style="display:flex; gap:12px; align-items:center;">
                             <div style="position: relative; width: 50px; height: 50px; border-radius: var(--radius-sm); overflow: hidden; background: var(--border);">
                                 <div class="img-skeleton"></div>
-                                <img src="${item.image}" alt="${item.name}" loading="lazy" onload="this.previousElementSibling.style.display='none';" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=80&h=80&q=80'; this.previousElementSibling.style.display='none';" style="width:100%; height:100%; object-fit:cover;">
+                                <img src="?{item.image}" alt="?{item.name}" loading="lazy" onload="this.previousElementSibling.style.display='none';" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=80&h=80&q=80'; this.previousElementSibling.style.display='none';" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <div>
                                 <h5 style="font-size:14px; font-weight:700; color:var(--text-main); margin: 0;">${item.name}</h5>
@@ -2049,14 +2049,14 @@ function updateCartCounter() {
     const members = splitInput ? (parseInt(splitInput.value) || 1) : 1;
     const splitAmount = document.getElementById("split-bill-amount");
     if (splitAmount) {
-        splitAmount.innerText = `$${(finalTotal / Math.max(1, members)).toFixed(2)}`;
+        splitAmount.innerText = `₹${(finalTotal / Math.max(1, members)).toFixed(2)}`;
     }
 
     // Remaining money display (Screenshot 4 & 5 compliance)
     const remainingVal = walletBalance - finalTotal;
     const remainingEl = document.getElementById("checkout-remaining-balance");
     if (remainingEl) {
-        remainingEl.innerText = `$${remainingVal.toFixed(2)}`;
+        remainingEl.innerText = `₹${remainingVal.toFixed(2)}`;
         if (remainingVal < 0) {
             remainingEl.style.color = "var(--primary)";
         } else {
@@ -2082,7 +2082,7 @@ function renderCartSlideout() {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; border:1px solid var(--border);">
                 <div>
                     <div style="font-weight:700; font-size:13px;">${item.name}</div>
-                    <div style="font-size:11px; color:var(--text-muted);">$${item.price.toFixed(2)}</div>
+                    <div style="font-size:11px; color:var(--text-muted);">₹${item.price.toFixed(2)}</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px;">
                     <button class="header-btn" onclick="adjustCartQty('${item.id}', -1)" style="padding:2px 8px;">-</button>
@@ -2114,7 +2114,7 @@ function goToCheckout() {
         summary.innerHTML += `
             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:10px;">
                 <span>${item.qty}x ${item.name}</span>
-                <span>$${(item.price * item.qty).toFixed(2)}</span>
+                <span>₹${(item.price * item.qty).toFixed(2)}</span>
             </div>
         `;
     });
@@ -2202,7 +2202,7 @@ function dispatchOrderSaga() {
     }
 
     const rawTotal = document.getElementById("checkout-grand-total") ? document.getElementById("checkout-grand-total").innerText : "0";
-    const totalVal = parseFloat(rawTotal.replace("₹", "").replace("$", "").trim()) || 0;
+    const totalVal = parseFloat(rawTotal.replace("₹", "").replace("?", "").trim()) || 0;
     
     const selectedModeEl = document.querySelector('input[name="payment-method"]:checked');
     const selectedMode = selectedModeEl ? selectedModeEl.value : "CARD";
@@ -2224,7 +2224,7 @@ function dispatchOrderSaga() {
         if (loader) loader.style.display = "flex";
 
         const restaurantName = document.getElementById("selected-restaurant-name") ? document.getElementById("selected-restaurant-name").innerText : "Bella Napoli Pizza";
-        const itemsList = cartItems.map(i => `${i.qty}x ${i.name}`).join(", ");
+        const itemsList = cartItems.map(i => `?{i.qty}x ${i.name}`).join(", ");
 
         const orderData = {
             restaurantName: restaurantName,
@@ -2527,7 +2527,7 @@ function syncProfileRealtime() {
     const ln = document.getElementById("profile-last-name").value;
     const logoEl = document.getElementById("app-logo-text");
     if (logoEl) {
-        logoEl.innerText = `${fn} (${((fn[0] || "") + (ln[0] || "")).toUpperCase()}) - Delivo`;
+        logoEl.innerText = `?{fn} (${((fn[0] || "") + (ln[0] || "")).toUpperCase()}) - Delivo`;
     }
 }
 
@@ -2612,7 +2612,7 @@ function reorderItems(orderId) {
 function exportOrdersToCSV() {
     let csv = "Order ID,Date,Items,Amount,Status\n";
     orderHistory.forEach(ord => {
-        csv += `${ord.id},${ord.date},"${ord.items}",${ord.amount},${ord.status}\n`;
+        csv += `?{ord.id},${ord.date},"?{ord.items}",${ord.amount},${ord.status}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -2729,10 +2729,10 @@ function refreshCatalogDisplay() {
             landingGrid.innerHTML += `
                 <div class="store-card" onclick="showAuthPage('CUSTOMER')">
                     <div class="store-img" style="position: relative; width: 100%; height: 160px; overflow: hidden; background: var(--border);">
-                        <img src="${s.image}" alt="${s.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
+                        <img src="?{s.image}" alt="?{s.name}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
                         <div class="store-tag">${s.cuisine}</div>
                         <button class="favorite-btn ${isFav ? 'active' : ''}" id="landing-fav-btn-${s.id}">
-                            <i class="fa-solid fa-star" style="${isFav ? 'color: #FFB703;' : ''}"></i>
+                            <i class="fa-solid fa-star" style="?{isFav ? 'color: #FFB703;' : ''}"></i>
                         </button>
                     </div>
                     <div class="store-info">
@@ -2787,13 +2787,13 @@ function renderCatalog(stores) {
             <div class="store-card" onclick="openMenu('${s.id}')">
                 <div class="store-img" style="position: relative; width: 100%; height: 160px; overflow: hidden; background: var(--border);">
                     <div class="img-skeleton"></div>
-                    <img src="${s.image}" alt="${s.name}" loading="lazy" 
+                    <img src="?{s.image}" alt="?{s.name}" loading="lazy" 
                         onload="this.previousElementSibling.style.display='none';" 
                         onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80'; this.previousElementSibling.style.display='none';" 
                         style="width:100%; height:100%; object-fit:cover;">
                     <div class="store-tag">${s.cuisine}</div>
                     <button class="favorite-btn ${isFav ? 'active' : ''}" id="fav-btn-${s.id}" onclick="toggleFavoriteStore('${s.id}', event)">
-                        <i class="fa-solid fa-star" style="${isFav ? 'color: #FFB703;' : ''}"></i>
+                        <i class="fa-solid fa-star" style="?{isFav ? 'color: #FFB703;' : ''}"></i>
                     </button>
                 </div>
                 <div class="store-info">
@@ -3038,7 +3038,7 @@ function renderWalletLedgerView() {
     if (!tbody) return;
     tbody.innerHTML = "";
 
-    document.getElementById("wallet-balance-val").innerText = `$${walletBalance.toFixed(2)}`;
+    document.getElementById("wallet-balance-val").innerText = `?${walletBalance.toFixed(2)}`;
 
     const filterVal = document.getElementById("wallet-tx-filter").value;
     const searchVal = document.getElementById("wallet-tx-search").value.toLowerCase().trim();
@@ -3142,7 +3142,7 @@ function addWalletLedgerFunds() {
 function exportWalletTransactions() {
     let csv = "Transaction ID,Timestamp,Payment Method,Amount,Balance\n";
     walletLedger.forEach(log => {
-        csv += `${log.id},${log.time},${log.type},${log.amount},${log.bal}\n`;
+        csv += `?{log.id},${log.time},${log.type},${log.amount},${log.bal}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -3258,8 +3258,8 @@ function triggerFlyingDot(event) {
 
     const dot = document.createElement("div");
     dot.className = "flying-dot";
-    dot.style.left = `${startRect.left + startRect.width / 2 - 7}px`;
-    dot.style.top = `${startRect.top + startRect.height / 2 - 7}px`;
+    dot.style.left = `?{startRect.left + startRect.width / 2 - 7}px`;
+    dot.style.top = `?{startRect.top + startRect.height / 2 - 7}px`;
     document.body.appendChild(dot);
 
     // Force repaint
@@ -3320,13 +3320,13 @@ function updateAdminDashboardCounters() {
     const monthlyRev = document.getElementById("admin-revenue-monthly");
     
     if (dailyRev) {
-        dailyRev.innerText = `$${(totalDeliveredSum + 1840.50).toFixed(2)}`;
+        dailyRev.innerText = `?${(totalDeliveredSum + 1840.50).toFixed(2)}`;
     }
     if (weeklyRev) {
-        weeklyRev.innerText = `$${(totalDeliveredSum + 12450.00).toFixed(2)}`;
+        weeklyRev.innerText = `?${(totalDeliveredSum + 12450.00).toFixed(2)}`;
     }
     if (monthlyRev) {
-        monthlyRev.innerText = `$${(totalDeliveredSum + 48250.00).toFixed(2)}`;
+        monthlyRev.innerText = `?${(totalDeliveredSum + 48250.00).toFixed(2)}`;
     }
 }
 
@@ -3497,7 +3497,7 @@ function openOtpModal(email, onVerifiedCallback) {
             <p style="font-size:13px; color:var(--text-muted); margin:0 0 20px 0;">We sent a random 6-digit security code to <br><strong style="color:var(--secondary);">${pendingOtpEmail}</strong></p>
 
             <div style="margin-bottom:20px;">
-                <input type="text" id="otp-input-code" value="${currentGeneratedOtp}" maxlength="6" style="width:100%; letter-spacing:12px; font-size:24px; font-weight:800; text-align:center; padding:12px; border-radius:8px; border:2px solid var(--primary); background:var(--bg); color:var(--text-main);" placeholder="------" autofocus />
+                <input type="text" id="otp-input-code" value="?{currentGeneratedOtp}" maxlength="6" style="width:100%; letter-spacing:12px; font-size:24px; font-weight:800; text-align:center; padding:12px; border-radius:8px; border:2px solid var(--primary); background:var(--bg); color:var(--text-main);" placeholder="------" autofocus />
                 <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Random OTP generated: <strong style="color:var(--neon-green);" id="otp-code-hint">${currentGeneratedOtp}</strong></div>
             </div>
 
@@ -3743,7 +3743,7 @@ function closeLocationModal() {
 }
 
 function selectSavedAddress(label, address) {
-    currentSelectedAddress = `${label}: ${address}`;
+    currentSelectedAddress = `?{label}: ${address}`;
     const txt = document.getElementById("current-location-text");
     if (txt) txt.innerText = currentSelectedAddress;
     
@@ -3873,7 +3873,7 @@ function simulateFriendJoin() {
         const mockItem = mockMenus[storeId][0]; // Margherita or similar first item
         cartItems.push({
             id: mockItem.id + "_friend",
-            name: `${mockItem.name} (Anjali Nair)`,
+            name: `?{mockItem.name} (Anjali Nair)`,
             price: mockItem.price,
             qty: 1,
             storeId: storeId,
@@ -4171,7 +4171,7 @@ function driverVerifyOtp() {
     // Add payout amount to wallet
     const balanceDisplay = document.getElementById("driver-wallet-balance");
     if (balanceDisplay) {
-        balanceDisplay.innerText = "$433.00";
+        balanceDisplay.innerText = "?433.00";
     }
 
     showToast("OTP verified successfully. Payout added to rider wallet ledger.", "success");
@@ -4199,7 +4199,7 @@ function downloadCurrentSuccessInvoice() {
             restaurantName: "Bella Napoli Pizza",
             amount: 15.00,
             eta: "25 min",
-            address: currentSelectedAddress || "123 Main St, New York",
+            address: currentSelectedAddress || "Highway 48, Bandra Kurla Complex, Mumbai",
             paymentMethod: "CREDIT CARD",
             items: "1x Bella Napoli Pizza"
         });
@@ -4225,7 +4225,7 @@ function showOrderSuccessPage(orderId) {
                 restaurantName: "Bella Napoli Pizza",
                 amount: 15.00,
                 eta: "25 min",
-                address: currentSelectedAddress || "123 Main St, New York",
+                address: currentSelectedAddress || "Highway 48, Bandra Kurla Complex, Mumbai",
                 paymentMethod: "CREDIT CARD",
                 currentStatus: "PREPARING",
                 items: "1x Bella Napoli Pizza (Extra Sauce)"
@@ -4304,7 +4304,7 @@ function showOrderSuccessPage(orderId) {
 }
 
 function triggerStatusNotification(orderId, status) {
-    const key = `${orderId}_${status}`;
+    const key = `?{orderId}_${status}`;
     if (lastNotifiedStatusMap[key]) return;
 
     lastNotifiedStatusMap[key] = true;
@@ -4533,7 +4533,7 @@ function updateLiveTrackingTimeline(status) {
     else if (currentLevelIdx >= 5) percent = 50;
     else if (currentLevelIdx >= 3) percent = 33;
     else if (currentLevelIdx >= 1) percent = 15;
-    fillBar.style.height = `${percent}%`;
+    fillBar.style.height = `?{percent}%`;
 
     // Toggle driver details block
     const driverTrip = document.getElementById("driver-active-trip");
