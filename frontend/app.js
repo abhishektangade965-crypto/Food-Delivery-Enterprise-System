@@ -629,14 +629,18 @@ function navigateToPath(path) {
 function scrollToElement(id) {
     const landing = document.getElementById("view-landing");
     if (landing && !landing.classList.contains("active")) {
-        navigateToPath("/");
+        document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
+        landing.classList.add("active");
+        window.location.hash = "/";
     }
     setTimeout(() => {
         const el = document.getElementById(id);
         if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
-    }, 150);
+    }, 50);
 }
 
 function triggerVoiceSearch() {
