@@ -674,18 +674,26 @@ function filterCategory(category) {
     if (category !== "All" && category !== "") {
         filtered = mockStores.filter(s => 
             s.cuisine.toLowerCase().includes(term) || 
-            s.desc.toLowerCase().includes(term)
+            s.desc.toLowerCase().includes(term) ||
+            s.name.toLowerCase().includes(term)
         );
     }
 
     // Populate dashboard grid
     const dashGrid = document.getElementById("catalog-grid");
-    if (dashGrid) {
-        renderCatalog(filtered);
-    }
-    
-    // Populate landing page grid
     const landingGrid = document.getElementById("landing-catalog-grid");
+
+    if (filtered.length === 0) {
+        const emptyHtml = `
+            <div class="no-results-msg" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 13px;">
+                <i class="fa-solid fa-store-slash" style="font-size: 32px; margin-bottom: 10px; display: block; color: var(--text-muted);"></i>
+                No matching restaurants found. Try altering your search query.
+            </div>
+        `;
+        if (dashGrid) dashGrid.innerHTML = emptyHtml;
+        if (landingGrid) landingGrid.innerHTML = emptyHtml;
+        return;
+    }
     if (landingGrid) {
         landingGrid.innerHTML = "";
         filtered.forEach(s => {
