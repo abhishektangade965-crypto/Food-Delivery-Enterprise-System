@@ -1,12 +1,12 @@
 // Initialize Supabase Client for delivo-food-delivery
 const SUPABASE_URL = window.SUPABASE_URL || "https://lswbhfldjcrvtyqrcqng.supabase.co";
 const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxzd2JoZmxkamNydnR5cXJjcW5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1MzA0NDUsImV4cCI6MjA1NDEwNjQ0NX0";
-let supabase = null;
+let delivoSupabaseClient = null;
 
 function initSupabaseClient() {
     try {
         if (window.supabase && typeof window.supabase.createClient === "function") {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            delivoSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log("Connected to Supabase project:", SUPABASE_URL);
         }
     } catch (e) {
@@ -2129,9 +2129,9 @@ function checkCoupon(code) {
 // SUPABASE REALTIME ORDER MANAGEMENT
 // ==========================================================================
 async function saveOrderToSupabase(orderData) {
-    if (!supabase) return null;
+    if (!delivoSupabaseClient) return null;
     try {
-        const { data, error } = await supabase
+        const { data, error } = await delivoSupabaseClient
             .from('orders')
             .insert([
                 {
@@ -2159,9 +2159,9 @@ async function saveOrderToSupabase(orderData) {
 }
 
 function listenToLiveSupabaseOrder(orderId) {
-    if (!supabase) return;
+    if (!delivoSupabaseClient) return;
     try {
-        supabase
+        delivoSupabaseClient
             .channel(`order-updates-${orderId}`)
             .on('postgres_changes', 
                 { 
