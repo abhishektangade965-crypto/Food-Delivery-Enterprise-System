@@ -822,6 +822,7 @@ function handleHashChange() {
         if (customerView) customerView.classList.add("active");
         
         checkLoyaltyMilestone();
+        setTimeout(renderOrderHistoryUI, 100);
         
         const mainTabs = document.getElementById("main-nav-tabs");
         const publicTabs = document.getElementById("public-nav-tabs");
@@ -2271,20 +2272,40 @@ function dispatchOrderSaga() {
             return res.json();
         })
         .then(data => {
-            // Deduct from wallet only if WALLET payment was selected
+            const orderId = (data && data.orderId) ? data.orderId : ("ord_" + Math.floor(100000 + Math.random() * 900000));
+            
+            // Realtime wallet deduction if WALLET mode selected
             if (selectedMode === "WALLET") {
-                walletBalance -= totalVal;
-                syncLocalWalletBalances();
-                
-                walletLedger.push({
-                    id: "tx_ledger_" + Math.random().toString(36).substr(2, 9),
+                walletBalance = Math.max(0, walletBalance - totalVal);
+                walletLedger.unshift({
+                    id: "tx_ledger_" + Math.floor(100000 + Math.random() * 900000),
                     time: new Date().toISOString().replace('T', ' ').substring(0, 19),
                     type: "DEBIT",
                     amount: totalVal,
                     bal: walletBalance
                 });
-                renderWalletLedger();
             }
+
+            // Award Loyalty Points for purchase (10% of total)
+            const ptsEarned = Math.max(5, Math.floor(totalVal * 0.10));
+            loyaltyPoints += ptsEarned;
+
+            syncLocalWalletBalances();
+            checkLoyaltyMilestone();
+            if (typeof renderWalletLedger === "function") renderWalletLedger();
+
+            // Record in Order History
+            orderHistory.unshift({
+                id: orderId,
+                date: new Date().toISOString().substring(0, 10),
+                items: itemsList,
+                amount: totalVal,
+                status: "PREPARING",
+                customerName: localStorage.getItem("delivo-email") || "Alice Smith",
+                restaurantName: restaurantName,
+                paymentMethod: modeTitle
+            });
+            renderOrderHistoryUI();
 
             // Clear cart
             cartItems = [];
@@ -2293,10 +2314,10 @@ function dispatchOrderSaga() {
             // Hide loader
             if (loader) loader.style.display = "none";
 
-            showToast(`Payment successful via ${modeTitle}! Order confirmed.`, "success");
+            showToast(`🎉 Payment successful via ${modeTitle}! Earned +${ptsEarned} Loyalty Points.`, "success");
 
             // Navigate to Order Success page
-            navigateToPath(`/customer/order-success/${data.orderId}`);
+            navigateToPath(`/customer/order-success/${orderId}`);
         })
         .catch(err => {
             // Failure flow fallback for static deployment
@@ -2304,12 +2325,30 @@ function dispatchOrderSaga() {
             
             const fallbackId = "ord_" + Math.floor(100000 + Math.random() * 900000);
             if (selectedMode === "WALLET") {
-                walletBalance -= totalVal;
-                syncLocalWalletBalances();
+                walletBalance = Math.max(0, walletBalance - totalVal);
             }
+
+            const ptsEarned = Math.max(5, Math.floor(totalVal * 0.10));
+            loyaltyPoints += ptsEarned;
+
+            syncLocalWalletBalances();
+            checkLoyaltyMilestone();
+
+            orderHistory.unshift({
+                id: fallbackId,
+                date: new Date().toISOString().substring(0, 10),
+                items: itemsList,
+                amount: totalVal,
+                status: "PREPARING",
+                customerName: localStorage.getItem("delivo-email") || "Alice Smith",
+                restaurantName: restaurantName,
+                paymentMethod: modeTitle
+            });
+            renderOrderHistoryUI();
+
             cartItems = [];
             updateCartCounter();
-            showToast(`Order confirmed via ${modeTitle}!`, "success");
+            showToast(`🎉 Order confirmed via ${modeTitle}! Earned +${ptsEarned} Loyalty Points.`, "success");
             navigateToPath(`/customer/order-success/${fallbackId}`);
         });
     });
@@ -2556,6 +2595,49 @@ function redeemLoyaltyPoints() {
         }
 
         showToast("🎁 Reward Claimed! ₹100.00 instant credit added to your Delivoos Wallet.", "success");
+    });
+}
+
+function renderOrderHistoryUI() {
+    const container = document.getElementById("customer-orders-history-list");
+    if (!container) return;
+
+    if (!orderHistory || orderHistory.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted); font-size: 13px;">
+                <i class="fa-solid fa-receipt" style="font-size: 28px; margin-bottom: 10px; display: block;"></i>
+                No recent orders found. Browse our active local catalog to place your first order!
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = "";
+    orderHistory.slice(0, 8).forEach(ord => {
+        let statusBadge = `<span class="badge" style="background: rgba(46, 196, 182, 0.1); color: var(--neon-green); border: 1px solid rgba(46, 196, 182, 0.3);">${ord.status}</span>`;
+        if (ord.status === "PENDING" || ord.status === "PREPARING") {
+            statusBadge = `<span class="badge" style="background: rgba(255, 183, 3, 0.1); color: var(--neon-yellow); border: 1px solid rgba(255, 183, 3, 0.3);"><i class="fa-solid fa-fire fa-spin" style="margin-right: 4px;"></i> ${ord.status}</span>`;
+        } else if (ord.status === "ASSIGNED" || ord.status === "PICKED_UP" || ord.status === "EN_ROUTE") {
+            statusBadge = `<span class="badge" style="background: rgba(0, 180, 216, 0.1); color: var(--secondary); border: 1px solid rgba(0, 180, 216, 0.3);"><i class="fa-solid fa-motorcycle" style="margin-right: 4px;"></i> OUT FOR DELIVERY</span>`;
+        }
+
+        container.innerHTML += `
+            <div class="checkout-box" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; flex-wrap: wrap; gap: 15px; margin: 0; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md);">
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+                        <strong style="font-size: 14px; color: var(--text-main);">${ord.restaurantName || "Bella Napoli Pizza"}</strong>
+                        ${statusBadge}
+                        <span style="font-size: 11px; color: var(--text-muted);">${ord.date}</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">${ord.items}</div>
+                    <div style="font-size: 11px; color: var(--secondary); font-weight: 600;">Transaction ID: ${ord.id} • ${ord.paymentMethod || "Delivoos Wallet"}</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-size: 16px; font-weight: 800; color: var(--primary);">₹${parseFloat(ord.amount).toFixed(2)}</span>
+                    <button onclick="navigateToPath('/customer/track/${ord.id}')" class="header-btn" style="margin: 0; padding: 6px 14px; font-size: 12px; background: var(--primary); color: white; border: none; font-weight: 700;">Track / View</button>
+                </div>
+            </div>
+        `;
     });
 }
 

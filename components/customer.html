@@ -113,6 +113,18 @@
                 </div>
             </div>
 
+            <!-- Active Orders & Order History Section -->
+            <div class="section-container" style="margin-top: 40px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3><i class="fa-solid fa-clock-rotate-left color-primary" style="margin-right: 8px;"></i> My Orders & Realtime History</h3>
+                    <span class="badge" style="background: rgba(0, 180, 216, 0.1); color: var(--secondary); border: 1px solid rgba(0, 180, 216, 0.3); font-weight: 700;">Live Saga Updates</span>
+                </div>
+                
+                <div id="customer-orders-history-list" style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Loaded dynamically by renderOrderHistoryUI() -->
+                </div>
+            </div>
+
             <!-- Restaurant Menu Details view -->
             <div id="restaurant-menu-details" style="display: none; margin-top: 30px;">
                 <div style="margin-bottom: 20px;">
