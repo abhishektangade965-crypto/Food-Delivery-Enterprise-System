@@ -31,16 +31,54 @@
     <meta name="twitter:description" content="Orchestrate enterprise-level multi-region transactions, Saga workflow timelines, and real-time logistics tracking on Delivoos.">
     <meta name="twitter:image" content="https://delivoos.vercel.app/assets/images/logo.png">
     
-    <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD Structured Data (schema.org Compliance) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": "DeliveryService",
       "name": "Delivoos",
-      "url": "http://127.0.0.1:8080/",
-      "applicationCategory": "FoodEstablishment",
-      "operatingSystem": "All",
-      "browserRequirements": "Requires HTML5, Geolocation, JavaScript"
+      "url": "https://delivoos.vercel.app/",
+      "logo": "https://delivoos.vercel.app/assets/images/logo.png",
+      "description": "Orchestrate enterprise-level multi-region food delivery, Saga workflow timelines, and real-time logistics tracking on Delivoos.",
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "Maharashtra, India"
+      },
+      "provider": [
+        {
+          "@type": "Restaurant",
+          "name": "Bella Napoli Pizza",
+          "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591",
+          "servesCuisine": ["Pizza", "Italian", "Pasta"],
+          "priceRange": "₹₹"
+        },
+        {
+          "@type": "Restaurant",
+          "name": "Gourmet Burger Kitchen",
+          "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+          "servesCuisine": ["Burgers", "American", "Fast Food"],
+          "priceRange": "₹₹"
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Delivoos Platform Menu Catalog",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "MenuItem",
+              "name": "Truffle Mushroom Pizza",
+              "description": "Wild mushrooms, white truffle oil, and creamy ricotta cheese.",
+              "offers": {
+                "@type": "Offer",
+                "price": "399.00",
+                "priceCurrency": "INR"
+              }
+            }
+          }
+        ]
+      }
     }
     </script>
 
