@@ -720,12 +720,35 @@ function filterCategory(category) {
     }
 }
 
+function updateNotificationBadgeUI() {
+    const token = localStorage.getItem("delivo-token");
+    const badge = document.getElementById("notification-badge");
+    if (!badge) return;
+
+    if (!token) {
+        badge.innerText = "0";
+        badge.style.display = "none";
+    } else {
+        const items = document.querySelectorAll("#notification-list-container .notification-item.unread");
+        const count = items ? items.length : 0;
+        if (count > 0) {
+            badge.innerText = count;
+            badge.style.display = "inline-block";
+        } else {
+            badge.innerText = "0";
+            badge.style.display = "none";
+        }
+    }
+}
+
 function handleHashChange() {
     let path = window.location.hash.slice(1);
     if (!path || path === "") path = "/";
 
     const token = localStorage.getItem("delivo-token");
     const role = localStorage.getItem("delivo-role");
+
+    updateNotificationBadgeUI();
 
     // Guard dashboards
     if (path.startsWith("/customer/") || path === "/customer/dashboard") {
