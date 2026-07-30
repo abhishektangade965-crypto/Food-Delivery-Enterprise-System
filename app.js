@@ -63,6 +63,9 @@ function showToast(message, type = "info") {
     const container = document.getElementById("toast-container");
     if (!container) return;
     
+    // Clear old toasts to prevent stacking spam
+    container.innerHTML = "";
+
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
     
@@ -79,12 +82,12 @@ function showToast(message, type = "info") {
     
     container.appendChild(toast);
     
-    // Auto dismiss after 4 seconds
+    // Auto dismiss after 3.5 seconds
     setTimeout(() => {
         toast.style.opacity = "0";
         toast.style.transform = "translateX(120%)";
         setTimeout(() => toast.remove(), 300);
-    }, 4000);
+    }, 3500);
 }
 
 // Custom Confirm modal system
@@ -211,26 +214,26 @@ for (let i = 1; i <= 30; i++) {
     // Populate dynamic menus divided into starters, mains, pizzas, burgers, drinks, and desserts
     mockMenus[storeId] = [
         // Starters
-        { id: `${storeId}-m1`, name: "Mozzarella Sticks", price: 6.99, desc: "Crispy fried mozzarella cheese served with warm marinara dip.", calories: 380, image: "https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=300&q=80", category: "Starters" },
-        { id: `${storeId}-m2`, name: "Garlic Parmesan Bread", price: 5.99, desc: "Toasted artisan sourdough brushed with garlic butter and parsley.", calories: 290, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=300&q=80", category: "Starters" },
+        { id: `${storeId}-m1`, name: "Mozzarella Sticks", price: 199.00, desc: "Crispy fried mozzarella cheese served with warm marinara dip.", calories: 380, image: "https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=300&q=80", category: "Starters" },
+        { id: `${storeId}-m2`, name: "Garlic Parmesan Bread", price: 149.00, desc: "Toasted artisan sourdough brushed with garlic butter and parsley.", calories: 290, image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=300&q=80", category: "Starters" },
         
         // Mains
-        { id: `${storeId}-m3`, name: "Pesto Penne Pasta", price: 14.99, desc: "Fresh basil pesto sauce tossed with pine nuts and cherry tomatoes.", calories: 720, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
-        { id: `${storeId}-m4`, name: "Beijing Orange Chicken", price: 13.99, desc: "Crispy chicken breast chunks tossed in sweet citrus orange glaze.", calories: 680, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
+        { id: `${storeId}-m3`, name: "Pesto Penne Pasta", price: 299.00, desc: "Fresh basil pesto sauce tossed with pine nuts and cherry tomatoes.", calories: 720, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
+        { id: `${storeId}-m4`, name: "Beijing Orange Chicken", price: 349.00, desc: "Crispy chicken breast chunks tossed in sweet citrus orange glaze.", calories: 680, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80", category: "Main Course" },
         
         // Pizza
-        { id: `${storeId}-m5`, name: "Margherita Classic Pizza", price: 12.99, desc: "Mozzarella, organic sweet basil, and extra virgin olive oil.", calories: 650, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d001?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
-        { id: `${storeId}-m6`, name: "Truffle Mushroom Pizza", price: 16.99, desc: "Wild mushrooms, white truffle oil, and creamy ricotta cheese.", calories: 850, image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
+        { id: `${storeId}-m5`, name: "Margherita Classic Pizza", price: 299.00, desc: "Mozzarella, organic sweet basil, and extra virgin olive oil.", calories: 650, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d001?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
+        { id: `${storeId}-m6`, name: "Truffle Mushroom Pizza", price: 449.00, desc: "Wild mushrooms, white truffle oil, and creamy ricotta cheese.", calories: 850, image: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=300&q=80", category: "Pizza" },
         
         // Burgers
-        { id: `${storeId}-m7`, name: "Classic Cheddar Burger", price: 9.99, desc: "Flame-grilled angus beef, sharp cheddar, lettuce, and secret sauce.", calories: 750, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
-        { id: `${storeId}-m8`, name: "Bacon Avocado Burger", price: 12.99, desc: "Crispy bacon, sliced avocado, swiss cheese, and garlic aioli.", calories: 920, image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
+        { id: `${storeId}-m7`, name: "Classic Cheddar Burger", price: 249.00, desc: "Flame-grilled angus beef, sharp cheddar, lettuce, and secret sauce.", calories: 750, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
+        { id: `${storeId}-m8`, name: "Bacon Avocado Burger", price: 329.00, desc: "Crispy bacon, sliced avocado, swiss cheese, and garlic aioli.", calories: 920, image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=300&q=80", category: "Burgers" },
         
         // Drinks
-        { id: `${storeId}-m9`, name: "Cold-Pressed Detox Juice", price: 5.99, desc: "Fresh organic cucumber, green apple, spinach, and ginger root.", calories: 80, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=300&q=80", category: "Drinks" },
+        { id: `${storeId}-m9`, name: "Cold-Pressed Detox Juice", price: 129.00, desc: "Fresh organic cucumber, green apple, spinach, and ginger root.", calories: 80, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=300&q=80", category: "Drinks" },
         
         // Desserts
-        { id: `${storeId}-m10`, name: "Double Chocolate Belgian Waffle", price: 8.99, desc: "Topped with warm dark fudge, milk chocolate chips, and whipped cream.", calories: 720, image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80", category: "Desserts" }
+        { id: `${storeId}-m10`, name: "Double Chocolate Belgian Waffle", price: 219.00, desc: "Topped with warm dark fudge, milk chocolate chips, and whipped cream.", calories: 720, image: "https://images.unsplash.com/photo-1562376502-6f769499c886?auto=format&fit=crop&w=300&q=80", category: "Desserts" }
     ];
 }
 
@@ -2625,18 +2628,29 @@ function renderOrderHistoryUI() {
     const container = document.getElementById("customer-orders-history-list");
     if (!container) return;
 
-    if (!orderHistory || orderHistory.length === 0) {
+    const loggedEmail = localStorage.getItem("delivo-email") || "customer@delivo.com";
+    
+    // Filter to only show orders belonging to this customer
+    const myOrders = orderHistory.filter(ord => 
+        ord.customerEmail === loggedEmail || 
+        ord.customerName === loggedEmail || 
+        ord.isMyOrder === true ||
+        ord.customerName === "Alice Smith" ||
+        ord.id.startsWith("ord_")
+    );
+
+    if (!myOrders || myOrders.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted); font-size: 13px;">
                 <i class="fa-solid fa-receipt" style="font-size: 28px; margin-bottom: 10px; display: block;"></i>
-                No recent orders found. Browse our active local catalog to place your first order!
+                No order history found for ${loggedEmail}. Browse our active local catalog to place your first order!
             </div>
         `;
         return;
     }
 
     container.innerHTML = "";
-    orderHistory.slice(0, 8).forEach(ord => {
+    myOrders.slice(0, 8).forEach(ord => {
         let statusBadge = `<span class="badge" style="background: rgba(46, 196, 182, 0.1); color: var(--neon-green); border: 1px solid rgba(46, 196, 182, 0.3);">${ord.status}</span>`;
         if (ord.status === "PENDING" || ord.status === "PREPARING") {
             statusBadge = `<span class="badge" style="background: rgba(255, 183, 3, 0.1); color: var(--neon-yellow); border: 1px solid rgba(255, 183, 3, 0.3);"><i class="fa-solid fa-fire fa-spin" style="margin-right: 4px;"></i> ${ord.status}</span>`;
