@@ -2643,20 +2643,21 @@ function renderOrderHistoryUI() {
 
 function topUpCustomerWallet() {
     const input = document.getElementById("quick-topup-input");
-    const amount = parseFloat(input ? input.value : 50);
+    const amount = parseFloat(input ? input.value : 100);
 
     if (isNaN(amount) || amount <= 0) {
-        showToast("Please enter a valid amount.", "warning");
+        showToast("Please enter a valid top-up amount.", "warning");
         return;
     }
 
-    if (amount > 5000.0) {
-        showToast("Maximum wallet top-up increment limit is ₹5,000.", "warning");
+    if (amount > 500.0) {
+        showToast("ℹ️ Quick Top-up Limit: Single top-up maximum is ₹500. Enter an amount up to ₹500.", "warning");
+        if (input) input.value = 500;
         return;
     }
 
-    if (walletBalance + amount > 50000.0) {
-        showToast("Maximum account wallet balance limit reached: ₹50,000.", "error");
+    if (walletBalance + amount > 15000.0) {
+        showToast(`⚠️ Account Balance Limit: Your current wallet balance is ₹${walletBalance.toFixed(2)}. Maximum account balance is capped at ₹15,000.`, "error");
         return;
     }
 
@@ -2664,16 +2665,16 @@ function topUpCustomerWallet() {
     syncLocalWalletBalances();
 
     // Write top-up transaction ledger entry
-    walletLedger.push({
-        id: "tx_ledger_" + (walletLedger.length + 1),
+    walletLedger.unshift({
+        id: "tx_ledger_" + Math.floor(100000 + Math.random() * 900000),
         time: new Date().toISOString().replace('T', ' ').substring(0, 19),
         type: "TOPUP",
         amount: amount,
         bal: walletBalance
     });
-    renderWalletLedger();
+    if (typeof renderWalletLedger === "function") renderWalletLedger();
 
-    showToast(`Successfully topped up wallet balance by ₹${amount.toFixed(2)}.`, "success");
+    showToast(`💳 Top-up Successful: Added ₹${amount.toFixed(2)} to your wallet. New Balance: ₹${walletBalance.toFixed(2)}`, "success");
 }
 
 function syncProfileRealtime() {
