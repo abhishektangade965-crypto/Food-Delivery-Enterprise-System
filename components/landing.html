@@ -12,72 +12,97 @@
         </div>
     </div>
 
-    <!-- HERO SECTION -->
-    <section class="landing-hero" id="home">
+    <!-- HERO SECTION (TICKET #42 home.png EXACT MATCH) -->
+    <section class="landing-hero" id="home" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; padding: 40px 0 20px 0;">
         <div class="landing-hero-content">
-            <span class="landing-badge">The Future of Food Delivery</span>
-            <h1>Your Next Meal, <span>Already Moving</span></h1>
-            <p>Search dishes, track couriers in real-time, manage ledgers with secure wallet systems, and enjoy customized AI suggestions.</p>
+            <h1 style="font-size: 48px; font-weight: 900; line-height: 1.15; margin-bottom: 20px; font-family: var(--font-display); color: var(--text-main);">
+                Your Next Meal,<br><span style="color: #FF6B00;">Already Waiting</span>
+            </h1>
+            <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; max-width: 480px;">
+                Order from the best restaurants near you, fast delivery, real-time tracking, and exclusive offers.
+            </p>
             
-            <!-- Combined Search Bar -->
-            <div class="search-bar-wrapper hero-search">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="landing-search-input" class="search-input" placeholder="Search restaurant, cuisine, dish, location...">
-                <button class="voice-search-btn" onclick="triggerVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
-                <button class="ai-suggestion-btn" onclick="triggerAiSuggestions()"><i class="fa-solid fa-brain"></i> AI</button>
-            </div>
-            
-            <div class="landing-cta-group" style="margin-top: 20px;">
-                <button class="landing-btn landing-btn-primary" onclick="switchView('view-customer')">Order Now</button>
-                <button class="landing-btn landing-btn-outline" onclick="scrollToElement('popular-restaurants')">Explore Restaurants</button>
+            <!-- Combined Search Bar (matching home.png) -->
+            <div class="search-bar-wrapper hero-search" style="display: flex; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 40px; padding: 6px 8px 6px 20px; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); margin-right: 12px;"></i>
+                <input type="text" id="landing-search-input" class="search-input" placeholder="Search for restaurants or cuisines..." style="flex-grow: 1; border: none; background: transparent; outline: none; font-size: 14px; color: var(--text-main);">
+                <button class="landing-btn" onclick="triggerSearch(document.getElementById('landing-search-input').value)" style="background: #FF6B00; color: white; border: none; border-radius: 30px; padding: 12px 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; margin: 0;">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
             </div>
         </div>
         
-        <!-- Right: Glass Dashboard -->
-        <div class="landing-hero-illustration">
-            <div class="hero-glass-dashboard">
-                <div class="glass-dash-header">
-                    <strong>System Live Feed</strong>
-                    <span class="pulse-indicator"></span>
+        <!-- Right: Dish Plate Illustration with Floating Badges (matching home.png) -->
+        <div class="landing-hero-illustration" style="position: relative; display: flex; justify-content: center; align-items: center;">
+            <!-- Floating Badge Top Right: 30-40 min Delivery Time -->
+            <div style="position: absolute; top: 10px; right: 20px; z-index: 3; background: #ffffff; color: #1e293b; padding: 10px 16px; border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 10px;">
+                <div>
+                    <strong style="display: block; font-size: 15px; color: #0f172a;">30–40 min</strong>
+                    <span style="font-size: 11px; color: #64748b;">Delivery Time</span>
                 </div>
-                <div class="glass-dash-content">
-                    <div class="dash-widget">
-                        <span>Wallet Balance</span>
-                        <strong>$1,588.44</strong>
-                    </div>
-                    <div class="dash-widget">
-                        <span>AI Suggestion</span>
-                        <strong>Truffle Mushroom Pizza</strong>
-                    </div>
-                    <div class="dash-widget">
-                        <span>Active Courier</span>
-                        <strong>Rahul Sharma (EN ROUTE)</strong>
-                    </div>
-                    <div class="dash-map-preview" id="dash-map-mini">
-                        <i class="fa-solid fa-map-location-dot"></i> Live Route Active
-                    </div>
+                <div style="background: #fff7ed; padding: 8px; border-radius: 12px; color: #FF6B00; font-size: 18px;">
+                    <i class="fa-solid fa-motorcycle"></i>
+                </div>
+            </div>
+
+            <!-- Central Dish Image Plate -->
+            <div style="position: relative; width: 340px; height: 340px; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.25); border: 8px solid rgba(255,255,255,0.1);">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80" alt="Delicious Gourmet Meal Bowl" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <!-- Floating Badge Bottom Right: 50% OFF Today's Offer -->
+            <div style="position: absolute; bottom: 10px; right: 0px; z-index: 3; background: #ffffff; color: #1e293b; padding: 10px 16px; border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 10px;">
+                <div>
+                    <strong style="display: block; font-size: 15px; color: #0f172a;">50% OFF</strong>
+                    <span style="font-size: 11px; color: #64748b;">Today's Offer</span>
+                </div>
+                <div style="background: #f0fdf4; padding: 8px; border-radius: 12px; color: #22c55e; font-size: 18px;">
+                    <i class="fa-solid fa-tag"></i>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- STATISTICS -->
-    <section class="landing-stats">
-        <div class="stat-item">
-            <h3>1M+</h3>
-            <p>Orders Delivered</p>
+    <!-- 4 Feature Cards (matching home.png bottom row) -->
+    <section class="landing-features-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 30px 0 50px 0;">
+        <div class="checkout-box" style="display: flex; align-items: center; gap: 14px; padding: 18px; margin: 0; background: var(--bg); border: 1px solid var(--border); border-radius: 16px;">
+            <div style="background: rgba(255, 107, 0, 0.1); color: #FF6B00; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 14px; color: var(--text-main);">Fast Delivery</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">On-time, every time</span>
+            </div>
         </div>
-        <div class="stat-item">
-            <h3>500+</h3>
-            <p>Partner Restaurants</p>
+
+        <div class="checkout-box" style="display: flex; align-items: center; gap: 14px; padding: 18px; margin: 0; background: var(--bg); border: 1px solid var(--border); border-radius: 16px;">
+            <div style="background: rgba(255, 107, 0, 0.1); color: #FF6B00; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                <i class="fa-solid fa-location-crosshairs"></i>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 14px; color: var(--text-main);">Live Tracking</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Track your order</span>
+            </div>
         </div>
-        <div class="stat-item">
-            <h3>50+</h3>
-            <p>Cities Covered</p>
+
+        <div class="checkout-box" style="display: flex; align-items: center; gap: 14px; padding: 18px; margin: 0; background: var(--bg); border: 1px solid var(--border); border-radius: 16px;">
+            <div style="background: rgba(255, 107, 0, 0.1); color: #FF6B00; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                <i class="fa-solid fa-percent"></i>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 14px; color: var(--text-main);">Best Offers</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">Save more</span>
+            </div>
         </div>
-        <div class="stat-item">
-            <h3>99.9%</h3>
-            <p>Success Rate</p>
+
+        <div class="checkout-box" style="display: flex; align-items: center; gap: 14px; padding: 18px; margin: 0; background: var(--bg); border: 1px solid var(--border); border-radius: 16px;">
+            <div style="background: rgba(255, 107, 0, 0.1); color: #FF6B00; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+                <strong style="display: block; font-size: 14px; color: var(--text-main);">Secure Payment</strong>
+                <span style="font-size: 12px; color: var(--text-muted);">100% safe checkout</span>
+            </div>
         </div>
     </section>
 

@@ -2005,11 +2005,16 @@ function openMenu(storeId, searchFilter = "", sortBy = "default") {
 
 function scrollToCategory(secId, btn) {
     const sec = document.getElementById(secId);
-    if (sec) {
-        sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        document.querySelectorAll(".menu-category-link").forEach(l => l.classList.remove("active"));
-        btn.classList.add("active");
+    const container = document.getElementById("menu-items-list");
+    if (sec && container) {
+        const topPos = sec.offsetTop - container.offsetTop;
+        container.scrollTo({ top: topPos, behavior: 'smooth' });
+    } else if (sec) {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    
+    document.querySelectorAll(".menu-category-link").forEach(l => l.classList.remove("active"));
+    if (btn) btn.classList.add("active");
 }
 
 function showCatalog() {
