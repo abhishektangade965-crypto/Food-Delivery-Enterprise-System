@@ -2574,8 +2574,14 @@ function syncLocalWalletBalances() {
 function checkLoyaltyMilestone() {
     const banner = document.getElementById("loyalty-milestone-banner");
     const display = document.getElementById("customer-loyalty-display");
+    
+    // Strict cap at 450 pts limit - prevent overlimit
+    if (loyaltyPoints >= 450) {
+        loyaltyPoints = 450;
+    }
+    
     if (display) {
-        display.innerText = `Loyalty Points: ${loyaltyPoints} pts`;
+        display.innerText = `Loyalty Points: ${loyaltyPoints} / 450 pts`;
     }
     if (loyaltyPoints >= 450) {
         if (banner) banner.style.display = "flex";
@@ -2591,7 +2597,7 @@ function redeemLoyaltyPoints() {
     }
 
     showConfirm("Redeem 450 Loyalty Points Limit Reward", "You have reached the 450 Loyalty Points limit milestone! Redeem 450 points now for an instant ₹100.00 Wallet Credit?", () => {
-        loyaltyPoints -= 450;
+        loyaltyPoints = 0; // Reset points upon claiming reward
         walletBalance += 100.00;
         
         syncLocalWalletBalances();
@@ -2625,7 +2631,7 @@ function redeemLoyaltyPoints() {
             }
         }
 
-        showToast("🎁 Reward Claimed! ₹100.00 instant credit added to your Delivoos Wallet.", "success");
+        showToast("🎁 Reward Claimed! ₹100.00 instant credit added to your Delivoos Wallet. Points reset to 0.", "success");
     });
 }
 
@@ -2633,22 +2639,21 @@ function renderOrderHistoryUI() {
     const container = document.getElementById("customer-orders-history-list");
     if (!container) return;
 
-    const loggedEmail = localStorage.getItem("delivo-email") || "customer@delivo.com";
+    const loggedEmail = (localStorage.getItem("delivo-email") || "customer@delivo.com").toLowerCase().trim();
     
-    // Filter to only show orders belonging to this customer
-    const myOrders = orderHistory.filter(ord => 
-        ord.customerEmail === loggedEmail || 
-        ord.customerName === loggedEmail || 
-        ord.isMyOrder === true ||
-        ord.customerName === "Alice Smith" ||
-        ord.id.startsWith("ord_")
-    );
+    // Filter strictly to ONLY show orders belonging to this logged-in customer's email or account
+    const myOrders = orderHistory.filter(ord => {
+        const cEmail = (ord.customerEmail || "").toLowerCase().trim();
+        const cName = (ord.customerName || "").toLowerCase().trim();
+        const belongs = (ord.belongsTo || "").toLowerCase().trim();
+        return cEmail === loggedEmail || cName === loggedEmail || belongs === loggedEmail || ord.isMyOrder === true;
+    });
 
     if (!myOrders || myOrders.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted); font-size: 13px;">
                 <i class="fa-solid fa-receipt" style="font-size: 28px; margin-bottom: 10px; display: block;"></i>
-                No order history found for ${loggedEmail}. Browse our active local catalog to place your first order!
+                No order history found for <strong>${loggedEmail}</strong>. Browse our active local catalog to place your first order!
             </div>
         `;
         return;
@@ -2692,9 +2697,9 @@ function topUpCustomerWallet() {
         return;
     }
 
-    if (amount > 500.0) {
-        showToast("ℹ️ Quick Top-up Limit: Single top-up maximum is ₹500. Enter an amount up to ₹500.", "warning");
-        if (input) input.value = 500;
+    if (amount > 450.0) {
+        showToast("ℹ️ Quick Top-up Limit: Single top-up maximum is ₹450. Enter an amount up to ₹450.", "warning");
+        if (input) input.value = 450;
         return;
     }
 
