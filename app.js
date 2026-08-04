@@ -2025,14 +2025,6 @@ function showCatalog() {
 }
 
 function addToCart(itemId, storeId, event) {
-    // Require authentication when clicking food items
-    const token = localStorage.getItem("delivo-token");
-    if (!token) {
-        showToast("Please login to your account to add food items to cart!", "warning");
-        navigateToPath('/auth/customer/login');
-        return;
-    }
-
     const item = mockMenus[storeId].find(i => i.id === itemId);
     if (!item) return;
 
@@ -2049,12 +2041,6 @@ function addToCart(itemId, storeId, event) {
 }
 
 function updateMenuQty(itemId, val, storeId, event) {
-    const token = localStorage.getItem("delivo-token");
-    if (!token) {
-        showToast("Please login to your account to manage your cart!", "warning");
-        navigateToPath('/auth/customer/login');
-        return;
-    }
     const cartItem = cartItems.find(c => c.id === itemId);
     if (!cartItem) return;
     
@@ -2164,6 +2150,12 @@ function adjustCartQty(itemId, val) {
 }
 
 function goToCheckout() {
+    const token = localStorage.getItem("delivo-token");
+    if (!token) {
+        showToast("Please login to your account to place your order and checkout!", "info");
+        navigateToPath('/auth/customer/login');
+        return;
+    }
     updateCartCounter();
     const summary = document.getElementById("checkout-summary-items");
     if (!summary) return;
