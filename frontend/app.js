@@ -1938,9 +1938,9 @@ function openMenu(storeId, searchFilter = "", sortBy = "default") {
                 sectionHtml += `
                     <div class="menu-item-row" style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid var(--border); gap:15px; background: rgba(255,255,255,0.01); border-radius: 6px;">
                         <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="position: relative; width: 50px; height: 50px; border-radius: var(--radius-sm); overflow: hidden; background: var(--border);">
+                            <div style="position: relative; width: 60px; height: 60px; border-radius: var(--radius-sm); overflow: hidden; background: var(--border); flex-shrink: 0;">
                                 <div class="img-skeleton"></div>
-                                <img src="${item.image}" alt="${item.name}" loading="lazy" onload="this.previousElementSibling.style.display='none';" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=80&h=80&q=80'; this.previousElementSibling.style.display='none';" style="width:100%; height:100%; object-fit:cover;">
+                                <img src="${item.image}" alt="${item.name}" loading="lazy" onload="if(this.previousElementSibling) this.previousElementSibling.style.display='none';" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=120&h=120&q=80'; if(this.previousElementSibling) this.previousElementSibling.style.display='none';" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2;">
                             </div>
                             <div>
                                 <h5 style="font-size:14px; font-weight:700; color:var(--text-main); margin: 0;">${item.name}</h5>
@@ -2981,9 +2981,9 @@ function renderCatalog(stores) {
                 <div class="store-img" style="position: relative; width: 100%; height: 160px; overflow: hidden; background: var(--border);">
                     <div class="img-skeleton"></div>
                     <img src="${s.image}" alt="${s.name}" loading="lazy" 
-                        onload="this.previousElementSibling.style.display='none';" 
-                        onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80'; this.previousElementSibling.style.display='none';" 
-                        style="width:100%; height:100%; object-fit:cover;">
+                        onload="if(this.previousElementSibling) this.previousElementSibling.style.display='none';" 
+                        onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80'; if(this.previousElementSibling) this.previousElementSibling.style.display='none';" 
+                        style="position: absolute; top: 0; left: 0; width:100%; height:100%; object-fit:cover; z-index: 2;">
                     <div class="store-tag">${s.cuisine}</div>
                     <button class="favorite-btn ${isFav ? 'active' : ''}" id="fav-btn-${s.id}" onclick="toggleFavoriteStore('${s.id}', event)">
                         <i class="fa-solid fa-star" style="${isFav ? 'color: #FFB703;' : ''}"></i>
