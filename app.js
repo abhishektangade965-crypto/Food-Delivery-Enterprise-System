@@ -4632,8 +4632,20 @@ function showLiveTrackingPage(orderId) {
     if (orderSuccessPollingTimer) clearInterval(orderSuccessPollingTimer);
     if (liveTrackingPollingTimer) clearInterval(liveTrackingPollingTimer);
 
-    // Track active order transaction ID
-    currentActiveTransactionId = orderId || "ord_159349";
+    const loggedEmail = (localStorage.getItem("delivo-email") || "").toLowerCase().trim();
+    
+    // Find matching order in orderHistory
+    let targetOrder = null;
+    if (orderId && orderId !== "latest" && orderId !== "default") {
+        targetOrder = orderHistory.find(o => o.id === orderId);
+    }
+    if (!targetOrder) {
+        // Find latest order for logged-in customer or latest overall order
+        targetOrder = orderHistory.find(o => (o.customerEmail || "").toLowerCase() === loggedEmail || o.isMyOrder) || orderHistory[0];
+    }
+
+    const activeId = targetOrder ? targetOrder.id : (orderId || "TXN-894106");
+    currentActiveTransactionId = activeId;
 
     // Initialize Map immediately with slight delay for DOM rendering
     setTimeout(() => {
@@ -4643,46 +4655,27 @@ function showLiveTrackingPage(orderId) {
         }
     }, 200);
 
-    fetch(`/api/orders/${orderId}`)
-    .then(res => {
-        if (!res.ok) {
-            return {
-                orderId: orderId || "ord_159349",
-                currentStatus: "PREPARING",
-                restaurantName: "Bella Napoli Pizza",
-                amount: 15.00
-            };
-        }
-        return res.json();
-    })
-    .then(order => {
-        // Update tracking status
-        updateLiveTrackingTimeline(order.currentStatus || "PREPARING");
+    const currentStatus = targetOrder ? targetOrder.status : "PREPARING";
+    updateLiveTrackingTimeline(currentStatus);
 
-        // Map order parameters
-        const trackingOtp = document.getElementById("tracking-delivery-otp");
-        if (trackingOtp) trackingOtp.innerText = generatedDeliveryOtp;
+    // Map order parameters
+    const trackingOtp = document.getElementById("tracking-delivery-otp");
+    if (trackingOtp) trackingOtp.innerText = generatedDeliveryOtp;
 
-        const customerOtpInput = document.getElementById("delivery-verification-otp");
-        if (customerOtpInput) {
-            customerOtpInput.value = generatedDeliveryOtp;
-        }
+    const customerOtpInput = document.getElementById("delivery-verification-otp");
+    if (customerOtpInput) {
+        customerOtpInput.value = generatedDeliveryOtp;
+    }
 
-        // Start status polling
-        liveTrackingPollingTimer = setInterval(() => {
-            fetch(`/api/orders/${orderId}/status`)
-            .then(res => res.ok ? res.json() : { status: "PREPARING" })
-            .then(data => {
-                updateLiveTrackingTimeline(data.status);
-                triggerStatusNotification(orderId, data.status);
-            })
-            .catch(() => {});
-        }, 5000);
-    })
-    .catch(err => {
-        console.warn("Live tracking context warning:", err);
-        updateLiveTrackingTimeline("PREPARING");
-    });
+    // Update driver & order details if targetOrder present
+    if (targetOrder) {
+        const dName = document.getElementById("driver-name-text");
+        if (dName) dName.innerText = targetOrder.driverName || "Rahul Sharma (Assigned)";
+        const dPlate = document.getElementById("driver-plate-text");
+        if (dPlate) dPlate.innerText = "Honda Activa | MH12AB1234 (Verified Courier)";
+        
+        showToast(`Tracking Order ${targetOrder.id} • ${targetOrder.restaurantName || "Bella Napoli Pizza"}`, "info");
+    }
 }
 
 function updateLiveTrackingTimeline(status) {
