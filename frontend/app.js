@@ -792,24 +792,27 @@ function handleHashChange() {
 
     // Auth Views
     if (path.startsWith("/auth/")) {
-        // Fix double-login bug: If user is ALREADY authenticated, redirect immediately to dashboard
-        if (token) {
-            showToast(`Already signed in as ${localStorage.getItem("delivo-email") || "User"}.`, "info");
-            if (role === "ADMIN") {
-                window.location.hash = "/admin/dashboard";
-            } else {
-                window.location.hash = "/customer/dashboard";
-            }
-            return;
-        }
-
         const authView = document.getElementById("view-auth");
         if (authView) authView.classList.add("active");
+
+        // Hide all auth subviews first
+        document.querySelectorAll(".auth-subview").forEach(sv => sv.style.display = "none");
         
         if (path === "/auth/customer/login") {
-            showAuthPage('CUSTOMER');
+            const el = document.getElementById("subview-customer-login");
+            if (el) el.style.display = "flex";
+        } else if (path === "/auth/customer/register") {
+            const el = document.getElementById("subview-customer-register");
+            if (el) el.style.display = "flex";
         } else if (path === "/auth/admin/login") {
-            showAuthPage('ADMIN');
+            const el = document.getElementById("subview-admin-login");
+            if (el) el.style.display = "flex";
+        } else if (path === "/auth/forgot-password") {
+            const el = document.getElementById("subview-forgot-password");
+            if (el) el.style.display = "flex";
+        } else if (path === "/auth/reset-password") {
+            const el = document.getElementById("subview-reset-password");
+            if (el) el.style.display = "flex";
         } else {
             const el = document.getElementById("subview-role-select");
             if (el) el.style.display = "flex";
