@@ -250,25 +250,25 @@ let walletLedger = [
 // Active/Past Order history
 let orderHistory = [
     // 5 PENDING
-    { id: "tx_ord_101", date: "2026-07-02", items: "2x Margherita Classic Pizza", amount: 25.98, status: "PENDING", customerName: "Alice Smith", customerImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_102", date: "2026-07-02", items: "1x Classic Cheddar Burger, 1x Loaded Cheese Fries", amount: 16.98, status: "PENDING", customerName: "Bob Johnson", customerImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_103", date: "2026-07-02", items: "3x Salmon Nigiri Sushi platters", amount: 47.97, status: "PENDING", customerName: "Charlie Brown", customerImage: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_104", date: "2026-07-02", items: "1x Avocado Quinoa Green Bowl, 1x Detox Juice", amount: 17.98, status: "PENDING", customerName: "Diana Prince", customerImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_105", date: "2026-07-02", items: "2x Double Chocolate Waffles", amount: 17.98, status: "PENDING", customerName: "Evan Wright", customerImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894101", date: "2026-07-02", items: "2x Margherita Classic Pizza", amount: 299.00, status: "PENDING", customerName: "Alice Smith", customerImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894102", date: "2026-07-02", items: "1x Classic Cheddar Burger, 1x Loaded Cheese Fries", amount: 249.00, status: "PENDING", customerName: "Bob Johnson", customerImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894103", date: "2026-07-02", items: "3x Salmon Nigiri Sushi platters", amount: 449.00, status: "PENDING", customerName: "Charlie Brown", customerImage: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894104", date: "2026-07-02", items: "1x Avocado Quinoa Green Bowl, 1x Detox Juice", amount: 199.00, status: "PENDING", customerName: "Diana Prince", customerImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894105", date: "2026-07-02", items: "2x Double Chocolate Waffles", amount: 179.00, status: "PENDING", customerName: "Evan Wright", customerImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=48&h=48&q=80" },
     
     // 5 PREPARING / ACTIVE
-    { id: "tx_ord_106", date: "2026-07-02", items: "1x Margherita Classic Pizza, 1x Pesto Pasta", amount: 27.98, status: "PREPARING", customerName: "Fiona Gallagher", customerImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_107", date: "2026-07-02", items: "2x Bacon Avocado Burger", amount: 25.98, status: "ASSIGNED", customerName: "George Clark", customerImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_108", date: "2026-07-02", items: "1x Orange Chicken, 1x Spicy Ramen Bowl", amount: 28.98, status: "PICKED_UP", customerName: "Hannah Abbott", customerImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_109", date: "2026-07-02", items: "2x Organic Tofu & Sesame Salad", amount: 21.98, status: "EN_ROUTE", customerName: "Ian Malcolm", customerImage: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_110", date: "2026-07-02", items: "1x Red Velvet Cake, 1x Vanilla Shake", amount: 11.98, status: "PREPARING", customerName: "Julia Roberts", customerImage: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894106", date: "2026-07-02", items: "1x Margherita Classic Pizza, 1x Pesto Pasta", amount: 349.00, status: "PREPARING", customerName: "Fiona Gallagher", customerImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894107", date: "2026-07-02", items: "2x Bacon Avocado Burger", amount: 299.00, status: "ASSIGNED", customerName: "George Clark", customerImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894108", date: "2026-07-02", items: "1x Orange Chicken, 1x Spicy Ramen Bowl", amount: 329.00, status: "PICKED_UP", customerName: "Hannah Abbott", customerImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894109", date: "2026-07-02", items: "2x Organic Tofu & Sesame Salad", amount: 219.00, status: "EN_ROUTE", customerName: "Ian Malcolm", customerImage: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894110", date: "2026-07-02", items: "1x Red Velvet Cake, 1x Vanilla Shake", amount: 149.00, status: "PREPARING", customerName: "Julia Roberts", customerImage: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=48&h=48&q=80" },
 
     // 5 DELIVERED
-    { id: "tx_ord_111", date: "2026-07-01", items: "1x Master Chef Specialty Dish", amount: 22.82, status: "DELIVERED", customerName: "Kevin Bacon", customerImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_112", date: "2026-07-01", items: "2x Classic Cheddar Burger", amount: 19.98, status: "DELIVERED", customerName: "Laura Croft", customerImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_113", date: "2026-07-01", items: "1x Salmon Nigiri Sushi platters", amount: 15.99, status: "DELIVERED", customerName: "Marcus Aurelius", customerImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_114", date: "2026-07-01", items: "1x Avocado Quinoa Green Bowl", amount: 11.99, status: "DELIVERED", customerName: "Natalie Portman", customerImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=48&h=48&q=80" },
-    { id: "tx_ord_115", date: "2026-07-01", items: "1x Double Chocolate Waffle", amount: 8.99, status: "DELIVERED", customerName: "Oliver Twist", customerImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=48&h=48&q=80" }
+    { id: "TXN-894111", date: "2026-07-01", items: "1x Master Chef Specialty Dish", amount: 399.00, status: "DELIVERED", customerName: "Kevin Bacon", customerImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894112", date: "2026-07-01", items: "2x Classic Cheddar Burger", amount: 279.00, status: "DELIVERED", customerName: "Laura Croft", customerImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894113", date: "2026-07-01", items: "1x Salmon Nigiri Sushi platters", amount: 249.00, status: "DELIVERED", customerName: "Marcus Aurelius", customerImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894114", date: "2026-07-01", items: "1x Avocado Quinoa Green Bowl", amount: 189.00, status: "DELIVERED", customerName: "Natalie Portman", customerImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=48&h=48&q=80" },
+    { id: "TXN-894115", date: "2026-07-01", items: "1x Double Chocolate Waffle", amount: 139.00, status: "DELIVERED", customerName: "Oliver Twist", customerImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=48&h=48&q=80" }
 ];
 
 // ==========================================================================
@@ -4782,7 +4782,7 @@ function downloadInvoice(order) {
     invoiceContent += `Payment ID: ${order.paymentId}\n`;
     invoiceContent += `Transaction ID: ${order.transactionId}\n`;
     invoiceContent += `Restaurant Name: ${order.restaurantName}\n`;
-    invoiceContent += `Total Amount Paid: $${order.amount.toFixed(2)}\n`;
+    invoiceContent += `Total Amount Paid: ₹${order.amount.toFixed(2)}\n`;
     invoiceContent += `Estimated Delivery Time: ${order.eta}\n`;
     invoiceContent += `Payment Method: ${order.paymentMethod}\n`;
     invoiceContent += `Delivery Address: ${order.address}\n`;
