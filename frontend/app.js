@@ -2582,6 +2582,7 @@ function syncLocalWalletBalances() {
 function checkLoyaltyMilestone() {
     const banner = document.getElementById("loyalty-milestone-banner");
     const display = document.getElementById("customer-loyalty-display");
+    const tag = document.getElementById("loyalty-status-tag");
     
     // Strict cap at 450 pts limit - prevent overlimit
     if (loyaltyPoints >= 450) {
@@ -2589,12 +2590,23 @@ function checkLoyaltyMilestone() {
     }
     
     if (display) {
-        display.innerText = `Loyalty Points: ${loyaltyPoints} / 450 pts`;
+        display.innerText = `${loyaltyPoints} / 450 pts`;
     }
+
     if (loyaltyPoints >= 450) {
         if (banner) banner.style.display = "flex";
+        if (tag) {
+            tag.innerText = "450 / 450 pts — Limit Reached";
+            tag.style.color = "var(--secondary)";
+            tag.style.fontWeight = "700";
+        }
     } else {
         if (banner) banner.style.display = "none";
+        if (tag) {
+            tag.innerText = "Points Tier";
+            tag.style.color = "var(--text-muted)";
+            tag.style.fontWeight = "600";
+        }
     }
 }
 
@@ -2717,6 +2729,20 @@ function topUpCustomerWallet() {
     }
 
     walletBalance += amount;
+
+    // Optional top-up loyalty points reward (+10% of top-up up to 450 max cap)
+    if (loyaltyPoints < 450) {
+        const topupPts = Math.min(450 - loyaltyPoints, Math.floor(amount * 0.10));
+        if (topupPts > 0) {
+            loyaltyPoints += topupPts;
+            showToast(`💳 Top-up Successful: Added ₹${amount.toFixed(2)} to Wallet Balance (+${topupPts} pts earned). New Wallet Balance: ₹${walletBalance.toFixed(2)}`, "success");
+        } else {
+            showToast(`💳 Top-up Successful: Added ₹${amount.toFixed(2)} to Wallet Balance (450 pts limit reached). New Wallet Balance: ₹${walletBalance.toFixed(2)}`, "info");
+        }
+    } else {
+        showToast(`💳 Top-up Successful: Added ₹${amount.toFixed(2)} to Wallet Balance (450 / 450 pts — Limit Reached, 0 additional points). New Wallet Balance: ₹${walletBalance.toFixed(2)}`, "info");
+    }
+
     syncLocalWalletBalances();
 
     // Write top-up transaction ledger entry
@@ -2728,8 +2754,6 @@ function topUpCustomerWallet() {
         bal: walletBalance
     });
     if (typeof renderWalletLedger === "function") renderWalletLedger();
-
-    showToast(`💳 Top-up Successful: Added ₹${amount.toFixed(2)} to your wallet. New Balance: ₹${walletBalance.toFixed(2)}`, "success");
 }
 
 function syncProfileRealtime() {

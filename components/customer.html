@@ -14,26 +14,43 @@
 
                 <!-- Right Side Widgets Column -->
                 <div class="widgets-column">
-                    <!-- Core Account Wallet Card -->
+                    <!-- Core Account Wallet Card (Ticket #45 Clear Labeling Compliance) -->
                     <div class="widget-card wallet-widget">
                         <div class="widget-header">
-                            <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                            <i class="fa-solid fa-wallet" aria-hidden="true" style="color: #FF6B00;"></i>
                             <h4>Core Account Wallet</h4>
                         </div>
-                        <div class="wallet-balance-row" style="display: flex; flex-direction: column; gap: 4px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span class="balance" id="customer-wallet-display">₹1600.00</span>
-                                <span class="loyalty" id="customer-loyalty-display" onclick="redeemLoyaltyPoints()" style="cursor: pointer;" title="Click to redeem 450 pts reward">Loyalty Points: 450 pts</span>
+                        <div class="wallet-balance-row" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                            <!-- Wallet Currency Balance Label (Explicitly labeled as Wallet Balance) -->
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; background: rgba(255, 107, 0, 0.05); padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255, 107, 0, 0.15);">
+                                <div>
+                                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: var(--text-muted); display: block;">Wallet Balance</span>
+                                    <span class="balance" id="customer-wallet-display" style="font-size: 22px; font-weight: 800; color: var(--text-main);">₹1600.00</span>
+                                </div>
+                                <span style="font-size: 11px; font-weight: 600; color: #FF6B00; background: rgba(255, 107, 0, 0.1); padding: 4px 8px; border-radius: 6px;">Cash Ledger</span>
                             </div>
-                            <div id="loyalty-milestone-banner" style="display: flex; align-items: center; justify-content: space-between; background: rgba(46, 196, 182, 0.15); border: 1px solid rgba(46, 196, 182, 0.35); border-radius: 8px; padding: 6px 10px; margin-top: 8px; font-size: 11px; color: var(--text-main);">
+
+                            <!-- Loyalty Points Label & Meter (Explicitly labeled as Loyalty Points) -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);">
+                                <div>
+                                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: var(--text-muted); display: block;">Loyalty Points</span>
+                                    <span class="loyalty" id="customer-loyalty-display" onclick="redeemLoyaltyPoints()" style="font-size: 14px; font-weight: 700; color: var(--secondary); cursor: pointer;" title="Click to redeem 450 pts reward">50 / 450 pts</span>
+                                </div>
+                                <span id="loyalty-status-tag" style="font-size: 11px; font-weight: 600; color: var(--text-muted);">Points Tier</span>
+                            </div>
+
+                            <!-- Milestone Banner when 450 pts touched -->
+                            <div id="loyalty-milestone-banner" style="display: none; align-items: center; justify-content: space-between; background: rgba(46, 196, 182, 0.15); border: 1px solid rgba(46, 196, 182, 0.35); border-radius: 8px; padding: 8px 12px; margin-top: 4px; font-size: 11px; color: var(--text-main);">
                                 <span><i class="fa-solid fa-award" style="color: var(--secondary); margin-right: 5px;"></i> <strong>450 pts Limit Reached!</strong></span>
-                                <button onclick="redeemLoyaltyPoints()" class="header-btn" style="padding: 3px 10px; margin: 0; font-size: 10px; background: var(--secondary); color: white; border: none; font-weight: 700; border-radius: 4px;">Redeem ₹100</button>
+                                <button onclick="redeemLoyaltyPoints()" class="header-btn" style="padding: 4px 12px; margin: 0; font-size: 11px; background: var(--secondary); color: white; border: none; font-weight: 700; border-radius: 6px; cursor: pointer;">Redeem ₹100</button>
                             </div>
                         </div>
+
+                        <!-- Quick Top-up Row -->
                         <div class="quick-topup-row" style="display: flex; gap: 8px; margin-top: 15px; align-items: center;">
                             <span style="font-weight: 700; color: var(--text-muted);">₹</span>
-                            <input type="number" id="quick-topup-input" class="input-field" value="100" min="10" max="450" style="width: 80px; padding: 5px; margin: 0;" aria-label="Top-up Amount">
-                            <button class="btn-quick-topup" id="btn-quick-topup">Quick Top-up</button>
+                            <input type="number" id="quick-topup-input" class="input-field" value="100" min="10" max="450" style="width: 80px; padding: 6px; margin: 0; font-size: 13px;" aria-label="Top-up Amount">
+                            <button class="btn-quick-topup" id="btn-quick-topup" style="flex-grow: 1;">Quick Top-up</button>
                         </div>
                     </div>
 
