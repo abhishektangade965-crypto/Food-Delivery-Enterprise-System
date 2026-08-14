@@ -749,23 +749,25 @@ function handleHashChange() {
     if (!path || path === "") path = "/";
 
     const token = localStorage.getItem("delivo-token");
-    const role = localStorage.getItem("delivo-role");
+    const role = (localStorage.getItem("delivo-role") || "CUSTOMER").toUpperCase();
 
     updateNotificationBadgeUI();
+    if (typeof updateRoleNavigationHeader === "function") updateRoleNavigationHeader();
 
     // Guard dashboards
     if (path.startsWith("/customer/") || path === "/customer/dashboard") {
-        if (!token || role !== "CUSTOMER") {
-            showToast("Access Denied: Customer authorization required.", "error");
+        if (!token) {
+            showToast("Please sign in to access your customer dashboard.", "info");
             window.location.hash = "/auth/customer/login";
             return;
         }
     }
 
-    if (path.startsWith("/admin/") || path === "/admin/dashboard") {
+    // Guard Admin / Merchant / KDS / Driver Dashboards: Strictly restrict from normal customers
+    if (path.startsWith("/admin/") || path === "/admin/dashboard" || path.startsWith("/restaurant/") || path === "/restaurant/dashboard" || path.startsWith("/driver/") || path === "/driver/dashboard" || path.startsWith("/kds/")) {
         if (!token || role !== "ADMIN") {
-            showToast("Access Denied: Admin authorization required.", "error");
-            window.location.hash = "/auth/admin/login";
+            showToast("Access Denied: Kitchen KDS & Admin Hub dashboards are restricted to Admins & Merchants.", "error");
+            window.location.hash = "/customer/dashboard";
             return;
         }
     }
@@ -3543,27 +3545,58 @@ function updateAdminDashboardCounters() {
 // ==========================================================================
 let currentUserRole = null;
 
-function checkAuthOnLoad() {
+function updateRoleNavigationHeader() {
     const token = localStorage.getItem("delivo-token");
-    const role = localStorage.getItem("delivo-role");
-    const email = localStorage.getItem("delivo-email");
-
-    const tabs = document.getElementById("main-nav-tabs");
+    const role = (localStorage.getItem("delivo-role") || "CUSTOMER").toUpperCase();
+    const mainTabs = document.getElementById("main-nav-tabs");
+    const publicTabs = document.getElementById("public-nav-tabs");
+    const guestAuthBtn = document.getElementById("guest-auth-buttons");
     const logoutBtn = document.getElementById("btn-logout");
 
+    if (!token) {
+        if (mainTabs) mainTabs.style.display = "none";
+        if (publicTabs) publicTabs.style.display = "flex";
+        if (guestAuthBtn) guestAuthBtn.style.display = "flex";
+        if (logoutBtn) logoutBtn.style.display = "none";
+        return;
+    }
+
+    if (publicTabs) publicTabs.style.display = "none";
+    if (guestAuthBtn) guestAuthBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "block";
+    if (mainTabs) mainTabs.style.display = "flex";
+
+    const customerBtn = mainTabs.querySelector('[data-view="view-customer"]');
+    const kdsBtn = mainTabs.querySelector('[data-view="view-restaurant"]');
+    const driverBtn = mainTabs.querySelector('[data-view="view-driver"]');
+    const adminBtn = mainTabs.querySelector('[data-view="view-admin"]');
+
+    if (role === "CUSTOMER") {
+        if (customerBtn) customerBtn.style.display = "inline-flex";
+        if (kdsBtn) kdsBtn.style.display = "none";
+        if (driverBtn) driverBtn.style.display = "none";
+        if (adminBtn) adminBtn.style.display = "none";
+    } else {
+        if (customerBtn) customerBtn.style.display = "inline-flex";
+        if (kdsBtn) kdsBtn.style.display = "inline-flex";
+        if (driverBtn) driverBtn.style.display = "inline-flex";
+        if (adminBtn) adminBtn.style.display = "inline-flex";
+    }
+}
+
+function checkAuthOnLoad() {
+    const token = localStorage.getItem("delivo-token");
+    const role = (localStorage.getItem("delivo-role") || "CUSTOMER").toUpperCase();
+
+    updateRoleNavigationHeader();
+
     if (token && role) {
-        if (tabs) tabs.style.display = "flex";
-        if (logoutBtn) logoutBtn.style.display = "block";
-        
-        // Show corresponding views
         if (role === "ADMIN") {
             switchView("view-admin");
         } else {
             switchView("view-customer");
         }
     } else {
-        if (tabs) tabs.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "none";
         switchView("view-landing");
     }
 }
@@ -3653,10 +3686,7 @@ function handleAuthSubmit(event) {
             
             showToast("Authenticated successfully!", "success");
             
-            const tabs = document.getElementById("main-nav-tabs");
-            const logoutBtn = document.getElementById("btn-logout");
-            if (tabs) tabs.style.display = "flex";
-            if (logoutBtn) logoutBtn.style.display = "block";
+            updateRoleNavigationHeader();
             
             if (primaryRole === "ADMIN") {
                 navigateToPath("/admin/dashboard");
