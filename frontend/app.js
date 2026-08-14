@@ -785,23 +785,7 @@ function handleHashChange() {
         const landingView = document.getElementById("view-landing");
         if (landingView) landingView.classList.add("active");
         
-        const mainTabs = document.getElementById("main-nav-tabs");
-        const publicTabs = document.getElementById("public-nav-tabs");
-        const guestAuthBtn = document.getElementById("guest-auth-buttons");
-        const logoutBtn = document.getElementById("btn-logout");
-        
-        if (token) {
-            if (mainTabs) mainTabs.style.display = "flex";
-            if (publicTabs) publicTabs.style.display = "none";
-            if (guestAuthBtn) guestAuthBtn.style.display = "none";
-            if (logoutBtn) logoutBtn.style.display = "block";
-        } else {
-            if (mainTabs) mainTabs.style.display = "none";
-            if (publicTabs) publicTabs.style.display = "flex";
-            if (guestAuthBtn) guestAuthBtn.style.display = "flex";
-            if (logoutBtn) logoutBtn.style.display = "none";
-        }
-
+        updateRoleNavigationHeader();
         setTimeout(populateLandingCatalog, 100);
         return;
     }
@@ -821,24 +805,13 @@ function handleHashChange() {
 
         const authView = document.getElementById("view-auth");
         if (authView) authView.classList.add("active");
-
-        if (path === "/auth/select") {
-            const el = document.getElementById("subview-role-select");
-            if (el) el.style.display = "flex";
-        } else if (path === "/auth/customer/login") {
-            const el = document.getElementById("subview-customer-login");
-            if (el) el.style.display = "flex";
-        } else if (path === "/auth/customer/register") {
-            const el = document.getElementById("subview-customer-register");
-            if (el) el.style.display = "flex";
+        
+        if (path === "/auth/customer/login") {
+            showAuthPage('CUSTOMER');
         } else if (path === "/auth/admin/login") {
-            const el = document.getElementById("subview-admin-login");
-            if (el) el.style.display = "flex";
-        } else if (path === "/auth/forgot-password") {
-            const el = document.getElementById("subview-forgot-password");
-            if (el) el.style.display = "flex";
-        } else if (path === "/auth/reset-password") {
-            const el = document.getElementById("subview-reset-password");
+            showAuthPage('ADMIN');
+        } else {
+            const el = document.getElementById("subview-role-select");
             if (el) el.style.display = "flex";
         }
         return;
@@ -851,16 +824,7 @@ function handleHashChange() {
         
         checkLoyaltyMilestone();
         setTimeout(renderOrderHistoryUI, 100);
-        
-        const mainTabs = document.getElementById("main-nav-tabs");
-        const publicTabs = document.getElementById("public-nav-tabs");
-        const guestAuthBtn = document.getElementById("guest-auth-buttons");
-        const logoutBtn = document.getElementById("btn-logout");
-        
-        if (mainTabs) mainTabs.style.display = "flex";
-        if (publicTabs) publicTabs.style.display = "none";
-        if (guestAuthBtn) guestAuthBtn.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "block";
+        updateRoleNavigationHeader();
         return;
     }
 
@@ -868,15 +832,7 @@ function handleHashChange() {
         const adminView = document.getElementById("view-admin");
         if (adminView) adminView.classList.add("active");
         
-        const mainTabs = document.getElementById("main-nav-tabs");
-        const publicTabs = document.getElementById("public-nav-tabs");
-        const guestAuthBtn = document.getElementById("guest-auth-buttons");
-        const logoutBtn = document.getElementById("btn-logout");
-        
-        if (mainTabs) mainTabs.style.display = "flex";
-        if (publicTabs) publicTabs.style.display = "none";
-        if (guestAuthBtn) guestAuthBtn.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "block";
+        updateRoleNavigationHeader();
 
         renderAdminCoupons();
         renderAdminRefunds();
@@ -3577,34 +3533,32 @@ function updateRoleNavigationHeader() {
     const guestAuthBtn = document.getElementById("guest-auth-buttons");
     const logoutBtn = document.getElementById("btn-logout");
 
+    // Always keep public navbar tabs (Home, Restaurants, Offers, Track Order, About) visible
+    if (publicTabs) publicTabs.style.display = "flex";
+
     if (!token) {
         if (mainTabs) mainTabs.style.display = "none";
-        if (publicTabs) publicTabs.style.display = "flex";
         if (guestAuthBtn) guestAuthBtn.style.display = "flex";
         if (logoutBtn) logoutBtn.style.display = "none";
         return;
     }
 
-    if (publicTabs) publicTabs.style.display = "none";
     if (guestAuthBtn) guestAuthBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "block";
-    if (mainTabs) mainTabs.style.display = "flex";
 
-    const customerBtn = mainTabs.querySelector('[data-view="view-customer"]');
-    const kdsBtn = mainTabs.querySelector('[data-view="view-restaurant"]');
-    const driverBtn = mainTabs.querySelector('[data-view="view-driver"]');
-    const adminBtn = mainTabs.querySelector('[data-view="view-admin"]');
+    if (role === "ADMIN" || role === "RESTAURANT") {
+        if (mainTabs) mainTabs.style.display = "flex";
+        const customerBtn = mainTabs.querySelector('[data-view="view-customer"]');
+        const kdsBtn = mainTabs.querySelector('[data-view="view-restaurant"]');
+        const driverBtn = mainTabs.querySelector('[data-view="view-driver"]');
+        const adminBtn = mainTabs.querySelector('[data-view="view-admin"]');
 
-    if (role === "CUSTOMER") {
-        if (customerBtn) customerBtn.style.display = "inline-flex";
-        if (kdsBtn) kdsBtn.style.display = "none";
-        if (driverBtn) driverBtn.style.display = "none";
-        if (adminBtn) adminBtn.style.display = "none";
-    } else {
         if (customerBtn) customerBtn.style.display = "inline-flex";
         if (kdsBtn) kdsBtn.style.display = "inline-flex";
         if (driverBtn) driverBtn.style.display = "inline-flex";
         if (adminBtn) adminBtn.style.display = "inline-flex";
+    } else {
+        if (mainTabs) mainTabs.style.display = "none";
     }
 }
 
